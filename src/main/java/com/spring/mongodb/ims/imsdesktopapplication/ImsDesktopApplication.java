@@ -1,5 +1,6 @@
 package com.spring.mongodb.ims.imsdesktopapplication;
 
+import java.awt.EventQueue;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -8,21 +9,40 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 
+import javax.swing.JFrame;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.spring.mongodb.ims.imsdesktopapplication.exceptions.InvalidInputException;
 import com.spring.mongodb.ims.imsdesktopapplication.model.Customer;
 import com.spring.mongodb.ims.imsdesktopapplication.model.Employee;
+import com.spring.mongodb.ims.imsdesktopapplication.ui.LoginPage;
 
 @SpringBootApplication
 public class ImsDesktopApplication {
 	
 	private static List<Employee> currentEmployees;
+	private static JFrame frame;
 
 	public static void main(String[] args) {
 		init();
 		SpringApplication.run(ImsDesktopApplication.class, args);
+		System.setProperty("java.awt.headless", "false");
+		
+		/**
+		 * Start application
+		 */
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					frame = new LoginPage();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 	public static void setCurrentEmployees(List<Employee> currentEmployees) {
@@ -99,6 +119,20 @@ public class ImsDesktopApplication {
 			currentEmployees.add(currenteEmployee);
 		}
 
+	}
+	
+	/**
+	 * @return the frame
+	 */
+	public static JFrame getFrame() {
+		return frame;
+	}
+
+	/**
+	 * @param frame the frame to set
+	 */
+	public static void setFrame(JFrame frame) {
+		ImsDesktopApplication.frame = frame;
 	}
 	
 }
