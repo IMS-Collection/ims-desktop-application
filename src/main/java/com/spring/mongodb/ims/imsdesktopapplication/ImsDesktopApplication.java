@@ -11,38 +11,35 @@ import java.util.TimeZone;
 
 import javax.swing.JFrame;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 
 import com.spring.mongodb.ims.imsdesktopapplication.exceptions.InvalidInputException;
 import com.spring.mongodb.ims.imsdesktopapplication.model.Customer;
 import com.spring.mongodb.ims.imsdesktopapplication.model.Employee;
-import com.spring.mongodb.ims.imsdesktopapplication.ui.LoginPage;
 
 @SpringBootApplication
-public class ImsDesktopApplication {
+public class ImsDesktopApplication extends JFrame{
+	public ImsDesktopApplication() {
+	}
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5035583466578245836L;
 	private static List<Employee> currentEmployees;
 	private static JFrame frame;
-
+	
 	public static void main(String[] args) {
 		init();
-		SpringApplication.run(ImsDesktopApplication.class, args);
-		System.setProperty("java.awt.headless", "false");
-		
-		/**
-		 * Start application
-		 */
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					frame = new LoginPage();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		var ctx = new SpringApplicationBuilder(ImsDesktopApplication.class)
+                .headless(false).run(args);
+
+        EventQueue.invokeLater(() -> {
+
+            var ex = ctx.getBean(ImsPage.class);
+            ex.setVisible(true);
+        });
 	}
 
 	public static void setCurrentEmployees(List<Employee> currentEmployees) {

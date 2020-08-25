@@ -91,6 +91,58 @@ public class ProductServiceImpl implements ProductService{
 		
 	}
 
+	@Override
+	public void testCreateProduct(String name) throws InvalidInputException {
+		
+//		Employee employee = employeeRepository.findByEmployeeId(employeeId);
+//		boolean loggedIn = false;
+//		if (employee == null) {
+//			throw new InvalidInputException("An employee must log in.");
+//		}
+//		for (Employee e : ImsDesktopApplication.getCurrentEmployees()) {
+//			if (e.getUserName().equals(employee.getUserName())) {
+//				loggedIn = true;
+//			}
+//		}
+//		String error = "";
+//		if (!loggedIn) {
+//			error = "An employee must log in before creating a product.";
+//		} else if (!employee.isManager()) {
+//			error = "A manager is required to create a product.";
+//		} else if (productDTO.getName() == null || productDTO.getName().equals("")) {
+//			error = "The name of a product cannot be empty.";
+//		} else if (productDTO.getItemPrice() < 0) {
+//			error = "The price of a product cannot be negative.";
+//		} else if (productDTO.getItemPrice() == 0) {
+//			error = "The price of a product cannot be zero";
+//		} else if (productDTO.getQuantity() <= 0) {
+//			error = "Quantity of a product cannot be less than one.";
+//		}
+//		if (error.length() > 0) {
+//			throw new InvalidInputException(error);
+//		}
+//		
+//		ModelMapper modelMapper = new ModelMapper();
+
+//		Product newProduct = modelMapper.map(productDTO, Product.class);
+		Product newProduct = new Product();
+		
+		String publicProductId = utils.generateEmployeeId(30);
+		newProduct.setProductId(publicProductId);
+		newProduct.setName(name);
+		newProduct.setQuantity(100);
+		newProduct.setItemPrice(10);
+		
+		try {
+			productRepository.save(newProduct);
+		} catch (Exception e) {
+			//TODO: fine-tune the response
+			throw new InvalidInputException("Error!, seems the name already exist");
+		}
+		
+		
+	}
+
 	/**
 	 * Deletes an instance of a product
 	 */

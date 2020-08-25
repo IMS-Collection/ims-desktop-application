@@ -1,71 +1,57 @@
-package com.spring.mongodb.ims.imsdesktopapplication.ui;
+package com.spring.mongodb.ims.imsdesktopapplication;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLayeredPane;
-import javax.swing.JOptionPane;
-import javax.swing.border.BevelBorder;
 import java.awt.Color;
-import javax.swing.border.LineBorder;
-
-import com.spring.mongodb.ims.imsdesktopapplication.ImsDesktopApplication;
-import com.spring.mongodb.ims.imsdesktopapplication.exceptions.InvalidInputException;
-
-import java.awt.CardLayout;
-import javax.swing.JLabel;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.GroupLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.ImageIcon;
-import javax.swing.JTextField;
-import javax.swing.JPasswordField;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.JButton;
-import javax.swing.JDialog;
+import javax.swing.border.LineBorder;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-public class LoginPage extends JFrame {
+import com.spring.mongodb.ims.imsdesktopapplication.exceptions.InvalidInputException;
+import com.spring.mongodb.ims.imsdesktopapplication.service.ProductService;
+
+@SpringBootApplication
+public class ImsPage extends ImsDesktopApplication {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1350344339139050067L;
+	
+	
+	/**** login page  *****/
+
 	private JPanel contentPane;
 	private JTextField userName;
 	private JPasswordField passwordField;
 	private JLabel errorMessage;
 	private String error = "";
-
-	/**
-	 * Launch the application.
-	 */
-	/*public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoginPage frame = new LoginPage();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}*/
+	
+	@Autowired
+	ProductService productService;
 
 	/**
 	 * Create the frame.
 	 */
-	public LoginPage() {
+	public ImsPage() {
 		//setUndecorated(true);
 		UIManager.put("OptionPane.messageForeground", Color.green);
 		Image iconImg = new ImageIcon(this.getClass().getResource("/motorcyclist-icon.png")).getImage();
@@ -84,7 +70,7 @@ public class LoginPage extends JFrame {
 		lblNewLabel.setVerticalAlignment(SwingConstants.TOP);
 		Image motorcycle = new ImageIcon(this.getClass().getResource("/motorcycle.png")).getImage();
 		lblNewLabel.setIcon(new ImageIcon(motorcycle));
-		lblNewLabel.setBounds(31, 63, 302, 274);
+		lblNewLabel.setBounds(31, 58, 302, 279);
 		contentPane.add(lblNewLabel);
 		
 		JPanel panel = new JPanel();
@@ -150,12 +136,14 @@ public class LoginPage extends JFrame {
 				
 				if (name != null && name.length() > 0) {
 					if (password != null && password.length() > 0) {
-//						try {
-//							ImsController.login(name, password);
-//						} catch (InvalidInputException e) {
-//							loggedIn = false;
-//							error = e.getMessage();
-//						}
+						try {
+							//ImsController.login(name, password);
+							productService.testCreateProduct(name);
+							
+						} catch (InvalidInputException e) {
+							loggedIn = false;
+							error = e.getMessage();
+						}
 					} else {
 						loggedIn = false;
 						error = "You can't log in with empty password";
@@ -304,4 +292,7 @@ public class LoginPage extends JFrame {
 		userName.setText("");
 		passwordField.setText("");
 	}
+	
+	/**** login page   ******/
+
 }
