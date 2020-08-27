@@ -23,6 +23,11 @@ public class ImsDesktopApplication extends JFrame{
 	public ImsDesktopApplication() {
 	}
 	
+//	use jdialog for register page
+//	About about = new About()
+//	about.setModal(true)
+//	about.steVisible(true)
+//	
 	/**
 	 * 
 	 */
@@ -32,13 +37,13 @@ public class ImsDesktopApplication extends JFrame{
 	
 	public static void main(String[] args) {
 		init();
-		var ctx = new SpringApplicationBuilder(ImsDesktopApplication.class)
+		var springApp = new SpringApplicationBuilder(ImsDesktopApplication.class)
                 .headless(false).run(args);
 
         EventQueue.invokeLater(() -> {
 
-            var ex = ctx.getBean(ImsPage.class);
-            ex.setVisible(true);
+            var imsPage = springApp.getBean(ImsMainPage.class);
+            imsPage.setVisible(true);
         });
 	}
 
