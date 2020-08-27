@@ -7,7 +7,18 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import com.spring.mongodb.ims.imsdesktopapplication.exceptions.InvalidInputException;
+import com.spring.mongodb.ims.imsdesktopapplication.service.CustomerService;
+import com.spring.mongodb.ims.imsdesktopapplication.service.EmployeeService;
+import com.spring.mongodb.ims.imsdesktopapplication.service.ImsService;
+import com.spring.mongodb.ims.imsdesktopapplication.service.ProductService;
+import com.spring.mongodb.ims.imsdesktopapplication.service.TransactionService;
+import com.spring.mongodb.ims.imsdesktopapplication.service.impl.EmployeeServiceImpl;
+import com.spring.mongodb.ims.imsdesktopapplication.shared.dto.EmployeeDTO;
+
 import javax.swing.JLayeredPane;
 import java.awt.CardLayout;
 import javax.swing.GroupLayout;
@@ -22,6 +33,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
 
 @SpringBootApplication
 public class ImsMainPage extends ImsDesktopApplication {
@@ -31,8 +43,26 @@ public class ImsMainPage extends ImsDesktopApplication {
 	 */
 	private static final long serialVersionUID = -6112156228697064281L;
 	private JPanel contentPane;
-	private JTextField textField;
+	private JTextField userName;
 	private JPasswordField passwordField;
+	private String error = "";
+	
+	@Autowired
+	EmployeeService employeeService;
+	
+	@Autowired
+	CustomerService customerService;
+	
+	@Autowired
+	ProductService productService;
+	
+	@Autowired
+	TransactionService transactionService;
+	
+	@Autowired
+	ImsService imsService;
+	private JPanel imsPagePanel;
+	private JLabel errorMessage;
 
 	/**
 	 * Launch the application.
@@ -76,7 +106,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 		lblLoginPage.setFont(new Font("AppleMyungjo", Font.BOLD, 25));
 		
 		JPanel panel = new JPanel();
-		panel.setBackground(Color.decode("#669999"));
+		//panel.setBackground(Color.decode("#669999"));
+		panel.setBackground(Color.decode("#2dad5a"));
 		panel.setBorder(new LineBorder(Color.WHITE, 2));
 		
 		JButton btnRegister = new JButton("REGISTER");
@@ -93,23 +124,24 @@ public class ImsMainPage extends ImsDesktopApplication {
 		gl_loginPanel.setHorizontalGroup(
 			gl_loginPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_loginPanel.createSequentialGroup()
-					.addContainerGap(190, Short.MAX_VALUE)
-					.addComponent(lblLoginPage, GroupLayout.PREFERRED_SIZE, 459, GroupLayout.PREFERRED_SIZE)
-					.addGap(222))
-				.addGroup(gl_loginPanel.createSequentialGroup()
 					.addGap(236)
 					.addComponent(lblManagementSystem, GroupLayout.PREFERRED_SIZE, 319, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(316, Short.MAX_VALUE))
 				.addGroup(gl_loginPanel.createSequentialGroup()
 					.addGap(205)
+					.addComponent(lblNotHaveAccount)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(btnRegister, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(376, Short.MAX_VALUE))
+				.addGroup(Alignment.TRAILING, gl_loginPanel.createSequentialGroup()
+					.addContainerGap(190, Short.MAX_VALUE)
 					.addGroup(gl_loginPanel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_loginPanel.createSequentialGroup()
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(lblNotHaveAccount)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(btnRegister, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE))
-						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 396, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(270, Short.MAX_VALUE))
+							.addComponent(panel, GroupLayout.PREFERRED_SIZE, 411, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap())
+						.addGroup(Alignment.TRAILING, gl_loginPanel.createSequentialGroup()
+							.addComponent(lblLoginPage, GroupLayout.PREFERRED_SIZE, 459, GroupLayout.PREFERRED_SIZE)
+							.addGap(222))))
 		);
 		gl_loginPanel.setVerticalGroup(
 			gl_loginPanel.createParallelGroup(Alignment.TRAILING)
@@ -118,25 +150,25 @@ public class ImsMainPage extends ImsDesktopApplication {
 					.addComponent(lblLoginPage, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(lblManagementSystem)
-					.addGap(27)
-					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 297, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_loginPanel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblNotHaveAccount)
 						.addComponent(btnRegister, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE))
-					.addGap(257))
+					.addGap(172))
 		);
 		
 		JLabel lblUserLogin = new JLabel("User Login");
 		lblUserLogin.setFont(new Font("SansSerif", Font.BOLD, 18));
 		lblUserLogin.setForeground(Color.WHITE);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
+		userName = new JTextField();
+		userName.setColumns(10);
 		
 		passwordField = new JPasswordField();
 		
-		JLabel lblUserName = new JLabel("User Name");
+		JLabel lblUserName = new JLabel("User Name or Email Address");
 		lblUserName.setForeground(Color.WHITE);
 		lblUserName.setFont(new Font("SansSerif", Font.PLAIN, 18));
 		
@@ -147,60 +179,107 @@ public class ImsMainPage extends ImsDesktopApplication {
 		JButton btnLogin = new JButton("LOGIN");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//clear error
+				error = "";
+				String name = userName.getText();
+				char[] pass = passwordField.getPassword();
+				String password = new String(pass);
+				
+				boolean loggedIn = true;
+				
+				if (name != null && name.length() > 0) {
+					if (password != null && password.length() > 0) {
+						try {
+							imsService.login(name, password);
+						} catch (InvalidInputException er) {
+							loggedIn = false;
+							error = er.getMessage();
+						}
+					} else {
+						loggedIn = false;
+						error = "You can't log in with empty password";
+					}
+				} else {
+					loggedIn = false;
+					error = "You can't log in with empty user name";
+				}
+				if(loggedIn) {
+					/**
+					 * Launch the main page.
+					 */
+					try {
+						error = "";
+						layeredPane.removeAll();
+						layeredPane.add(imsPagePanel);
+						layeredPane.repaint();
+						layeredPane.revalidate();
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+				
+				//update visuals
+				refreshLoginData();
 			}
 		});
 		
 		JButton btnExit = new JButton("EXIT");
+		
+		errorMessage = new JLabel("");
+		errorMessage.setFont(new Font("SansSerif", Font.BOLD, 16));
+		errorMessage.setForeground(Color.RED);
+		errorMessage.setHorizontalAlignment(SwingConstants.CENTER);
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(btnLogin)
+							.addGap(18)
+							.addComponent(btnExit))
 						.addGroup(gl_panel.createSequentialGroup()
 							.addGap(18)
-							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
 								.addComponent(lblUserName)
-								.addComponent(lblPassword))
-							.addGap(18)
-							.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING, false)
-								.addGroup(gl_panel.createSequentialGroup()
-									.addComponent(btnLogin, GroupLayout.PREFERRED_SIZE, 84, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(btnExit, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)
-									.addGap(33))
-								.addGroup(gl_panel.createSequentialGroup()
-									.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-										.addComponent(passwordField, GroupLayout.PREFERRED_SIZE, 214, GroupLayout.PREFERRED_SIZE)
-										.addComponent(textField, GroupLayout.PREFERRED_SIZE, 214, GroupLayout.PREFERRED_SIZE))
-									.addGap(35))))
-						.addGroup(gl_panel.createSequentialGroup()
-							.addGap(142)
-							.addComponent(lblUserLogin)))
-					.addContainerGap(13, Short.MAX_VALUE))
+								.addComponent(lblPassword)
+								.addComponent(passwordField)
+								.addComponent(userName, GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE))))
+					.addGap(108))
+				.addGroup(gl_panel.createSequentialGroup()
+					.addGap(132)
+					.addComponent(lblUserLogin)
+					.addContainerGap(176, Short.MAX_VALUE))
+				.addGroup(gl_panel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(errorMessage, GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
+					.addContainerGap())
 		);
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
-					.addContainerGap()
 					.addComponent(lblUserLogin, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
-					.addGap(12)
-					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(textField, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblUserName, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(passwordField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblPassword, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(errorMessage)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(lblUserName, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(userName, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+					.addGap(28)
+					.addComponent(lblPassword, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(passwordField, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
 					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnLogin)
-						.addComponent(btnExit))
-					.addContainerGap())
+						.addComponent(btnExit, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnLogin, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE))
+					.addGap(21))
 		);
 		panel.setLayout(gl_panel);
 		loginPanel.setLayout(gl_loginPanel);
 		
-		JPanel imsPagePanel = new JPanel();
+		imsPagePanel = new JPanel();
 		layeredPane.add(imsPagePanel, "name_60694851832107");
 		
 		JLabel lblMainPage = new JLabel("main page");
@@ -241,5 +320,14 @@ public class ImsMainPage extends ImsDesktopApplication {
 					.addContainerGap(172, Short.MAX_VALUE))
 		);
 		registerPanel.setLayout(gl_registerPanel);
+	}
+	
+	private void refreshLoginData() {
+		//error
+		errorMessage.setText(error);
+		
+		//clear contents
+		userName.setText("");
+		passwordField.setText("");
 	}
 }
