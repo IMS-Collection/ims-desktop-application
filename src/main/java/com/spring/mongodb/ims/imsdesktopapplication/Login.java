@@ -29,7 +29,7 @@ import com.spring.mongodb.ims.imsdesktopapplication.exceptions.InvalidInputExcep
 import com.spring.mongodb.ims.imsdesktopapplication.service.ProductService;
 
 @SpringBootApplication
-public class ImsPage extends ImsDesktopApplication {
+public class Login extends ImsDesktopApplication {
 
 	/**
 	 * 
@@ -51,7 +51,7 @@ public class ImsPage extends ImsDesktopApplication {
 	/**
 	 * Create the frame.
 	 */
-	public ImsPage() {
+	public Login() {
 		//setUndecorated(true);
 		UIManager.put("OptionPane.messageForeground", Color.green);
 		Image iconImg = new ImageIcon(this.getClass().getResource("/motorcyclist-icon.png")).getImage();
