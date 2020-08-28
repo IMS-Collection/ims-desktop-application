@@ -20,6 +20,8 @@ import com.spring.mongodb.ims.imsdesktopapplication.model.Employee;
 
 @SpringBootApplication
 public class ImsDesktopApplication extends JFrame{
+	
+	Object imsPage;
 	public ImsDesktopApplication() {
 	}
 	

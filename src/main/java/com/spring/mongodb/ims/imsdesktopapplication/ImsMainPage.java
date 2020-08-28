@@ -94,7 +94,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 883, 622);
 		contentPane = new JPanel();
-		contentPane.setBackground(Color.decode("#A683E3"));
+		contentPane.setBackground(Color.decode("#d3d2d4"));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -105,17 +105,16 @@ public class ImsMainPage extends ImsDesktopApplication {
 		layeredPane.setLayout(new CardLayout(0, 0));
 		
 		JPanel loginPanel = new JPanel();
-		loginPanel.setBackground(Color.decode("#A683E3"));
+		loginPanel.setBackground(Color.decode("#d3d2d4"));
 		layeredPane.add(loginPanel, "name_60650339811448");
 		
 		JLabel lblLoginPage = new JLabel("DE-DEDON MOTORS INVENTORY ");
-		lblLoginPage.setForeground(Color.WHITE);
+		lblLoginPage.setForeground(Color.decode("#2dad5a"));
 		lblLoginPage.setFont(new Font("AppleMyungjo", Font.BOLD, 25));
 		
 		JPanel panel = new JPanel();
-		//panel.setBackground(Color.decode("#669999"));
-		panel.setBackground(Color.decode("#2dad5a"));
-		panel.setBorder(new LineBorder(Color.WHITE, 2));
+		panel.setBackground(Color.decode("#d3d2d4"));
+		panel.setBorder(new LineBorder(Color.decode("#2dad5a"), 2));
 		
 		JButton btnRegister = new JButton("REGISTER");
 		btnRegister.addActionListener(new ActionListener() {
@@ -134,11 +133,11 @@ public class ImsMainPage extends ImsDesktopApplication {
 		btnRegister.setBackground(Color.BLUE);
 		
 		JLabel lblManagementSystem = new JLabel("MANAGEMENT SYSTEM");
-		lblManagementSystem.setForeground(Color.WHITE);
+		lblManagementSystem.setForeground(Color.decode("#2dad5a"));
 		lblManagementSystem.setFont(new Font("AppleMyungjo", Font.BOLD, 25));
 		
 		JLabel lblNotHaveAccount = new JLabel("Not have account?");
-		lblNotHaveAccount.setForeground(Color.WHITE);
+		lblNotHaveAccount.setForeground(Color.BLACK);
 		lblNotHaveAccount.setFont(new Font("AppleMyungjo", Font.PLAIN, 20));
 		GroupLayout gl_loginPanel = new GroupLayout(loginPanel);
 		gl_loginPanel.setHorizontalGroup(
@@ -181,7 +180,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		
 		JLabel lblUserLogin = new JLabel("User Login");
 		lblUserLogin.setFont(new Font("SansSerif", Font.BOLD, 18));
-		lblUserLogin.setForeground(Color.WHITE);
+		lblUserLogin.setForeground(Color.BLACK);
 		
 		userName = new JTextField();
 		userName.setColumns(10);
@@ -189,14 +188,15 @@ public class ImsMainPage extends ImsDesktopApplication {
 		passwordField = new JPasswordField();
 		
 		JLabel lblUserName = new JLabel("User Name or Email Address");
-		lblUserName.setForeground(Color.WHITE);
+		lblUserName.setForeground(Color.BLACK);
 		lblUserName.setFont(new Font("SansSerif", Font.PLAIN, 18));
 		
 		JLabel lblPassword = new JLabel("Password");
 		lblPassword.setFont(new Font("SansSerif", Font.PLAIN, 18));
-		lblPassword.setForeground(Color.WHITE);
+		lblPassword.setForeground(Color.BLACK);
 		
 		JButton btnLogin = new JButton("LOGIN");
+		btnLogin.setForeground(Color.decode("#2dad5a"));
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//clear error
@@ -244,6 +244,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		});
 		
 		JButton btnExit = new JButton("EXIT");
+		btnExit.setForeground(Color.RED);
 		
 		errorMessage = new JLabel("");
 		errorMessage.setFont(new Font("SansSerif", Font.BOLD, 16));
@@ -321,19 +322,20 @@ public class ImsMainPage extends ImsDesktopApplication {
 		imsPagePanel.setLayout(gl_imsPagePanel);
 		
 		registerPanel = new JPanel();
-		registerPanel.setBackground(Color.decode("#A683E3"));
+		registerPanel.setBackground(Color.decode("#d3d2d4"));
 		layeredPane.add(registerPanel, "name_61084217787461");
 		
 		JLabel lblRegisterPanel = new JLabel("REGISTRATION PAGE");
 		lblRegisterPanel.setFont(new Font("American Typewriter", Font.PLAIN, 15));
-		lblRegisterPanel.setForeground(Color.WHITE);
+		lblRegisterPanel.setForeground(Color.decode("#2dad5a"));
 		
 		JLabel lblDededonMotorsInventory = new JLabel("DE-DEDON MOTORS INVENTORY MANAGEMENT SYSTEM");
-		lblDededonMotorsInventory.setForeground(Color.WHITE);
+		lblDededonMotorsInventory.setForeground(Color.decode("#2dad5a"));
 		lblDededonMotorsInventory.setFont(new Font("AppleMyungjo", Font.BOLD, 20));
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(Color.decode("#2dad5a"));
+		panel_1.setBorder(new LineBorder(Color.decode("#2dad5a")));
+		panel_1.setBackground(Color.decode("#d3d2d4"));
 		GroupLayout gl_registerPanel = new GroupLayout(registerPanel);
 		gl_registerPanel.setHorizontalGroup(
 			gl_registerPanel.createParallelGroup(Alignment.TRAILING)
@@ -364,44 +366,44 @@ public class ImsMainPage extends ImsDesktopApplication {
 		JLabel lblEmployeeRegistration = new JLabel("Employee Registration");
 		lblEmployeeRegistration.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEmployeeRegistration.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
-		lblEmployeeRegistration.setForeground(Color.WHITE);
+		lblEmployeeRegistration.setForeground(Color.BLACK);
 		
 		errorRegisterMessage = new JLabel("");
-		errorRegisterMessage.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+		errorRegisterMessage.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
 		errorRegisterMessage.setHorizontalAlignment(SwingConstants.CENTER);
 		errorRegisterMessage.setForeground(Color.RED);
 		
 		JLabel lblFirstName = new JLabel("First Name");
-		lblFirstName.setForeground(Color.WHITE);
+		lblFirstName.setForeground(Color.BLACK);
 		
 		firstNameField = new JTextField();
 		firstNameField.setColumns(10);
 		
 		JLabel lblLastName = new JLabel("Last Name");
-		lblLastName.setForeground(Color.WHITE);
+		lblLastName.setForeground(Color.BLACK);
 		
 		lastNameField = new JTextField();
 		lastNameField.setColumns(10);
 		
 		JLabel lblUserName_1 = new JLabel("User Name");
-		lblUserName_1.setForeground(Color.WHITE);
+		lblUserName_1.setForeground(Color.BLACK);
 		
 		userNameField = new JTextField();
 		userNameField.setColumns(10);
 		
 		JLabel lblEmailAddress = new JLabel("Email Address");
-		lblEmailAddress.setForeground(Color.WHITE);
+		lblEmailAddress.setForeground(Color.BLACK);
 		
 		emailField = new JTextField();
 		emailField.setColumns(10);
 		
 		JLabel lblPassword_1 = new JLabel("Password");
-		lblPassword_1.setForeground(Color.WHITE);
+		lblPassword_1.setForeground(Color.BLACK);
 		
 		passwordRegisterField = new JPasswordField();
 		
 		JLabel lblConfirmPassword = new JLabel("Confirm Password");
-		lblConfirmPassword.setForeground(Color.WHITE);
+		lblConfirmPassword.setForeground(Color.BLACK);
 		
 		confirmPasswordField = new JPasswordField();
 		
@@ -417,9 +419,10 @@ public class ImsMainPage extends ImsDesktopApplication {
 				}
 			}
 		});
-		chckbxShowPassword.setForeground(Color.WHITE);
+		chckbxShowPassword.setForeground(Color.RED);
 		
 		JButton btnRegister_1 = new JButton("REGISTER");
+		btnRegister_1.setForeground(Color.decode("#2dad5a"));
 		btnRegister_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				registerActionPerformed(e);
