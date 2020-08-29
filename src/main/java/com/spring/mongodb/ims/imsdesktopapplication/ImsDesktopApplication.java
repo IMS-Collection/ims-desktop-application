@@ -20,6 +20,7 @@ import com.spring.mongodb.ims.imsdesktopapplication.model.Employee;
 
 @SpringBootApplication
 public class ImsDesktopApplication extends JFrame{
+	
 	public ImsDesktopApplication() {
 	}
 	
@@ -34,6 +35,10 @@ public class ImsDesktopApplication extends JFrame{
 	private static final long serialVersionUID = 5035583466578245836L;
 	private static List<Employee> currentEmployees;
 	private static JFrame frame;
+	/**
+	 * This represented the client employee who is currently logged in.
+	 */
+	private static String currentEmployeeId;
 	
 	public static void main(String[] args) {
 		init();
@@ -54,6 +59,22 @@ public class ImsDesktopApplication extends JFrame{
 	public static List<Employee> getCurrentEmployees() {
 		return currentEmployees;
 	}
+	
+
+	/**
+	 * @return the currentEmployeeId
+	 */
+	public static String getCurrentEmployeeId() {
+		return currentEmployeeId;
+	}
+
+	/**
+	 * @param currentEmployeeId the currentEmployeeId to set
+	 */
+	public static void setCurrentEmployeeId(String currentEmployeeId) {
+		ImsDesktopApplication.currentEmployeeId = currentEmployeeId;
+	}
+
 
 	private static List<Customer> currentCustomers;
 
