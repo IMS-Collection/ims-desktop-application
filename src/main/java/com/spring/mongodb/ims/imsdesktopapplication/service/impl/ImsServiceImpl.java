@@ -18,7 +18,7 @@ public class ImsServiceImpl implements ImsService {
 	public void login(String username, String password) throws InvalidInputException {
 		
 		Employee currentEmployee = null;
-		if (ImsDesktopApplication.getCurrentEmployee() != null) {
+		if (ImsDesktopApplication.getCurrentEmployeeId() != null) {
 			throw new InvalidInputException("An employee is currently loggedin!");
 		}
 		
@@ -27,12 +27,12 @@ public class ImsServiceImpl implements ImsService {
 		} else {
 			currentEmployee = employeeService.getEmployeeByUserName(username, password);
 		}
-		ImsDesktopApplication.setCurrentEmployee(currentEmployee);
+		ImsDesktopApplication.setCurrentEmployeeId(currentEmployee.getEmployeeId());
 	}
 
 	@Override
 	public void logout() {
-		ImsDesktopApplication.setCurrentEmployee(null);
+		ImsDesktopApplication.setCurrentEmployeeId(null);
 		
 	}
 

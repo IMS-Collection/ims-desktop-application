@@ -39,7 +39,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.spring.mongodb.ims.imsdesktopapplication.exceptions.InvalidInputException;
-import com.spring.mongodb.ims.imsdesktopapplication.model.Product;
 import com.spring.mongodb.ims.imsdesktopapplication.service.CustomerService;
 import com.spring.mongodb.ims.imsdesktopapplication.service.EmployeeService;
 import com.spring.mongodb.ims.imsdesktopapplication.service.ImsService;
@@ -375,12 +374,12 @@ public class ImsMainPage extends ImsDesktopApplication {
 		lblErrorMEssage = new JLabel("");
 		lblErrorMEssage.setForeground(Color.RED);
 		lblErrorMEssage.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-		lblErrorMEssage.setBounds(73, 77, 618, 20);
+		lblErrorMEssage.setBounds(133, 77, 618, 20);
 		panel_2.add(lblErrorMEssage);
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBackground(new Color(85, 107, 47));
-		panel_3.setBounds(6, 108, 176, 474);
+		panel_3.setBounds(6, 108, 176, 501);
 		imsPagePanel.add(panel_3);
 		
 		JLabel lblProducts = new JLabel("Products");
@@ -397,7 +396,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 				lblAccounts.setForeground(Color.GREEN);
 				lblTransaction.setForeground(Color.GREEN);
 				
-//				refreshProductTable();
+				refreshProductTable();
+				refreshProductPanel();
 			}
 		});
 		lblProducts.setForeground(Color.GREEN);
@@ -598,7 +598,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 					quantity = Integer.parseInt(textFieldProductQuantity.getText());
 				}
 				catch (NumberFormatException e) {
-					error = error + "Quantity figure needs to be a integer value! ";
+					error = "Quantity figure needs to be a integer value! ";
 				}
 				
 				String name = textFieldProductName.getText();
@@ -611,7 +611,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 						productDTO.setName(name);
 						productDTO.setItemPrice(price);
 						productDTO.setQuantity(quantity);
-						productService.createProduct(productDTO, ImsDesktopApplication.getCurrentEmployee().getEmployeeId());
+						productService.createProduct(productDTO, ImsDesktopApplication.getCurrentEmployeeId());
 //						ImsProductController.callCreateProduct();
 					} catch (InvalidInputException e) {
 						error = e.getMessage();
@@ -619,7 +619,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 				}
 				
 				refreshProductPanel();
-//				refreshProductTable();
+				refreshProductTable();
 			}
 		});
 		btnAddProduct.setBorder(new LineBorder(new Color(128, 0, 0), 1, true));
@@ -656,6 +656,22 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_6.add(separator);
 		
 		comboBoxProduct = new JComboBox<String>();
+		comboBoxProduct.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				error = "";
+				int selectedIndex = comboBoxProduct.getSelectedIndex();
+				String productName = products.get(selectedIndex);
+				if (productName != null) {
+					for (ProductDTO p : productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId())) {
+						if (productName.equals(p.getName())) {
+							textFieldUpdateProductName.setText(productName);
+							textFieldUpdateProductPrice.setText(""+p.getItemPrice());
+							textFieldUpdateProductQuantity.setText(""+p.getQuantity());
+						}
+					}
+				}
+			}
+		});
 		comboBoxProduct.setBorder(new LineBorder(new Color(0, 0, 255)));
 		comboBoxProduct.setBounds(88, 277, 200, 26);
 		panel_6.add(comboBoxProduct);
@@ -695,11 +711,60 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_6.add(label_16);
 		
 		JButton btnUpdateProduct = new JButton("UPDATE");
+		btnUpdateProduct.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				error = "";
+				float updatePrice = 0;
+				try {
+					updatePrice = Float.parseFloat(textFieldUpdateProductPrice.getText());
+				}
+				catch (NumberFormatException e) {
+					error = "Price figure needs to be a numerical value! ";
+				}
+				int updateQuantity = 0;
+				try {
+					updateQuantity = Integer.parseInt(textFieldUpdateProductQuantity.getText());
+				}
+				catch (NumberFormatException e) {
+					error = error + "Quantity figure needs to be a integer value! ";
+				}
+				
+				String newName = textFieldUpdateProductName.getText();
+				
+				try {
+					int selectedIndex = comboBoxProduct.getSelectedIndex();
+					String oldName = products.get(selectedIndex);
+					ProductDTO productDTO = new ProductDTO();
+					productDTO.setName(newName);
+					productDTO.setItemPrice(updatePrice);
+					productDTO.setQuantity(updateQuantity);
+					productService.updateProduct(oldName, productDTO, ImsDesktopApplication.getCurrentEmployeeId());
+				} catch (InvalidInputException e) {
+					error = e.getMessage();
+				}
+				refreshProductTable();
+				refreshProductPanel();
+			}
+		});
 		btnUpdateProduct.setBorder(new LineBorder(new Color(128, 0, 0), 1, true));
 		btnUpdateProduct.setBounds(88, 437, 102, 29);
 		panel_6.add(btnUpdateProduct);
 		
 		JButton btnDelete = new JButton("DELETE");
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent earg0) {
+				error = "";
+				int selectedIndex = comboBoxProduct.getSelectedIndex();
+				String productName = products.get(selectedIndex);
+				try {
+					productService.deleteProduct(productName, ImsDesktopApplication.getCurrentEmployeeId());
+				} catch (InvalidInputException er) {
+					error = er.getMessage();
+				}
+				refreshProductPanel();
+				refreshProductTable();
+			}
+		});
 		btnDelete.setBorder(new LineBorder(new Color(128, 0, 0), 1, true));
 		btnDelete.setBounds(199, 437, 89, 29);
 		panel_6.add(btnDelete);
@@ -1302,7 +1367,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			List<String> names = new ArrayList<String>();
 			names.clear();
 			comboBoxProduct.removeAllItems();
-			String employeeId = ImsDesktopApplication.getCurrentEmployee().getEmployeeId();
+			String employeeId = ImsDesktopApplication.getCurrentEmployeeId();
 			for (ProductDTO p : productService.getProducts(employeeId)) {
 				names.add(p.getName());
 			}
@@ -1319,5 +1384,18 @@ public class ImsMainPage extends ImsDesktopApplication {
 			textFieldUpdateProductQuantity.setText("");
 			
 		}
+	}
+	
+	private void refreshProductTable() {
+		
+		if (error == null || error.length() == 0) {
+			List<ProductDTO> products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
+			DefaultTableModel model = (DefaultTableModel) tableProducts.getModel();
+			model.setRowCount(0);
+			for (ProductDTO p : products) {
+				model.addRow(new Object[] {p.getName(), p.getItemPrice(), p.getQuantity()});
+			}
+		}
+		
 	}
 }

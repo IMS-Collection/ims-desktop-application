@@ -38,7 +38,7 @@ public class ImsDesktopApplication extends JFrame{
 	/**
 	 * This represented the client employee who is currently logged in.
 	 */
-	private static Employee currentEmployee;
+	private static String currentEmployeeId;
 	
 	public static void main(String[] args) {
 		init();
@@ -62,18 +62,19 @@ public class ImsDesktopApplication extends JFrame{
 	
 
 	/**
-	 * @return the currentEmployee
+	 * @return the currentEmployeeId
 	 */
-	public static Employee getCurrentEmployee() {
-		return currentEmployee;
+	public static String getCurrentEmployeeId() {
+		return currentEmployeeId;
 	}
 
 	/**
-	 * @param currentEmployee the currentEmployee to set
+	 * @param currentEmployeeId the currentEmployeeId to set
 	 */
-	public static void setCurrentEmployee(Employee currentEmployee) {
-		ImsDesktopApplication.currentEmployee = currentEmployee;
+	public static void setCurrentEmployeeId(String currentEmployeeId) {
+		ImsDesktopApplication.currentEmployeeId = currentEmployeeId;
 	}
+
 
 	private static List<Customer> currentCustomers;
 
