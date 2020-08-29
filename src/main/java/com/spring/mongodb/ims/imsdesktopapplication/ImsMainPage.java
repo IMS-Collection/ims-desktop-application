@@ -8,6 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -22,23 +26,27 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.spring.mongodb.ims.imsdesktopapplication.exceptions.InvalidInputException;
+import com.spring.mongodb.ims.imsdesktopapplication.model.Product;
 import com.spring.mongodb.ims.imsdesktopapplication.service.CustomerService;
 import com.spring.mongodb.ims.imsdesktopapplication.service.EmployeeService;
 import com.spring.mongodb.ims.imsdesktopapplication.service.ImsService;
 import com.spring.mongodb.ims.imsdesktopapplication.service.ProductService;
 import com.spring.mongodb.ims.imsdesktopapplication.service.TransactionService;
 import com.spring.mongodb.ims.imsdesktopapplication.shared.dto.EmployeeDTO;
+import com.spring.mongodb.ims.imsdesktopapplication.shared.dto.ProductDTO;
 
 @SpringBootApplication
 public class ImsMainPage extends ImsDesktopApplication {
@@ -66,6 +74,17 @@ public class ImsMainPage extends ImsDesktopApplication {
 	
 	@Autowired
 	ImsService imsService;
+	
+	//data elements
+	//Products
+	private HashMap<Integer, String> products;
+	private HashMap<Integer, String> transactionProducts;
+		
+	//Customers
+	private HashMap<Integer, String> customers;
+	private HashMap<Integer, String> customerTransactions;
+	
+	
 	private JPanel imsPagePanel;
 	private JLabel errorMessage;
 	private JTextField firstNameField;
@@ -101,6 +120,9 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private JPanel receiptPanel;
 	private JPanel transactionsPanel;
 	private JLayeredPane layeredMainPane;
+	private JLabel lblErrorMEssage;
+	private JTable tableProducts;
+	private JComboBox<String> comboBoxProduct;
 
 	/**
 	 * Launch the application.
@@ -334,31 +356,31 @@ public class ImsMainPage extends ImsDesktopApplication {
 		JPanel panel_2 = new JPanel();
 		panel_2.setLayout(null);
 		panel_2.setBackground(new Color(47, 79, 79));
-		panel_2.setBounds(6, 6, 941, 78);
+		panel_2.setBounds(6, 6, 941, 104);
 		imsPagePanel.add(panel_2);
 		
 		JLabel label = new JLabel("In God We Trust");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setForeground(Color.PINK);
 		label.setFont(new Font("Tahoma", Font.ITALIC, 22));
-		label.setBounds(247, 38, 162, 27);
+		label.setBounds(326, 38, 162, 27);
 		panel_2.add(label);
 		
 		JLabel label_1 = new JLabel("De-Don Motors Inventory Management System");
 		label_1.setForeground(Color.WHITE);
 		label_1.setFont(new Font("Times New Roman", Font.PLAIN, 30));
-		label_1.setBounds(48, 6, 794, 36);
+		label_1.setBounds(117, 6, 618, 36);
 		panel_2.add(label_1);
 		
-		JLabel label_2 = new JLabel("");
-		label_2.setForeground(Color.RED);
-		label_2.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-		label_2.setBounds(296, 71, 618, 20);
-		panel_2.add(label_2);
+		lblErrorMEssage = new JLabel("");
+		lblErrorMEssage.setForeground(Color.RED);
+		lblErrorMEssage.setFont(new Font("Times New Roman", Font.PLAIN, 18));
+		lblErrorMEssage.setBounds(73, 77, 618, 20);
+		panel_2.add(lblErrorMEssage);
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBackground(new Color(85, 107, 47));
-		panel_3.setBounds(6, 81, 176, 501);
+		panel_3.setBounds(6, 108, 176, 474);
 		imsPagePanel.add(panel_3);
 		
 		JLabel lblProducts = new JLabel("Products");
@@ -410,11 +432,12 @@ public class ImsMainPage extends ImsDesktopApplication {
 						JOptionPane.YES_NO_CANCEL_OPTION);
 				if (option == 0) {
 					try {
-//						ImsController.logout();
-//						LoginPage frame = new LoginPage();
-//						frame.setVisible(true);
-//						ImsApplication.getFrame().setVisible(false);
-//						ImsApplication.setFrame(frame);
+						imsService.logout();
+						error = "";
+						layeredPane.removeAll();
+						layeredPane.add(loginPanel);
+						layeredPane.repaint();
+						layeredPane.revalidate();
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
@@ -503,7 +526,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_3.setLayout(gl_panel_3);
 		
 		layeredMainPane = new JLayeredPane();
-		layeredMainPane.setBounds(183, 81, 764, 528);
+		layeredMainPane.setBounds(183, 108, 764, 501);
 		imsPagePanel.add(layeredMainPane);
 		layeredMainPane.setLayout(new CardLayout(0, 0));
 		
@@ -559,6 +582,46 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_6.add(label_11);
 		
 		JButton btnAddProduct = new JButton("ADD PRODUCT");
+		btnAddProduct.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent argo0) {
+
+				error = "";
+				float price = 0;
+				try {
+					price = Float.parseFloat(textFieldProductPrice.getText());
+				}
+				catch (NumberFormatException e) {
+					error = "Price figure needs to be a numerical value! ";
+				}
+				int quantity = 0;
+				try {
+					quantity = Integer.parseInt(textFieldProductQuantity.getText());
+				}
+				catch (NumberFormatException e) {
+					error = error + "Quantity figure needs to be a integer value! ";
+				}
+				
+				String name = textFieldProductName.getText();
+				
+				error.trim();
+				
+				if (error.length() == 0) {
+					try {
+						ProductDTO productDTO = new ProductDTO();
+						productDTO.setName(name);
+						productDTO.setItemPrice(price);
+						productDTO.setQuantity(quantity);
+						productService.createProduct(productDTO, ImsDesktopApplication.getCurrentEmployee().getEmployeeId());
+//						ImsProductController.callCreateProduct();
+					} catch (InvalidInputException e) {
+						error = e.getMessage();
+					}
+				}
+				
+				refreshProductPanel();
+//				refreshProductTable();
+			}
+		});
 		btnAddProduct.setBorder(new LineBorder(new Color(128, 0, 0), 1, true));
 		btnAddProduct.setBounds(88, 177, 143, 29);
 		panel_6.add(btnAddProduct);
@@ -592,7 +655,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		separator.setBounds(0, 230, 324, 20);
 		panel_6.add(separator);
 		
-		JComboBox<String> comboBoxProduct = new JComboBox<String>();
+		comboBoxProduct = new JComboBox<String>();
 		comboBoxProduct.setBorder(new LineBorder(new Color(0, 0, 255)));
 		comboBoxProduct.setBounds(88, 277, 200, 26);
 		panel_6.add(comboBoxProduct);
@@ -665,6 +728,40 @@ public class ImsMainPage extends ImsDesktopApplication {
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 449, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
 		);
+		
+		tableProducts = new JTable();
+		tableProducts.setAutoCreateRowSorter(true);
+		tableProducts.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+			}
+		});
+		tableProducts.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Name", "Price", "Quantity"
+			}
+		) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+			Class[] columnTypes = new Class[] {
+				String.class, Float.class, Integer.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+			boolean[] columnEditables = new boolean[] {
+				false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		//scrollPane.setColumnHeaderView(tableProducts);
+		scrollPane.setViewportView(tableProducts);
 		productsPanel.setLayout(gl_productsPanel);
 		
 		transactionsPanel = new JPanel();
@@ -924,7 +1021,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		receiptPanel.add(btnClose);
 		
 		JScrollPane scrollPane_3 = new JScrollPane();
-		scrollPane_3.setBounds(169, 16, 632, 477);
+		scrollPane_3.setBounds(126, 6, 632, 477);
 		receiptPanel.add(scrollPane_3);
 		
 		registerPanel = new JPanel();
@@ -1185,5 +1282,42 @@ public class ImsMainPage extends ImsDesktopApplication {
 		emailField.setText("");
 		passwordRegisterField.setText("");
 		confirmPasswordField.setText("");
+	}
+	
+	private void refreshProductPanel() {
+		lblErrorMEssage.setText(error);
+		
+		if (error == null || error.length() == 0) {
+			
+			//populate product page with data
+			//Add Product
+			textFieldProductName.setText("");
+			textFieldProductPrice.setText("");
+			textFieldProductQuantity.setText("");
+			
+			//Update product
+			products = new HashMap<Integer, String>();
+			//comboBoxProduct.removeAll();
+			int index = 0;
+			List<String> names = new ArrayList<String>();
+			names.clear();
+			comboBoxProduct.removeAllItems();
+			String employeeId = ImsDesktopApplication.getCurrentEmployee().getEmployeeId();
+			for (ProductDTO p : productService.getProducts(employeeId)) {
+				names.add(p.getName());
+			}
+			Collections.sort(names);
+			for (String name : names) {
+				products.put(index, name);
+				comboBoxProduct.addItem(name);
+				index++;
+			}
+			comboBoxProduct.setSelectedIndex(-1);
+			
+			textFieldUpdateProductName.setText("");
+			textFieldUpdateProductPrice.setText("");
+			textFieldUpdateProductQuantity.setText("");
+			
+		}
 	}
 }

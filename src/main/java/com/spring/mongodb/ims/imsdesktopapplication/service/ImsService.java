@@ -8,6 +8,6 @@ import com.spring.mongodb.ims.imsdesktopapplication.exceptions.InvalidInputExcep
 public interface ImsService {
 	
 	void login(String username, String password) throws InvalidInputException;
-	void logout(String userName);
+	void logout();
 
 }

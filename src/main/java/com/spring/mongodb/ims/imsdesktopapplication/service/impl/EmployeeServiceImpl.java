@@ -96,7 +96,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	 * @return the employee
 	 */
 	@Override
-	public EmployeeDTO getEmployeeByUserName(String userName, String password) {
+	public Employee getEmployeeByUserName(String userName, String password) {
 
 		String error = "";
 		if (userName == null || userName.length() == 0) {
@@ -109,7 +109,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 			throw new InvalidInputException(error);
 		}
 
-		EmployeeDTO returnValue = new EmployeeDTO();
 		Employee employee = employeeRepository.findByUserName(userName);
 		if (employee == null) {
 			throw new InvalidInputException("The user name is incorrect, try again!");
@@ -119,19 +118,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 			throw new InvalidInputException("Incorrect password, try again!");
 		}
 
-		BeanUtils.copyProperties(employee, returnValue);
-
 		ImsDesktopApplication.addCurrentEmployee(employee);
 
-		return returnValue;
-	}
-
-	/**
-	 * Removes current employee
-	 */
-	public void logout(String userName) {
-
-		ImsDesktopApplication.removeCurrentEmployee(userName);
+		return employee;
 	}
 
 	/**
@@ -143,7 +132,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	 * @return the employee
 	 */
 	@Override
-	public EmployeeDTO getEmployeeByEmail(String email, String password) {
+	public Employee getEmployeeByEmail(String email, String password) {
 
 		String error = "";
 
@@ -157,7 +146,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			throw new InvalidInputException(error);
 		}
 
-		EmployeeDTO returnValue = new EmployeeDTO();
+//		EmployeeDTO returnValue = new EmployeeDTO();
 		Employee employee = employeeRepository.findByEmail(email);
 		if (employee == null) {
 			throw new InvalidInputException("The email is incorrect, try again!");
@@ -168,9 +157,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		ImsDesktopApplication.addCurrentEmployee(employee);
 
-		BeanUtils.copyProperties(employee, returnValue);
+//		BeanUtils.copyProperties(employee, returnValue);
 
-		return returnValue;
+		return employee;
 	}
 
 	@Transactional

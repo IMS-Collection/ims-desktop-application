@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.spring.mongodb.ims.imsdesktopapplication.exceptions.InvalidInputException;
+import com.spring.mongodb.ims.imsdesktopapplication.model.Employee;
 import com.spring.mongodb.ims.imsdesktopapplication.shared.dto.EmployeeDTO;
 
 @Service
@@ -16,11 +17,9 @@ public interface EmployeeService {
 	
 	void deleteEmployee(String employeeId);
 
-	EmployeeDTO getEmployeeByUserName(String userName, String password);
+	Employee getEmployeeByUserName(String userName, String password);
 	
-	void logout(String userName);
-	
-	EmployeeDTO getEmployeeByEmail(String email, String password);
+	Employee getEmployeeByEmail(String email, String password);
 	
 	List<EmployeeDTO> getEmployees();
 	
