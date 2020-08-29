@@ -1074,7 +1074,22 @@ public class ImsMainPage extends ImsDesktopApplication {
 		lblUserName_2.setBounds(15, 380, 101, 20);
 		panel_10.add(lblUserName_2);
 		
+
 		JButton btnDelete_1 = new JButton("DELETE");
+		btnDelete_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				error = "";
+				int selectedIndex = comboBoxCustomer.getSelectedIndex();
+				String userName = customers.get(selectedIndex);
+				try {
+					customerService.deleteCustomer(userName, ImsDesktopApplication.getCurrentEmployeeId());
+				} catch (InvalidInputException e1) {
+					error = e1.getMessage();
+				}
+				refreshCustomerPanel();
+			}
+		});
 		btnDelete_1.setBorder(new LineBorder(new Color(128, 0, 0)));
 		btnDelete_1.setBounds(236, 445, 90, 29);
 		panel_10.add(btnDelete_1);
@@ -1083,19 +1098,20 @@ public class ImsMainPage extends ImsDesktopApplication {
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				error = "";
-				String userName = textFieldUpdateCustomerUN.getText();
+				String newUserName = textFieldUpdateCustomerUN.getText();
 				String firstName = textFieldUpdateCustomerFirstName.getText();
 				String lastName = textFieldUpdateCustomerLastName.getText();
 				String phoneNumber = textFieldUpdateCustomerNumber.getText();
 				
 				int index = comboBoxCustomer.getSelectedIndex();
+				String oldUserName = customers.get(index);
 				try {
 					CustomerDTO customerDTO = new CustomerDTO();
 					customerDTO.setFirstName(firstName);
 					customerDTO.setLastName(lastName);
-					customerDTO.setUserName(userName);
+					customerDTO.setUserName(newUserName);
 					customerDTO.setPhoneNumber(phoneNumber);
-					customerService.updateCustomer(customerDTO, ImsDesktopApplication.getCurrentEmployeeId());
+					customerService.updateCustomer(customerDTO, ImsDesktopApplication.getCurrentEmployeeId(), oldUserName);
 				} catch (InvalidInputException e1) {
 					error = e1.getMessage();
 				}

@@ -193,18 +193,18 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public void updateCustomer(CustomerDTO customerDTO, String employeeId) throws InvalidInputException {
+	public void updateCustomer(CustomerDTO customerDTO, String employeeId, String userName) throws InvalidInputException {
 		String error = "";
 
 		if (!isManagerLoggedIn(employeeId)) {
 			throw new InvalidInputException("A manager is required.");
 		}
 
-		Customer customer = customerRepository.findByUserName(customerDTO.getUserName());
+		Customer customer = customerRepository.findByUserName(userName);
 		if (customer == null) {
 			throw new InvalidInputException("The customer does not exist");
 		}
-
+		
 		if (customerDTO.getFirstName() == null || customerDTO.getFirstName().length() == 0) {
 			error = "The first name of a customer cannot be empty";
 		} else if (customerDTO.getLastName() == null || customerDTO.getLastName().length() == 0) {
@@ -223,6 +223,7 @@ public class CustomerServiceImpl implements CustomerService {
 		customer.setFirstName(customerDTO.getFirstName());
 		customer.setLastName(customerDTO.getLastName());
 		customer.setPhoneNumber(customerDTO.getPhoneNumber());
+		customer.setUserName(customerDTO.getUserName());
 
 		try {
 			customerRepository.save(customer);
