@@ -6,17 +6,23 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
@@ -33,10 +39,6 @@ import com.spring.mongodb.ims.imsdesktopapplication.service.ImsService;
 import com.spring.mongodb.ims.imsdesktopapplication.service.ProductService;
 import com.spring.mongodb.ims.imsdesktopapplication.service.TransactionService;
 import com.spring.mongodb.ims.imsdesktopapplication.shared.dto.EmployeeDTO;
-import javax.swing.JTextArea;
-import javax.swing.JSeparator;
-import javax.swing.JComboBox;
-import javax.swing.JScrollPane;
 
 @SpringBootApplication
 public class ImsMainPage extends ImsDesktopApplication {
@@ -90,6 +92,15 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private JTextField textFieldUpdateCustomerID;
 	private JTextField textFieldCurrentPaid;
 	private JTextField textFieldUpdatePaid;
+	private JLabel lblTransaction;
+	private JLabel lblAccounts;
+	private JLabel lblDashboard;
+	private JPanel productsPanel;
+	private JPanel dashBoardPanel;
+	private JPanel accountsPanel;
+	private JPanel receiptPanel;
+	private JPanel transactionsPanel;
+	private JLayeredPane layeredMainPane;
 
 	/**
 	 * Launch the application.
@@ -150,7 +161,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 				}
 			}
 		});
-		btnRegister.setBackground(Color.BLUE);
+		btnRegister.setBackground(Color.LIGHT_GRAY);
 		
 		JLabel lblManagementSystem = new JLabel("MANAGEMENT SYSTEM");
 		lblManagementSystem.setForeground(Color.decode("#2dad5a"));
@@ -163,39 +174,36 @@ public class ImsMainPage extends ImsDesktopApplication {
 		gl_loginPanel.setHorizontalGroup(
 			gl_loginPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_loginPanel.createSequentialGroup()
-					.addGap(236)
-					.addComponent(lblManagementSystem, GroupLayout.PREFERRED_SIZE, 319, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(316, Short.MAX_VALUE))
-				.addGroup(gl_loginPanel.createSequentialGroup()
-					.addGap(205)
-					.addComponent(lblNotHaveAccount)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnRegister, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(376, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, gl_loginPanel.createSequentialGroup()
-					.addContainerGap(190, Short.MAX_VALUE)
+					.addContainerGap(320, Short.MAX_VALUE)
 					.addGroup(gl_loginPanel.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_loginPanel.createSequentialGroup()
-							.addComponent(panel, GroupLayout.PREFERRED_SIZE, 411, GroupLayout.PREFERRED_SIZE)
-							.addContainerGap())
 						.addGroup(Alignment.TRAILING, gl_loginPanel.createSequentialGroup()
-							.addComponent(lblLoginPage, GroupLayout.PREFERRED_SIZE, 459, GroupLayout.PREFERRED_SIZE)
-							.addGap(222))))
+							.addGroup(gl_loginPanel.createParallelGroup(Alignment.LEADING)
+								.addComponent(panel, GroupLayout.PREFERRED_SIZE, 411, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblLoginPage, GroupLayout.PREFERRED_SIZE, 459, GroupLayout.PREFERRED_SIZE))
+							.addGap(222))
+						.addGroup(Alignment.TRAILING, gl_loginPanel.createSequentialGroup()
+							.addComponent(lblManagementSystem, GroupLayout.PREFERRED_SIZE, 319, GroupLayout.PREFERRED_SIZE)
+							.addGap(306))
+						.addGroup(Alignment.TRAILING, gl_loginPanel.createSequentialGroup()
+							.addComponent(lblNotHaveAccount)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(btnRegister, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
+							.addGap(341))))
 		);
 		gl_loginPanel.setVerticalGroup(
 			gl_loginPanel.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_loginPanel.createSequentialGroup()
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+				.addGroup(Alignment.LEADING, gl_loginPanel.createSequentialGroup()
+					.addContainerGap()
 					.addComponent(lblLoginPage, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(lblManagementSystem)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 297, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGap(18)
 					.addGroup(gl_loginPanel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblNotHaveAccount)
-						.addComponent(btnRegister, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE))
-					.addGap(172))
+						.addComponent(btnRegister, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblNotHaveAccount))
+					.addContainerGap(165, Short.MAX_VALUE))
 		);
 		
 		JLabel lblUserLogin = new JLabel("User Login");
@@ -274,19 +282,17 @@ public class ImsMainPage extends ImsDesktopApplication {
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(btnLogin)
-							.addGap(18)
-							.addComponent(btnExit))
+					.addGap(18)
+					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_panel.createSequentialGroup()
-							.addGap(18)
-							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
-								.addComponent(lblUserName)
-								.addComponent(lblPassword)
-								.addComponent(passwordField)
-								.addComponent(userName, GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE))))
+							.addComponent(btnLogin)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(btnExit))
+						.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
+							.addComponent(lblUserName)
+							.addComponent(lblPassword)
+							.addComponent(passwordField)
+							.addComponent(userName, GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)))
 					.addGap(108))
 				.addGroup(gl_panel.createSequentialGroup()
 					.addGap(132)
@@ -356,26 +362,107 @@ public class ImsMainPage extends ImsDesktopApplication {
 		imsPagePanel.add(panel_3);
 		
 		JLabel lblProducts = new JLabel("Products");
+		lblProducts.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				error = "";
+				layeredMainPane.removeAll();
+				layeredMainPane.add(productsPanel);
+				layeredMainPane.repaint();
+				layeredMainPane.revalidate();
+				lblDashboard.setForeground(Color.GREEN);
+				lblProducts.setForeground(Color.WHITE);
+				lblAccounts.setForeground(Color.GREEN);
+				lblTransaction.setForeground(Color.GREEN);
+				
+//				refreshProductTable();
+			}
+		});
 		lblProducts.setForeground(Color.GREEN);
 		lblProducts.setFont(new Font("Tahoma", Font.BOLD, 24));
 		lblProducts.setBackground(new Color(85, 107, 47));
 		
-		JLabel lblDashboard = new JLabel("Dashboard");
+		lblDashboard = new JLabel("Dashboard");
+		lblDashboard.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				error = "";
+				layeredMainPane.removeAll();
+				layeredMainPane.add(dashBoardPanel);
+				layeredMainPane.repaint();
+				layeredMainPane.revalidate();
+				lblDashboard.setForeground(Color.WHITE);
+				lblProducts.setForeground(Color.GREEN);
+				lblAccounts.setForeground(Color.GREEN);
+				lblTransaction.setForeground(Color.GREEN);
+			}
+		});
 		lblDashboard.setForeground(Color.WHITE);
 		lblDashboard.setFont(new Font("Tahoma", Font.BOLD, 24));
 		lblDashboard.setBackground(new Color(85, 107, 47));
 		
 		JButton btnLogout = new JButton("LOGOUT");
+		btnLogout.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int option = JOptionPane.showConfirmDialog(ImsDesktopApplication.getFrame(), 
+						"Do you really want to log out?", "Logout confirmation.", 
+						JOptionPane.YES_NO_CANCEL_OPTION);
+				if (option == 0) {
+					try {
+//						ImsController.logout();
+//						LoginPage frame = new LoginPage();
+//						frame.setVisible(true);
+//						ImsApplication.getFrame().setVisible(false);
+//						ImsApplication.setFrame(frame);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
 		btnLogout.setForeground(Color.MAGENTA);
 		btnLogout.setFont(new Font("Tahoma", Font.BOLD, 24));
 		btnLogout.setBorder(new LineBorder(new Color(0, 0, 255)));
 		
-		JLabel lblTransaction = new JLabel("Transactions");
+		lblTransaction = new JLabel("Transactions");
+		lblTransaction.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				error = "";
+				layeredMainPane.removeAll();
+				layeredMainPane.add(transactionsPanel);
+				layeredMainPane.repaint();
+				layeredMainPane.revalidate();
+				lblDashboard.setForeground(Color.GREEN);
+				lblProducts.setForeground(Color.GREEN);
+				lblAccounts.setForeground(Color.GREEN);
+				lblTransaction.setForeground(Color.white);
+				
+//				refreshTransactionPanel();
+			}
+		});
 		lblTransaction.setForeground(Color.GREEN);
 		lblTransaction.setFont(new Font("Tahoma", Font.BOLD, 24));
 		lblTransaction.setBackground(new Color(85, 107, 47));
 		
-		JLabel lblAccounts = new JLabel("Accounts");
+		lblAccounts = new JLabel("Accounts");
+		lblAccounts.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				error = "";
+				layeredMainPane.removeAll();
+				layeredMainPane.add(accountsPanel);
+				layeredMainPane.repaint();
+				layeredMainPane.revalidate();
+				lblDashboard.setForeground(Color.GREEN);
+				lblProducts.setForeground(Color.GREEN);
+				lblAccounts.setForeground(Color.WHITE);
+				lblTransaction.setForeground(Color.GREEN);
+				
+//				refreshCustomerPanel();
+			}
+		});
 		lblAccounts.setForeground(Color.GREEN);
 		lblAccounts.setFont(new Font("Tahoma", Font.BOLD, 24));
 		
@@ -415,13 +502,13 @@ public class ImsMainPage extends ImsDesktopApplication {
 		);
 		panel_3.setLayout(gl_panel_3);
 		
-		JLayeredPane layeredPane_1 = new JLayeredPane();
-		layeredPane_1.setBounds(183, 81, 764, 528);
-		imsPagePanel.add(layeredPane_1);
-		layeredPane_1.setLayout(new CardLayout(0, 0));
+		layeredMainPane = new JLayeredPane();
+		layeredMainPane.setBounds(183, 81, 764, 528);
+		imsPagePanel.add(layeredMainPane);
+		layeredMainPane.setLayout(new CardLayout(0, 0));
 		
-		JPanel dashBoardPanel = new JPanel();
-		layeredPane_1.add(dashBoardPanel, "name_118134937110699");
+		dashBoardPanel = new JPanel();
+		layeredMainPane.add(dashBoardPanel, "name_118134937110699");
 		
 		JTextArea textArea = new JTextArea();
 		textArea.setText("Warmly welcome to De Don Motors Inventory \r\nManagement Application. Please, feel free explore \r\nand thoroughly test the app and get to me with the\r\n comhrehensive feed back including bugs!");
@@ -446,8 +533,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 		);
 		dashBoardPanel.setLayout(gl_dashBoardPanel);
 		
-		JPanel productsPanel = new JPanel();
-		layeredPane_1.add(productsPanel, "name_118179738325051");
+		productsPanel = new JPanel();
+		layeredMainPane.add(productsPanel, "name_118179738325051");
 		
 		JPanel panel_6 = new JPanel();
 		panel_6.setLayout(null);
@@ -580,9 +667,9 @@ public class ImsMainPage extends ImsDesktopApplication {
 		);
 		productsPanel.setLayout(gl_productsPanel);
 		
-		JPanel transactionsPanel = new JPanel();
+		transactionsPanel = new JPanel();
 		transactionsPanel.setLayout(null);
-		layeredPane_1.add(transactionsPanel, "name_118242517273668");
+		layeredMainPane.add(transactionsPanel, "name_118242517273668");
 		
 		JPanel panel_8 = new JPanel();
 		panel_8.setLayout(null);
@@ -703,9 +790,9 @@ public class ImsMainPage extends ImsDesktopApplication {
 		btnRemove.setBounds(336, 464, 111, 29);
 		transactionsPanel.add(btnRemove);
 		
-		JPanel accountsPanel = new JPanel();
+		accountsPanel = new JPanel();
 		accountsPanel.setLayout(null);
-		layeredPane_1.add(accountsPanel, "name_118280808053760");
+		layeredMainPane.add(accountsPanel, "name_118280808053760");
 		
 		JPanel panel_10 = new JPanel();
 		panel_10.setLayout(null);
@@ -824,9 +911,9 @@ public class ImsMainPage extends ImsDesktopApplication {
 		label_35.setBounds(373, 476, 101, 14);
 		accountsPanel.add(label_35);
 		
-		JPanel receiptPanel = new JPanel();
+		receiptPanel = new JPanel();
 		receiptPanel.setLayout(null);
-		layeredPane_1.add(receiptPanel, "name_118353732281874");
+		layeredMainPane.add(receiptPanel, "name_118353732281874");
 		
 		JButton btnPrint = new JButton("PRINT");
 		btnPrint.setBounds(15, 36, 115, 29);
