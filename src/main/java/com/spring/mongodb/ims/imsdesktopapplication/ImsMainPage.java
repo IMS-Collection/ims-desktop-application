@@ -33,7 +33,9 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -47,6 +49,7 @@ import com.spring.mongodb.ims.imsdesktopapplication.service.TransactionService;
 import com.spring.mongodb.ims.imsdesktopapplication.shared.dto.CustomerDTO;
 import com.spring.mongodb.ims.imsdesktopapplication.shared.dto.EmployeeDTO;
 import com.spring.mongodb.ims.imsdesktopapplication.shared.dto.ProductDTO;
+import com.spring.mongodb.ims.imsdesktopapplication.shared.dto.TransactionDTO;
 
 @SpringBootApplication
 public class ImsMainPage extends ImsDesktopApplication {
@@ -60,6 +63,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private JPasswordField passwordField;
 	private String error = "";
 	private int countRefresh = 1;
+	private int productIndex;
 	
 	@Autowired
 	EmployeeService employeeService;
@@ -84,6 +88,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 	//Customers
 	private HashMap<Integer, String> customers;
 	private HashMap<Integer, String> customerTransactions;
+	private HashMap<Integer, String> transactionIds;
+	String selectedCustomerUserName;
 	
 	
 	private JPanel imsPagePanel;
@@ -129,6 +135,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private JTextField textFieldCustomerFirstName;
 	private JTextField textFieldUpdateCustomerLastName;
 	private JTextField textFieldUpdateCustomerNumber;
+	private JTable tableCustomers;
 
 	/**
 	 * Launch the application.
@@ -777,6 +784,11 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_6.add(btnDelete);
 		
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+		});
 		
 		JLabel label_17 = new JLabel("Click each column to sort the items");
 		label_17.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -806,6 +818,12 @@ public class ImsMainPage extends ImsDesktopApplication {
 		tableProducts.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				DefaultTableModel model = (DefaultTableModel) tableProducts.getModel();
+				int selectedRow = tableProducts.getSelectedRow();
+				
+				String name = model.getValueAt(selectedRow, 0).toString();
+				String price = model.getValueAt(selectedRow, 1).toString();
+				String quantity = model.getValueAt(selectedRow, 2).toString();
 			}
 		});
 		tableProducts.setModel(new DefaultTableModel(
@@ -1035,9 +1053,9 @@ public class ImsMainPage extends ImsDesktopApplication {
 			public void actionPerformed(ActionEvent arg0) {
 				error = "";
 				int index = comboBoxCustomer.getSelectedIndex();
-				String selectedID = customers.get(index);
+				selectedCustomerUserName = customers.get(index);
 				for (CustomerDTO c : customerService.getCustomers()) {
-					if (c.getUserName().equals(selectedID)) {
+					if (c.getUserName().equals(selectedCustomerUserName)) {
 						textFieldUpdateCustomerFirstName.setText(c.getFirstName());	
 						textFieldUpdateCustomerLastName.setText(c.getLastName());	
 						textFieldUpdateCustomerUN.setText(c.getUserName());
@@ -1164,8 +1182,65 @@ public class ImsMainPage extends ImsDesktopApplication {
 		accountsPanel.add(label_33);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(353, 52, 433, 385);
+		scrollPane_2.setBounds(353, 48, 405, 389);
 		accountsPanel.add(scrollPane_2);
+		
+		tableCustomers = new JTable();
+		scrollPane_2.setColumnHeaderView(tableCustomers);
+		tableCustomers.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				error = "";
+				DefaultTableModel model = (DefaultTableModel) tableCustomers.getModel();
+				int selectedRow = tableCustomers.getSelectedRow();
+				// the selected transaction id
+				String transactionID = transactionIds.get(selectedRow);
+				String employeeId = ImsDesktopApplication.getCurrentEmployeeId();
+				if (selectedCustomerUserName == null) {
+					error = "You have to select a customer first!";
+				}
+				if (error.length() == 0 || error.equals("")) {
+					try {
+						
+						transactionService.getTransactionDetail(employeeId, transactionID, selectedCustomerUserName);
+					} catch (InvalidInputException exc) {
+						error = exc.getMessage();
+					}
+				}
+				
+				
+				productIndex = Integer.parseInt(model.getValueAt(selectedRow, 0).toString());
+				String amountPaid = model.getValueAt(selectedRow, 3).toString();
+				textFieldCurrentPaid.setText(amountPaid);
+			}
+		});
+		tableCustomers.setAutoCreateRowSorter(true);
+		tableCustomers.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"DATE", "TOTAL AMOUNT", "AMOUNT PAID", "BALANCE"
+			}
+		) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -4393767896395429105L;
+			Class[] columnTypes = new Class[] {
+				Integer.class, Object.class, Object.class, Object.class, Float.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+			boolean[] columnEditables = new boolean[] {
+				false, true, true, true, true
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		tableCustomers.getColumnModel().getColumn(3).setResizable(false);
+		scrollPane_2.setViewportView(tableCustomers);
 		
 		JButton button_16 = new JButton("UPDATE");
 		button_16.setBorder(new LineBorder(new Color(128, 0, 0)));
@@ -1508,9 +1583,25 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private void refreshProductTable() {
 		
 		if (error == null || error.length() == 0) {
-			List<ProductDTO> products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
+			// some user settings
 			DefaultTableModel model = (DefaultTableModel) tableProducts.getModel();
 			model.setRowCount(0);
+			//set the size and alignment of name column
+//			TableColumnModel columnModel = tableProducts.getColumnModel();
+//			columnModel.getColumn(0).setPreferredWidth(6);
+			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+			centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+			//tableProducts.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+			
+			//set the alignment of price column
+			DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
+			leftRenderer.setHorizontalAlignment(SwingConstants.LEFT);
+			tableProducts.getColumnModel().getColumn(1).setCellRenderer(leftRenderer);
+			
+			//set the alignment of the quantity column
+			tableProducts.getColumnModel().getColumn(2).setCellRenderer(leftRenderer);
+			
+			List<ProductDTO> products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
 			for (ProductDTO p : products) {
 				model.addRow(new Object[] {p.getName(), p.getItemPrice(), p.getQuantity()});
 			}
@@ -1556,9 +1647,11 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private void refreshCustomerTable() {
 		lblErrorMEssage.setText(error);
 		
+		transactionIds = new HashMap<Integer, String>();
+		
 //		if (error == null || error.length() == 0) {
 //			customerTransactions = new HashMap<Integer, String>();
-//			List<TOTransaction> toTransactions = 
+//			List<TransactionDTO> toTransactions = 
 //					ImsTransactionController.getCustomerTransactions(textFieldUpdateCustomerID.getText());
 //			DefaultTableModel model = (DefaultTableModel) tableCustomers.getModel();
 //			model.setRowCount(0);
@@ -1579,8 +1672,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 //			float totalBalance = 0.0f;
 //			if (countRefresh > 1) {
 //				productIndex = 1;
-//				for (TOTransaction tT : toTransactions) {
-//					Date date = tT.getDate();
+//				for (TransactionDTO tT : toTransactions) {
+//					String date = tT.getDate();
 //					String cleanDate = date.toString();
 //					String truncateDate = cleanDate.substring(4, 10);
 //					truncateDate = truncateDate + " " + cleanDate.substring(24);
@@ -1591,9 +1684,9 @@ public class ImsMainPage extends ImsDesktopApplication {
 //					productIndex++;
 //				}
 //			}
-//			
+			
 //			textFieldCurrentPaid.setText("");
-//			lblTotalBalance.setText(""+totalBalance);
+//			//lblTotalBalance.setText(""+totalBalance);
 //			textFieldUpdatePaid.setText("");
 //		}
 		
