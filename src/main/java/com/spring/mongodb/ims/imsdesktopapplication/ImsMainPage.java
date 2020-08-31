@@ -135,7 +135,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private JTextField textFieldCustomerFirstName;
 	private JTextField textFieldUpdateCustomerLastName;
 	private JTextField textFieldUpdateCustomerNumber;
-	private JTable tableCustomers;
+	private JTable tableCustomerTransactions;
+	private JLabel lblTotalBalance;
 
 	/**
 	 * Launch the application.
@@ -369,31 +370,24 @@ public class ImsMainPage extends ImsDesktopApplication {
 		JPanel panel_2 = new JPanel();
 		panel_2.setLayout(null);
 		panel_2.setBackground(new Color(47, 79, 79));
-		panel_2.setBounds(6, 6, 941, 104);
+		panel_2.setBounds(6, 6, 941, 60);
 		imsPagePanel.add(panel_2);
 		
-		JLabel label = new JLabel("In God We Trust");
-		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setForeground(Color.PINK);
-		label.setFont(new Font("Tahoma", Font.ITALIC, 22));
-		label.setBounds(326, 38, 162, 27);
-		panel_2.add(label);
-		
-		JLabel label_1 = new JLabel("De-Don Motors Inventory Management System");
-		label_1.setForeground(Color.WHITE);
-		label_1.setFont(new Font("Times New Roman", Font.PLAIN, 30));
-		label_1.setBounds(117, 6, 618, 36);
-		panel_2.add(label_1);
+		JLabel lblDedonMotorsInventory = new JLabel("De-Don Motors Inventory Management System, In God We Trust");
+		lblDedonMotorsInventory.setForeground(Color.WHITE);
+		lblDedonMotorsInventory.setFont(new Font("Times New Roman", Font.PLAIN, 30));
+		lblDedonMotorsInventory.setBounds(63, 6, 818, 35);
+		panel_2.add(lblDedonMotorsInventory);
 		
 		lblErrorMEssage = new JLabel("");
 		lblErrorMEssage.setForeground(Color.RED);
 		lblErrorMEssage.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-		lblErrorMEssage.setBounds(133, 77, 618, 20);
+		lblErrorMEssage.setBounds(137, 34, 618, 20);
 		panel_2.add(lblErrorMEssage);
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBackground(new Color(85, 107, 47));
-		panel_3.setBounds(6, 108, 176, 501);
+		panel_3.setBounds(6, 66, 176, 543);
 		imsPagePanel.add(panel_3);
 		
 		JLabel lblProducts = new JLabel("Products");
@@ -540,7 +534,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_3.setLayout(gl_panel_3);
 		
 		layeredMainPane = new JLayeredPane();
-		layeredMainPane.setBounds(183, 108, 764, 501);
+		layeredMainPane.setBounds(183, 66, 764, 543);
 		imsPagePanel.add(layeredMainPane);
 		layeredMainPane.setLayout(new CardLayout(0, 0));
 		
@@ -984,13 +978,13 @@ public class ImsMainPage extends ImsDesktopApplication {
 		JPanel panel_10 = new JPanel();
 		panel_10.setLayout(null);
 		panel_10.setBorder(new LineBorder(new Color(0, 0, 255)));
-		panel_10.setBounds(0, 0, 338, 493);
+		panel_10.setBounds(0, 0, 211, 492);
 		accountsPanel.add(panel_10);
 		
 		JLabel label_26 = new JLabel("Register Customer");
 		label_26.setForeground(new Color(0, 128, 0));
-		label_26.setFont(new Font("Dialog", Font.BOLD, 24));
-		label_26.setBounds(40, 6, 253, 30);
+		label_26.setFont(new Font("Dialog", Font.BOLD, 20));
+		label_26.setBounds(6, 6, 196, 30);
 		panel_10.add(label_26);
 		
 		JLabel lblLastName_1 = new JLabel("Last Name");
@@ -999,16 +993,16 @@ public class ImsMainPage extends ImsDesktopApplication {
 		
 		textFieldCustomerLastName = new JTextField();
 		textFieldCustomerLastName.setColumns(10);
-		textFieldCustomerLastName.setBounds(131, 82, 192, 26);
+		textFieldCustomerLastName.setBounds(96, 82, 106, 26);
 		panel_10.add(textFieldCustomerLastName);
 		
-		JLabel label_28 = new JLabel("Customer ID");
-		label_28.setBounds(15, 123, 90, 20);
-		panel_10.add(label_28);
+		JLabel lblUserName_3 = new JLabel("User Name");
+		lblUserName_3.setBounds(15, 123, 90, 20);
+		panel_10.add(lblUserName_3);
 		
 		textFieldCustomerID = new JTextField();
 		textFieldCustomerID.setColumns(10);
-		textFieldCustomerID.setBounds(131, 120, 192, 26);
+		textFieldCustomerID.setBounds(96, 120, 106, 26);
 		panel_10.add(textFieldCustomerID);
 		
 		JButton btnRegisterCustomer = new JButton("REGISTER");
@@ -1033,7 +1027,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			}
 		});
 		btnRegisterCustomer.setBorder(new LineBorder(new Color(128, 0, 0)));
-		btnRegisterCustomer.setBounds(198, 196, 115, 29);
+		btnRegisterCustomer.setBounds(128, 191, 69, 29);
 		panel_10.add(btnRegisterCustomer);
 		
 		JSeparator separator_3 = new JSeparator();
@@ -1044,8 +1038,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 		
 		JLabel label_29 = new JLabel("Customer Details");
 		label_29.setForeground(new Color(0, 128, 0));
-		label_29.setFont(new Font("Dialog", Font.BOLD, 24));
-		label_29.setBounds(62, 237, 231, 30);
+		label_29.setFont(new Font("Dialog", Font.BOLD, 20));
+		label_29.setBounds(15, 237, 231, 30);
 		panel_10.add(label_29);
 		
 		comboBoxCustomer = new JComboBox<String>();
@@ -1060,14 +1054,15 @@ public class ImsMainPage extends ImsDesktopApplication {
 						textFieldUpdateCustomerLastName.setText(c.getLastName());	
 						textFieldUpdateCustomerUN.setText(c.getUserName());
 						textFieldUpdateCustomerNumber.setText(c.getPhoneNumber());
-						refreshCustomerTable();
+						//refreshCustomerTable();
+						refreshCustomerTransactionTable();
 						countRefresh++;
 						}
 				}
 				//refreshCustomerPanel();
 			}
 		});
-		comboBoxCustomer.setBounds(131, 279, 192, 26);
+		comboBoxCustomer.setBounds(96, 279, 106, 26);
 		panel_10.add(comboBoxCustomer);
 		
 		JLabel label_30 = new JLabel("Customer");
@@ -1076,7 +1071,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		
 		textFieldUpdateCustomerFirstName = new JTextField();
 		textFieldUpdateCustomerFirstName.setColumns(10);
-		textFieldUpdateCustomerFirstName.setBounds(131, 317, 192, 26);
+		textFieldUpdateCustomerFirstName.setBounds(96, 317, 106, 26);
 		panel_10.add(textFieldUpdateCustomerFirstName);
 		
 		JLabel lblFirstName_1 = new JLabel("First Name");
@@ -1085,7 +1080,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		
 		textFieldUpdateCustomerUN = new JTextField();
 		textFieldUpdateCustomerUN.setColumns(10);
-		textFieldUpdateCustomerUN.setBounds(131, 377, 192, 26);
+		textFieldUpdateCustomerUN.setBounds(96, 377, 106, 26);
 		panel_10.add(textFieldUpdateCustomerUN);
 		
 		JLabel lblUserName_2 = new JLabel("User Name");
@@ -1109,7 +1104,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			}
 		});
 		btnDelete_1.setBorder(new LineBorder(new Color(128, 0, 0)));
-		btnDelete_1.setBounds(236, 445, 90, 29);
+		btnDelete_1.setBounds(120, 445, 69, 29);
 		panel_10.add(btnDelete_1);
 		
 		JButton btnUpdate = new JButton("UPDATE");
@@ -1137,20 +1132,20 @@ public class ImsMainPage extends ImsDesktopApplication {
 			}
 		});
 		btnUpdate.setBorder(new LineBorder(new Color(128, 0, 0)));
-		btnUpdate.setBounds(131, 445, 93, 29);
+		btnUpdate.setBounds(25, 445, 83, 29);
 		panel_10.add(btnUpdate);
 		
-		JLabel lblPhoneNumber = new JLabel("Phone Number");
+		JLabel lblPhoneNumber = new JLabel("Phone N0.");
 		lblPhoneNumber.setBounds(15, 163, 101, 16);
 		panel_10.add(lblPhoneNumber);
 		
 		textFieldPhoneNumber = new JTextField();
-		textFieldPhoneNumber.setBounds(131, 158, 192, 26);
+		textFieldPhoneNumber.setBounds(96, 155, 106, 26);
 		panel_10.add(textFieldPhoneNumber);
 		textFieldPhoneNumber.setColumns(10);
 		
 		textFieldCustomerFirstName = new JTextField();
-		textFieldCustomerFirstName.setBounds(131, 44, 192, 26);
+		textFieldCustomerFirstName.setBounds(95, 44, 106, 26);
 		panel_10.add(textFieldCustomerFirstName);
 		textFieldCustomerFirstName.setColumns(10);
 		
@@ -1163,38 +1158,39 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_10.add(lblLastName_2);
 		
 		textFieldUpdateCustomerLastName = new JTextField();
-		textFieldUpdateCustomerLastName.setBounds(131, 347, 192, 26);
+		textFieldUpdateCustomerLastName.setBounds(96, 347, 106, 26);
 		panel_10.add(textFieldUpdateCustomerLastName);
 		textFieldUpdateCustomerLastName.setColumns(10);
 		
-		JLabel lblPhoneNumber_1 = new JLabel("Phone Number");
+		JLabel lblPhoneNumber_1 = new JLabel("Phone N0.");
 		lblPhoneNumber_1.setBounds(15, 412, 101, 16);
 		panel_10.add(lblPhoneNumber_1);
 		
 		textFieldUpdateCustomerNumber = new JTextField();
-		textFieldUpdateCustomerNumber.setBounds(131, 407, 192, 26);
+		textFieldUpdateCustomerNumber.setBounds(96, 412, 106, 26);
 		panel_10.add(textFieldUpdateCustomerNumber);
 		textFieldUpdateCustomerNumber.setColumns(10);
 		
 		JLabel label_33 = new JLabel("Transactions");
-		label_33.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		label_33.setBounds(353, 16, 239, 20);
+		label_33.setForeground(new Color(0, 128, 0));
+		label_33.setFont(new Font("Dialog", Font.BOLD, 20));
+		label_33.setBounds(223, 16, 148, 20);
 		accountsPanel.add(label_33);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(353, 48, 405, 389);
+		scrollPane_2.setBounds(217, 48, 541, 389);
 		accountsPanel.add(scrollPane_2);
 		
-		tableCustomers = new JTable();
-		scrollPane_2.setColumnHeaderView(tableCustomers);
-		tableCustomers.addMouseListener(new MouseAdapter() {
+		tableCustomerTransactions = new JTable();
+		scrollPane_2.setColumnHeaderView(tableCustomerTransactions);
+		tableCustomerTransactions.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				error = "";
-				DefaultTableModel model = (DefaultTableModel) tableCustomers.getModel();
-				int selectedRow = tableCustomers.getSelectedRow();
+				//DefaultTableModel model = (DefaultTableModel) tableCustomerTransactions.getModel();
+				int selecteTransactiondRow = tableCustomerTransactions.getSelectedRow();
 				// the selected transaction id
-				String transactionID = transactionIds.get(selectedRow);
+				String transactionID = transactionIds.get(selecteTransactiondRow);
 				String employeeId = ImsDesktopApplication.getCurrentEmployeeId();
 				if (selectedCustomerUserName == null) {
 					error = "You have to select a customer first!";
@@ -1209,13 +1205,13 @@ public class ImsMainPage extends ImsDesktopApplication {
 				}
 				
 				
-				productIndex = Integer.parseInt(model.getValueAt(selectedRow, 0).toString());
-				String amountPaid = model.getValueAt(selectedRow, 3).toString();
-				textFieldCurrentPaid.setText(amountPaid);
+//				productIndex = Integer.parseInt(model.getValueAt(selectedRow, 0).toString());
+//				String amountPaid = model.getValueAt(selectedRow, 3).toString();
+//				textFieldCurrentPaid.setText(amountPaid);
 			}
 		});
-		tableCustomers.setAutoCreateRowSorter(true);
-		tableCustomers.setModel(new DefaultTableModel(
+		tableCustomerTransactions.setAutoCreateRowSorter(true);
+		tableCustomerTransactions.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
@@ -1239,17 +1235,17 @@ public class ImsMainPage extends ImsDesktopApplication {
 				return columnEditables[column];
 			}
 		});
-		tableCustomers.getColumnModel().getColumn(3).setResizable(false);
-		scrollPane_2.setViewportView(tableCustomers);
+		tableCustomerTransactions.getColumnModel().getColumn(3).setResizable(false);
+		scrollPane_2.setViewportView(tableCustomerTransactions);
 		
 		JButton button_16 = new JButton("UPDATE");
 		button_16.setBorder(new LineBorder(new Color(128, 0, 0)));
-		button_16.setBounds(497, 473, 115, 20);
+		button_16.setBounds(614, 472, 115, 20);
 		accountsPanel.add(button_16);
 		
 		textFieldCurrentPaid = new JTextField();
 		textFieldCurrentPaid.setColumns(10);
-		textFieldCurrentPaid.setBounds(363, 448, 124, 20);
+		textFieldCurrentPaid.setBounds(467, 449, 124, 20);
 		accountsPanel.add(textFieldCurrentPaid);
 		
 		JLabel label_34 = new JLabel("");
@@ -1259,13 +1255,69 @@ public class ImsMainPage extends ImsDesktopApplication {
 		
 		textFieldUpdatePaid = new JTextField();
 		textFieldUpdatePaid.setColumns(10);
-		textFieldUpdatePaid.setBounds(497, 448, 115, 20);
+		textFieldUpdatePaid.setBounds(614, 448, 115, 20);
 		accountsPanel.add(textFieldUpdatePaid);
 		
 		JLabel label_35 = new JLabel("AMOUNT PAID");
 		label_35.setBorder(new LineBorder(new Color(128, 0, 0)));
-		label_35.setBounds(373, 476, 101, 14);
+		label_35.setBounds(477, 475, 101, 14);
 		accountsPanel.add(label_35);
+		
+		JButton button = new JButton("+");
+		button.setForeground(new Color(0, 128, 0));
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				error = "";
+				String employeeId = ImsDesktopApplication.getCurrentEmployeeId();
+				int index = comboBoxCustomer.getSelectedIndex();
+				String customerUserName = customers.get(index);
+				try {
+					transactionService.createTransaction(employeeId, customerUserName);
+				} catch (InvalidInputException exc) {
+					error = exc.getMessage();
+				}
+				refreshCustomerTransactionTable();
+			}
+		});
+		button.setBounds(363, 16, 44, 29);
+		accountsPanel.add(button);
+		
+		JLabel lblTotalAmountLeft = new JLabel("Total Amount Left:");
+		lblTotalAmountLeft.setFont(new Font("Dialog", Font.BOLD, 20));
+		lblTotalAmountLeft.setForeground(new Color(0, 128, 0));
+		lblTotalAmountLeft.setBounds(433, 21, 194, 16);
+		accountsPanel.add(lblTotalAmountLeft);
+		
+		lblTotalBalance = new JLabel("");
+		lblTotalBalance.setBounds(641, 20, 108, 16);
+		accountsPanel.add(lblTotalBalance);
+		
+		JButton btnOpen = new JButton("OPEN");
+		btnOpen.setBounds(223, 449, 70, 29);
+		accountsPanel.add(btnOpen);
+		
+		JButton btnDelete_2 = new JButton("DELETE");
+		btnDelete_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				error = "";
+				String employeeId = ImsDesktopApplication.getCurrentEmployeeId();
+				int selecteTransactiondRow = tableCustomerTransactions.getSelectedRow();
+				if (selecteTransactiondRow >= 0) {
+					try {
+						String transactionID = customerTransactions.get(selecteTransactiondRow);
+						transactionService.deleteTransaction(transactionID, employeeId);
+					} catch (InvalidInputException exc) {
+						error = exc.getMessage();
+					}
+				} else {
+					error = "Please select transaction first.";
+				}
+				refreshCustomerTransactionTable();
+			}
+		});
+		btnDelete_2.setForeground(Color.RED);
+		btnDelete_2.setBounds(290, 449, 81, 29);
+		accountsPanel.add(btnDelete_2);
 		
 		receiptPanel = new JPanel();
 		receiptPanel.setLayout(null);
@@ -1649,46 +1701,65 @@ public class ImsMainPage extends ImsDesktopApplication {
 		
 		transactionIds = new HashMap<Integer, String>();
 		
-//		if (error == null || error.length() == 0) {
-//			customerTransactions = new HashMap<Integer, String>();
-//			List<TransactionDTO> toTransactions = 
-//					ImsTransactionController.getCustomerTransactions(textFieldUpdateCustomerID.getText());
-//			DefaultTableModel model = (DefaultTableModel) tableCustomers.getModel();
-//			model.setRowCount(0);
-//			//set the size and alignment of NO column
-//			TableColumnModel columnModel = tableCustomers.getColumnModel();
-//			columnModel.getColumn(0).setPreferredWidth(6);
-//			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-//			centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-//			tableCustomers.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-//			
-//			//set the alignment of balance column
-//			DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
-//			leftRenderer.setHorizontalAlignment(SwingConstants.LEFT);
-//			tableCustomers.getColumnModel().getColumn(4).setCellRenderer(leftRenderer);
-//			
-//			//set the alignment of the date column
-//			tableCustomers.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
-//			float totalBalance = 0.0f;
-//			if (countRefresh > 1) {
-//				productIndex = 1;
-//				for (TransactionDTO tT : toTransactions) {
-//					String date = tT.getDate();
-//					String cleanDate = date.toString();
-//					String truncateDate = cleanDate.substring(4, 10);
-//					truncateDate = truncateDate + " " + cleanDate.substring(24);
-//					model.addRow(new Object[] {productIndex, truncateDate, tT.getTotalAmount(), 
-//							tT.getAmountPaid(), tT.getBalance()});
-//					totalBalance = (float) (totalBalance + tT.getBalance());
-//					customerTransactions.put(productIndex, tT.getId());
-//					productIndex++;
-//				}
-//			}
+		if (error == null || error.length() == 0) {
+			refreshCustomerTransactionTable();
 			
-//			textFieldCurrentPaid.setText("");
-//			//lblTotalBalance.setText(""+totalBalance);
-//			textFieldUpdatePaid.setText("");
-//		}
+			textFieldCurrentPaid.setText("");
+			//lblTotalBalance.setText(""+totalBalance);
+			textFieldUpdatePaid.setText("");
+		}
+		
+	}
+	
+	private void refreshCustomerTransactionTable() {
+		lblErrorMEssage.setText(error);
+		
+		transactionIds = new HashMap<Integer, String>();
+		
+		if (error == null || error.length() == 0) {
+			
+			DefaultTableModel model = (DefaultTableModel) tableCustomerTransactions.getModel();
+			model.setRowCount(0);
+			//set the size and alignment of Date column
+			//TableColumnModel columnModel = tableCustomerTransactions.getColumnModel();
+			//columnModel.getColumn(0).setPreferredWidth(6);
+			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+			centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+			
+			
+			//set the alignment of total amount column
+			DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
+			leftRenderer.setHorizontalAlignment(SwingConstants.LEFT);
+			
+			tableCustomerTransactions.getColumnModel().getColumn(0).setCellRenderer(leftRenderer);
+			tableCustomerTransactions.getColumnModel().getColumn(1).setCellRenderer(leftRenderer);
+			
+			//set the alignment of the amount paid column
+			tableCustomerTransactions.getColumnModel().getColumn(2).setCellRenderer(leftRenderer);
+			
+			//set the alignment of the balance column
+			tableCustomerTransactions.getColumnModel().getColumn(3).setCellRenderer(leftRenderer);
+			
+			float totalBalance = 0.0f;
+			customerTransactions = new HashMap<Integer, String>();
+			String employeeId = ImsDesktopApplication.getCurrentEmployeeId();
+			int index = comboBoxCustomer.getSelectedIndex();
+			String customerUserName = customers.get(index);
+			CustomerDTO customerDTO = customerService.getCustomerTransactions(customerUserName, employeeId);
+			int row = 0;
+			for (TransactionDTO tT : customerDTO.getTransactions()) {
+				String date = tT.getDate().substring(0, 10);
+				double balance = tT.getTotalAmount() - tT.getAmountPaid();
+				model.addRow(new Object[] {date, tT.getTotalAmount(), tT.getAmountPaid(), balance});
+				totalBalance = (float) (totalBalance + balance);
+				customerTransactions.put(row, tT.getTransactionId());
+				row++;
+			}
+			
+			//textFieldCurrentPaid.setText("");
+			lblTotalBalance.setText(""+totalBalance);
+			//textFieldUpdatePaid.setText("");
+		}
 		
 	}
 }

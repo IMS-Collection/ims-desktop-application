@@ -373,8 +373,12 @@ public class TransactionServiceImpl implements TransactionService {
 			}
 		}
 		//save  modified products
-		productRepository.saveAll(products);
-		productTransactionRepository.deleteAll(containedPTransactions);
+		if (products != null) {
+			productRepository.saveAll(products);
+		}
+		if (containedPTransactions != null) {
+			productTransactionRepository.deleteAll(containedPTransactions);
+		}
 		transactionRepository.delete(transaction);
 		
 		// remove if not error
