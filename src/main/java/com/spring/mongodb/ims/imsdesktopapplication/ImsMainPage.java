@@ -136,7 +136,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private JTextField textFieldUpdateCustomerNumber;
 	private JTable tableCustomerTransactions;
 	private JLabel lblTotalBalance;
-	private JTextField textFieldTranUpdateProduct;
+	private JTextField textFieldTranUpdateQuantity;
 	private JTable tableTransaction;
 	private JLabel lblProductTransaction;
 	private JLabel lblItemPrice;
@@ -501,7 +501,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 				lblAccounts.setForeground(Color.WHITE);
 				lblTransaction.setForeground(Color.GREEN);
 				
-				refreshCustomerPanel();
+				refreshAccountPanel();
+				//refreshCustomerTransactionTable();
 			}
 		});
 		lblAccounts.setForeground(Color.GREEN);
@@ -876,7 +877,18 @@ public class ImsMainPage extends ImsDesktopApplication {
 		
 		JButton btnUpdateTransaction = new JButton("UPDATE");
 		btnUpdateTransaction.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent arg0) {
+				error = "";
+				String productName = lblProductTransaction.getText();
+				int newQuantity = Integer.parseInt(textFieldTranUpdateQuantity.getText());
+				try {
+					transactionService.updateQuantityTransaction(ImsDesktopApplication.getCurrentEmployeeId(), 
+							productName, newQuantity, currentTransactionID);
+				} catch (InvalidInputException e) {
+					error = e.getMessage();
+				}
+				refreshTransactionPanel();
+				refreshTransactionDetail();
 			}
 		});
 		btnUpdateTransaction.setBorder(new LineBorder(new Color(128, 0, 0)));
@@ -1004,10 +1016,10 @@ public class ImsMainPage extends ImsDesktopApplication {
 		lblNewQuantity.setBounds(7, 77, 91, 16);
 		panel_8.add(lblNewQuantity);
 		
-		textFieldTranUpdateProduct = new JTextField();
-		textFieldTranUpdateProduct.setBounds(97, 77, 140, 26);
-		panel_8.add(textFieldTranUpdateProduct);
-		textFieldTranUpdateProduct.setColumns(10);
+		textFieldTranUpdateQuantity = new JTextField();
+		textFieldTranUpdateQuantity.setBounds(97, 77, 140, 26);
+		panel_8.add(textFieldTranUpdateQuantity);
+		textFieldTranUpdateQuantity.setColumns(10);
 		
 		lblItemPrice = new JLabel("New label");
 		lblItemPrice.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
@@ -1069,7 +1081,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		transactionsPanel.add(lblCustomerName);
 		
 		labelTranCustomerName = new JLabel("");
-		labelTranCustomerName.setBounds(403, 6, 199, 16);
+		labelTranCustomerName.setBounds(403, 6, 253, 16);
 		transactionsPanel.add(labelTranCustomerName);
 		
 		JLabel lblPhoneNumber_2 = new JLabel("Phone Number");
@@ -1077,7 +1089,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		transactionsPanel.add(lblPhoneNumber_2);
 		
 		labelTranCustomerNumber = new JLabel("");
-		labelTranCustomerNumber.setBounds(403, 34, 137, 16);
+		labelTranCustomerNumber.setBounds(403, 34, 253, 16);
 		transactionsPanel.add(labelTranCustomerNumber);
 		
 		JLabel lblDate = new JLabel("Transaction Date");
@@ -1085,7 +1097,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		transactionsPanel.add(lblDate);
 		
 		lbllabelTranDate = new JLabel("");
-		lbllabelTranDate.setBounds(403, 55, 137, 16);
+		lbllabelTranDate.setBounds(403, 55, 253, 16);
 		transactionsPanel.add(lbllabelTranDate);
 		
 		JLabel lblTotalAmount = new JLabel("Total Amount");
@@ -1093,7 +1105,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		transactionsPanel.add(lblTotalAmount);
 		
 		labelTranAmount = new JLabel("");
-		labelTranAmount.setBounds(403, 75, 137, 16);
+		labelTranAmount.setBounds(403, 75, 253, 16);
 		transactionsPanel.add(labelTranAmount);
 		
 		JLabel lblAmountPaid = new JLabel("Amount Paid");
@@ -1101,7 +1113,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		transactionsPanel.add(lblAmountPaid);
 		
 		labelTranAmountPaid = new JLabel("");
-		labelTranAmountPaid.setBounds(403, 103, 137, 16);
+		labelTranAmountPaid.setBounds(403, 103, 253, 16);
 		transactionsPanel.add(labelTranAmountPaid);
 		
 		JLabel lblAmountLeft = new JLabel("Amount Left");
@@ -1109,7 +1121,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		transactionsPanel.add(lblAmountLeft);
 		
 		labelTranAmountLeft = new JLabel("");
-		labelTranAmountLeft.setBounds(403, 126, 137, 16);
+		labelTranAmountLeft.setBounds(403, 126, 253, 16);
 		transactionsPanel.add(labelTranAmountLeft);
 		
 		accountsPanel = new JPanel();
@@ -1164,7 +1176,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 				} catch (InvalidInputException e) {
 					error = e.getMessage();
 				}
-				refreshCustomerPanel();
+				refreshAccountPanel();
 			}
 		});
 		btnRegisterCustomer.setBorder(new LineBorder(new Color(128, 0, 0)));
@@ -1241,7 +1253,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 				} catch (InvalidInputException e1) {
 					error = e1.getMessage();
 				}
-				refreshCustomerPanel();
+				refreshAccountPanel();
 			}
 		});
 		btnDelete_1.setBorder(new LineBorder(new Color(128, 0, 0)));
@@ -1269,7 +1281,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 				} catch (InvalidInputException e1) {
 					error = e1.getMessage();
 				}
-				refreshCustomerPanel();
+				refreshAccountPanel();
 			}
 		});
 		btnUpdate.setBorder(new LineBorder(new Color(128, 0, 0)));
@@ -1332,6 +1344,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 				int selectedTransactiondRow = tableCustomerTransactions.getSelectedRow();
 				// the selected transaction id
 				currentTransactionID = transactionIds.get(selectedTransactiondRow);
+				System.out.println(currentTransactionID);
 //				String employeeId = ImsDesktopApplication.getCurrentEmployeeId();
 //				if (selectedCustomerUserName == null) {
 //					error = "You have to select a customer first!";
@@ -1817,7 +1830,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		}
 	}
 	
-	private void refreshCustomerPanel() {
+	private void refreshAccountPanel() {
 		lblErrorMEssage.setText(error);
 		
 		if (error == null || error.length() == 0) {
@@ -1851,21 +1864,6 @@ public class ImsMainPage extends ImsDesktopApplication {
 			textFieldUpdateCustomerNumber.setText("");
 			
 		}
-	}
-	//TODO: update
-	private void refreshCustomerTable() {
-		lblErrorMEssage.setText(error);
-		
-		transactionIds = new HashMap<Integer, String>();
-		
-		if (error == null || error.length() == 0) {
-			refreshCustomerTransactionTable();
-			
-			textFieldCurrentPaid.setText("");
-			//lblTotalBalance.setText(""+totalBalance);
-			textFieldUpdatePaid.setText("");
-		}
-		
 	}
 	
 	/**
@@ -1927,7 +1925,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		if (error == null || error.length() == 0) {
 			
 			lblProductTransaction.setText("");
-			textFieldTranUpdateProduct.setText("");
+			textFieldTranUpdateQuantity.setText("");
 			textFieldTransactionProductQuantity.setText("");
 			textFieldPay.setText("");
 			lblItemPrice.setText("");
@@ -1961,13 +1959,15 @@ public class ImsMainPage extends ImsDesktopApplication {
 			DefaultTableModel model = (DefaultTableModel) tableTransaction.getModel();
 			model.setRowCount(0);
 			if (selectedCustomerUserName != null) {
+				boolean exception = false;
 				try {
 					transactionDetail = transactionService.getTransactionDetail(employeeId, currentTransactionID, selectedCustomerUserName);
 				} catch (InvalidInputException exc) {
 					error = exc.getMessage();
 					lblErrorMEssage.setText(error);
+					exception = true;
 				}
-				if (error == null || error.length() == 0) {
+				if (!exception) {
 					if (transactionDetail.getpTransactions() != null) {
 						for (ProductTransactionDTO tp : transactionDetail.getpTransactions()) {
 							model.addRow(new Object[] {tp.getProductName(), tp.getPrice() / tp.getQuantity(), tp.getQuantity(), tp.getPrice()});

@@ -302,7 +302,7 @@ public class TransactionServiceImpl implements TransactionService {
 		transactionDetails.setDate(date);
 
 		try {
-			for (ProductTransaction pTransaction : transaction.getProductTransactions()) {
+			for (ProductTransaction pTransaction : productTransactionRepository.findAllByTransaction(transaction)) {
 
 				ProductTransactionDTO pTransactionDTO = new ProductTransactionDTO();
 
