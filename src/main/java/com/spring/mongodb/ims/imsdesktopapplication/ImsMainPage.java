@@ -2,11 +2,20 @@ package com.spring.mongodb.ims.imsdesktopapplication;
 
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.PrintJob;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -147,6 +156,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private JLabel labelTranAmount;
 	private JLabel labelTranAmountPaid;
 	private JLabel labelTranAmountLeft;
+	private JPanel panel_4;
 
 	/**
 	 * Launch the application.
@@ -1002,6 +1012,18 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_8.add(label_24);
 		
 		JButton btnShowReceipt = new JButton("SHOW RECEIPT");
+		btnShowReceipt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// TODO add your handling code here:
+//			    Toolkit tkp = transactionsPanel.getToolkit();
+//			    PrintJob pjp = tkp.getPrintJob(ImsDesktopApplication.getFrame(), null, null);
+//			    Graphics g = pjp.getGraphics();
+//			    transactionsPanel.print(g);
+//			    g.dispose();
+//			    pjp.end();
+			    printComponenet(panel_4);
+			}
+		});
 		btnShowReceipt.setBorder(new LineBorder(new Color(128, 0, 0)));
 		btnShowReceipt.setBounds(120, 461, 115, 29);
 		panel_8.add(btnShowReceipt);
@@ -1027,9 +1049,40 @@ public class ImsMainPage extends ImsDesktopApplication {
 		lblItemPrice.setBounds(97, 217, 105, 16);
 		panel_8.add(lblItemPrice);
 		
+		JLabel label_25 = new JLabel("");
+		label_25.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		label_25.setBounds(713, 468, 102, 20);
+		transactionsPanel.add(label_25);
+		
+		panel_4 = new JPanel();
+		panel_4.setBounds(265, 0, 479, 537);
+		transactionsPanel.add(panel_4);
+		
+		JLabel lblCustomerName = new JLabel("Customer Name");
+		
+		labelTranCustomerName = new JLabel("");
+		
+		JLabel lblPhoneNumber_2 = new JLabel("Phone Number");
+		
+		JLabel lblDate = new JLabel("Transaction Date");
+		
+		JLabel lblTotalAmount = new JLabel("Total Amount");
+		
+		JLabel lblAmountPaid = new JLabel("Amount Paid");
+		
+		JLabel lblAmountLeft = new JLabel("Amount Left");
+		
+		labelTranCustomerNumber = new JLabel("");
+		
+		lbllabelTranDate = new JLabel("");
+		
+		labelTranAmount = new JLabel("");
+		
+		labelTranAmountPaid = new JLabel("");
+		
+		labelTranAmountLeft = new JLabel("");
+		
 		JScrollPane scrollPaneTransaction = new JScrollPane();
-		scrollPaneTransaction.setBounds(265, 154, 479, 383);
-		transactionsPanel.add(scrollPaneTransaction);
 		
 		tableTransaction = new JTable();
 		tableTransaction.setAutoCreateRowSorter(true);
@@ -1070,59 +1123,67 @@ public class ImsMainPage extends ImsDesktopApplication {
 			}
 		});
 		scrollPaneTransaction.setViewportView(tableTransaction);
-		
-		JLabel label_25 = new JLabel("");
-		label_25.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		label_25.setBounds(713, 468, 102, 20);
-		transactionsPanel.add(label_25);
-		
-		JLabel lblCustomerName = new JLabel("Customer Name");
-		lblCustomerName.setBounds(265, 6, 116, 16);
-		transactionsPanel.add(lblCustomerName);
-		
-		labelTranCustomerName = new JLabel("");
-		labelTranCustomerName.setBounds(403, 6, 253, 16);
-		transactionsPanel.add(labelTranCustomerName);
-		
-		JLabel lblPhoneNumber_2 = new JLabel("Phone Number");
-		lblPhoneNumber_2.setBounds(265, 34, 116, 16);
-		transactionsPanel.add(lblPhoneNumber_2);
-		
-		labelTranCustomerNumber = new JLabel("");
-		labelTranCustomerNumber.setBounds(403, 34, 253, 16);
-		transactionsPanel.add(labelTranCustomerNumber);
-		
-		JLabel lblDate = new JLabel("Transaction Date");
-		lblDate.setBounds(265, 55, 116, 16);
-		transactionsPanel.add(lblDate);
-		
-		lbllabelTranDate = new JLabel("");
-		lbllabelTranDate.setBounds(403, 55, 253, 16);
-		transactionsPanel.add(lbllabelTranDate);
-		
-		JLabel lblTotalAmount = new JLabel("Total Amount");
-		lblTotalAmount.setBounds(265, 75, 102, 16);
-		transactionsPanel.add(lblTotalAmount);
-		
-		labelTranAmount = new JLabel("");
-		labelTranAmount.setBounds(403, 75, 253, 16);
-		transactionsPanel.add(labelTranAmount);
-		
-		JLabel lblAmountPaid = new JLabel("Amount Paid");
-		lblAmountPaid.setBounds(265, 103, 102, 16);
-		transactionsPanel.add(lblAmountPaid);
-		
-		labelTranAmountPaid = new JLabel("");
-		labelTranAmountPaid.setBounds(403, 103, 253, 16);
-		transactionsPanel.add(labelTranAmountPaid);
-		
-		JLabel lblAmountLeft = new JLabel("Amount Left");
-		lblAmountLeft.setBounds(265, 126, 102, 16);
-		transactionsPanel.add(lblAmountLeft);
-		
-		labelTranAmountLeft = new JLabel("");
-		labelTranAmountLeft.setBounds(403, 126, 253, 16);
-		transactionsPanel.add(labelTranAmountLeft);
+		GroupLayout gl_panel_4 = new GroupLayout(panel_4);
+		gl_panel_4.setHorizontalGroup(
+			gl_panel_4.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_4.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
+						.addComponent(scrollPaneTransaction, GroupLayout.PREFERRED_SIZE, 479, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_panel_4.createSequentialGroup()
+							.addComponent(lblCustomerName, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(labelTranCustomerName, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panel_4.createSequentialGroup()
+							.addComponent(lblPhoneNumber_2, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(labelTranCustomerNumber, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panel_4.createSequentialGroup()
+							.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblDate, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblTotalAmount, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblAmountPaid, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblAmountLeft, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE))
+							.addGap(18)
+							.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
+								.addComponent(labelTranAmountLeft, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE)
+								.addComponent(labelTranAmountPaid, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE)
+								.addComponent(labelTranAmount, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lbllabelTranDate, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE))))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		gl_panel_4.setVerticalGroup(
+			gl_panel_4.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_4.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
+						.addComponent(labelTranCustomerName, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblCustomerName))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblPhoneNumber_2)
+						.addComponent(labelTranCustomerNumber, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblDate)
+						.addComponent(lbllabelTranDate, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblTotalAmount)
+						.addComponent(labelTranAmount, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblAmountPaid)
+						.addComponent(labelTranAmountPaid, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblAmountLeft)
+						.addComponent(labelTranAmountLeft, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addComponent(scrollPaneTransaction, GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE)
+					.addContainerGap())
+		);
+		panel_4.setLayout(gl_panel_4);
 		
 		accountsPanel = new JPanel();
 		accountsPanel.setLayout(null);
@@ -1987,4 +2048,30 @@ public class ImsMainPage extends ImsDesktopApplication {
 		}
 		
 	}
+	
+	public void printComponenet(Component component){
+		  PrinterJob pj = PrinterJob.getPrinterJob();
+		  pj.setJobName(" Print Component ");
+
+		  pj.setPrintable (new Printable() {    
+		    public int print(Graphics pg, PageFormat pf, int pageNum){
+		      if (pageNum > 0){
+		      return Printable.NO_SUCH_PAGE;
+		      }
+
+		      Graphics2D g2 = (Graphics2D) pg;
+		      g2.translate(pf.getImageableX(), pf.getImageableY());
+		      component.paint(g2);
+		      return Printable.PAGE_EXISTS;
+		    }
+		  });
+		  if (pj.printDialog() == false)
+		  return;
+
+		  try {
+		        pj.print();
+		  } catch (PrinterException ex) {
+		        // handle exception
+		  }
+		}
 }
