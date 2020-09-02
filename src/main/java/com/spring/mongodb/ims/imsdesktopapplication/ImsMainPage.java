@@ -947,17 +947,23 @@ public class ImsMainPage extends ImsDesktopApplication {
 				}
 				if (error.length() == 0) {
 					String productName = transactionProducts.get(selectedIndex);
-					int option = JOptionPane.showConfirmDialog(ImsDesktopApplication.getFrame(), 
-							"Confirm to add "+productName+"("+quantity+")", 
-							"Confirm adding product", JOptionPane.OK_CANCEL_OPTION);
-					if (option == 0) {
-						String employeeId = ImsDesktopApplication.getCurrentEmployeeId(); 
-						try {
-							transactionService.addTransactionProduct(employeeId, productName, quantity, currentTransactionID);
-						} catch (InvalidInputException e1) {
-							error = e1.getMessage();
-						}
+					String employeeId = ImsDesktopApplication.getCurrentEmployeeId(); 
+					try {
+						transactionService.addTransactionProduct(employeeId, productName, quantity, currentTransactionID);
+					} catch (InvalidInputException e1) {
+						error = e1.getMessage();
 					}
+//					int option = JOptionPane.showConfirmDialog(ImsDesktopApplication.getFrame(), 
+//							"Confirm to add "+productName+"("+quantity+")", 
+//							"Confirm adding product", JOptionPane.OK_CANCEL_OPTION);
+//					if (option == 0) {
+//						String employeeId = ImsDesktopApplication.getCurrentEmployeeId(); 
+//						try {
+//							transactionService.addTransactionProduct(employeeId, productName, quantity, currentTransactionID);
+//						} catch (InvalidInputException e1) {
+//							error = e1.getMessage();
+//						}
+//					}
 				} 
 				refreshTransactionPanel();
 				refreshTransactionDetail();
@@ -986,10 +992,6 @@ public class ImsMainPage extends ImsDesktopApplication {
 		btnSubmit.setBorder(new LineBorder(new Color(128, 0, 0)));
 		btnSubmit.setBounds(120, 420, 115, 29);
 		panel_8.add(btnSubmit);
-		
-		JLabel lblPay = new JLabel("Pay");
-		lblPay.setBounds(15, 385, 45, 20);
-		panel_8.add(lblPay);
 		
 		textFieldPay = new JTextField();
 		textFieldPay.setColumns(10);
@@ -1071,6 +1073,23 @@ public class ImsMainPage extends ImsDesktopApplication {
 		lblItemPrice.setForeground(Color.GREEN);
 		lblItemPrice.setBounds(97, 217, 105, 16);
 		panel_8.add(lblItemPrice);
+		
+		JButton btnPay = new JButton("PAY");
+		btnPay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				error = "";
+				double newAmount = Double.parseDouble((textFieldPay.getText()));
+				try {
+					transactionService.updateAmountPaidTransaction(newAmount, currentTransactionID, ImsDesktopApplication.getCurrentEmployeeId());
+				} catch (InvalidInputException exc) {
+					error = exc.getMessage();
+				}
+				refreshTransactionDetail();
+				refreshTransactionPanel();
+			}
+		});
+		btnPay.setBounds(15, 382, 62, 29);
+		panel_8.add(btnPay);
 		
 		JLabel label_25 = new JLabel("");
 		label_25.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -2061,19 +2080,21 @@ public class ImsMainPage extends ImsDesktopApplication {
 					lblErrorMEssage.setText(error);
 					exception = true;
 				}
+				double totalAmount = 0.0;
 				if (!exception) {
 					if (transactionDetail.getpTransactions() != null) {
 						for (ProductTransactionDTO tp : transactionDetail.getpTransactions()) {
 							model.addRow(new Object[] {tp.getProductName(), tp.getPrice() / tp.getQuantity(), tp.getQuantity(), tp.getPrice()});
+							totalAmount = totalAmount + tp.getPrice();
 						}
 					}
 					//update transaction details
 					labelTranCustomerName.setText(transactionDetail.getFirstName() + " " + transactionDetail.getLastName());
 					labelTranCustomerNumber.setText(transactionDetail.getPhoneNumber());
 					lbllabelTranDate.setText(transactionDetail.getDate());
-					labelTranAmount.setText(transactionDetail.getTotalAmount() +"");
+					labelTranAmount.setText(totalAmount + "");
 					labelTranAmountPaid.setText(transactionDetail.getAmountPaid() +"");
-					labelTranAmountLeft.setText(transactionDetail.getAmountUnpaid() +"");
+					labelTranAmountLeft.setText(totalAmount -  transactionDetail.getAmountPaid() +"");
 				}
 				
 			}
