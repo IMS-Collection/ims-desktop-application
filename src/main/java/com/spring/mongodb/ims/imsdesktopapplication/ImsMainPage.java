@@ -994,6 +994,18 @@ public class ImsMainPage extends ImsDesktopApplication {
 		JButton btnRemoveProduct = new JButton("REMOVE");
 		btnRemoveProduct.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				error = "";
+				try {
+					String productName = lblProductTransaction.getText();
+					transactionService.removeProduct(ImsDesktopApplication.getCurrentEmployeeId(), productName, currentTransactionID);
+				} catch (InvalidInputException exc) {
+					error = exc.getMessage();
+				}
+				refreshTransactionDetail();
+				refreshTransactionPanel();
+				if (error.length() == 0) {
+					JOptionPane.showMessageDialog(ImsDesktopApplication.getFrame(), "Successfully removed");
+				}
 			}
 		});
 		btnRemoveProduct.setBorder(new LineBorder(new Color(128, 0, 0)));
@@ -1986,6 +1998,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		if (error == null || error.length() == 0) {
 			
 			lblProductTransaction.setText("");
+			lblProductTransaction.setText("");
 			textFieldTranUpdateQuantity.setText("");
 			textFieldTransactionProductQuantity.setText("");
 			textFieldPay.setText("");
@@ -2018,6 +2031,15 @@ public class ImsMainPage extends ImsDesktopApplication {
 			String employeeId = ImsDesktopApplication.getCurrentEmployeeId();
 			TransactionDetail transactionDetail = null;
 			DefaultTableModel model = (DefaultTableModel) tableTransaction.getModel();
+			//set the alignment of total amount column
+			DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
+			leftRenderer.setHorizontalAlignment(SwingConstants.LEFT);
+			
+			tableTransaction.getColumnModel().getColumn(0).setCellRenderer(leftRenderer);
+			tableTransaction.getColumnModel().getColumn(1).setCellRenderer(leftRenderer);
+			tableTransaction.getColumnModel().getColumn(2).setCellRenderer(leftRenderer);
+			tableTransaction.getColumnModel().getColumn(3).setCellRenderer(leftRenderer);
+			
 			model.setRowCount(0);
 			if (selectedCustomerUserName != null) {
 				boolean exception = false;
