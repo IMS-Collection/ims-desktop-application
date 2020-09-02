@@ -22,4 +22,6 @@ public interface ProductService {
 	
 	List<ProductDTO> getProducts(String employeeId);
 
+	void testCreateProduct(String name) throws InvalidInputException;
+
 }

@@ -229,8 +229,8 @@ public class TransactionServiceImpl implements TransactionService {
 			throw new InvalidInputException("Error!, check your details and try again");
 		}
 
-		// set total transaction, then save the modified transaction, and then save modified product
-		setTransactionTotalAmount(currentTransaction, product);
+		// Save the modified transaction, and then save the modified product
+		saveTransactionAndProduct(currentTransaction, product);
 
 		ModelMapper modelMapper = new ModelMapper();
 		ProductTransactionDTO returnValue = modelMapper.map(productTransaction, ProductTransactionDTO.class);
@@ -239,15 +239,16 @@ public class TransactionServiceImpl implements TransactionService {
 
 	}
 
-	private void setTransactionTotalAmount(Transaction currentTransaction, Product product) throws InvalidInputException {
+	private void saveTransactionAndProduct(Transaction currentTransaction, Product product) throws InvalidInputException {
 
-		float totalAmount = 0.0f;
-		for (ProductTransaction productTransaction : currentTransaction.getProductTransactions()) {
-			double amount = productTransaction.getPrice();
-			totalAmount += amount;
-		}
-
-		currentTransaction.setTotalAmount(totalAmount);
+		// total amount to be handled in the gui
+//		float totalAmount = 0.0f;
+//		for (ProductTransaction productTransaction : currentTransaction.getProductTransactions()) {
+//			double amount = productTransaction.getPrice();
+//			totalAmount += amount;
+//		}
+//
+//		currentTransaction.setTotalAmount(totalAmount);
 
 		try {
 			transactionRepository.save(currentTransaction);
@@ -373,8 +374,12 @@ public class TransactionServiceImpl implements TransactionService {
 			}
 		}
 		//save  modified products
-		productRepository.saveAll(products);
-		productTransactionRepository.deleteAll(containedPTransactions);
+		if (products != null) {
+			productRepository.saveAll(products);
+		}
+		if (containedPTransactions != null) {
+			productTransactionRepository.deleteAll(containedPTransactions);
+		}
 		transactionRepository.delete(transaction);
 		
 		// remove if not error
@@ -480,8 +485,8 @@ public class TransactionServiceImpl implements TransactionService {
 			throw new InvalidInputException("Error!, The transaction was not saved.");
 		}
 		
-		// set total transaction, then save the modified transaction, and then save modified product
-		setTransactionTotalAmount(transaction, product);
+		// Save the modified transaction, and then save modified product
+		saveTransactionAndProduct(transaction, product);
 		
 	}
 
@@ -575,8 +580,8 @@ public class TransactionServiceImpl implements TransactionService {
 		product.getProductTransactions().remove(deletetPTranaction);
 		productTransactionRepository.delete(deletetPTranaction);
 		
-		// set total transaction, then save the modified transaction, and then save modified product
-		setTransactionTotalAmount(transaction, product);
+		// Save the modified transaction, and then save modified product
+		saveTransactionAndProduct(transaction, product);
 
 	}
 

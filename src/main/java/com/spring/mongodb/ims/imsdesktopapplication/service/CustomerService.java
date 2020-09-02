@@ -16,7 +16,7 @@ public interface CustomerService {
 	
 	void createCustomer(CustomerDTO customerDTO, String employeeId) throws InvalidInputException;
 	
-	void updateCustomer(CustomerDTO customerDTO, String employeeId) throws InvalidInputException;
+	void updateCustomer(CustomerDTO customerDTO, String employeeId, String userName) throws InvalidInputException;
 	
 	void deleteCustomer(String userName, String employeeId);
 	
