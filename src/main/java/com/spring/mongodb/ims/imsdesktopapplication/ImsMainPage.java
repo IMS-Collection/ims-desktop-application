@@ -972,6 +972,17 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_8.add(separator_2);
 		
 		JButton btnSubmit = new JButton("FINALIZE");
+		btnSubmit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				error = "";
+				try {
+					transactionService.finalizeTransaction(currentTransactionID, ImsDesktopApplication.getCurrentEmployeeId());
+				} catch (InvalidInputException exc) {
+					error = exc.getMessage();
+				}
+				refreshTransactionPanel();
+			}
+		});
 		btnSubmit.setBorder(new LineBorder(new Color(128, 0, 0)));
 		btnSubmit.setBounds(120, 420, 115, 29);
 		panel_8.add(btnSubmit);
