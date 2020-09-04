@@ -282,7 +282,7 @@ public class TransactionServiceImpl implements TransactionService {
 		Transaction transaction = transactionRepository.findByTransactionId(transactionId);
 		Customer customer = customerRepository.findByUserName(customerUserName);
 		if (transaction == null) {
-			error = "This transaction does not exist!";
+			error = "Please select a transaction";
 		} else if (customer == null) {
 			error = "The customer user name is incorrect";
 		}
