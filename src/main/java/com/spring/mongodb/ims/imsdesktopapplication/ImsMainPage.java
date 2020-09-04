@@ -48,6 +48,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.spring.mongodb.ims.imsdesktopapplication.exceptions.InvalidInputException;
+import com.spring.mongodb.ims.imsdesktopapplication.model.Employee;
 import com.spring.mongodb.ims.imsdesktopapplication.service.CustomerService;
 import com.spring.mongodb.ims.imsdesktopapplication.service.EmployeeService;
 import com.spring.mongodb.ims.imsdesktopapplication.service.ImsService;
@@ -157,6 +158,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private JButton btnDashboard;
 	private JButton btnProducts;
 	private JButton btnAccounts;
+	private JLabel lblEmployee;
 
 	/**
 	 * Launch the application.
@@ -324,6 +326,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 				
 				//update visuals
 				refreshLoginData();
+				refreshDashBoard();
 			}
 		});
 		
@@ -446,6 +449,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 				btnDashboard.setForeground(Color.decode("#0f03fc"));
 				btnProducts.setForeground(Color.GREEN);
 				btnAccounts.setForeground(Color.GREEN);
+				
+				refreshDashBoard();
 			}
 		});
 		btnDashboard.setFont(new Font("Tahoma", Font.BOLD, 24));
@@ -531,26 +536,23 @@ public class ImsMainPage extends ImsDesktopApplication {
 		dashBoardPanel = new JPanel();
 		layeredMainPane.add(dashBoardPanel, "name_118134937110699");
 		
-		JTextArea txtrWarmlyWelcomeTo = new JTextArea();
-		txtrWarmlyWelcomeTo.setText("Warmly welcome to De Don Motors Inventory \r\nManagement Application. Please, feel free explore \r\nand thoroughly test the app and get to me with the\r\ncomphrehensive feed back including bugs!");
-		txtrWarmlyWelcomeTo.setForeground(new Color(128, 128, 0));
-		txtrWarmlyWelcomeTo.setFont(new Font("Monospaced", Font.PLAIN, 20));
+		lblEmployee = new JLabel("");
+		lblEmployee.setHorizontalAlignment(SwingConstants.CENTER);
+		lblEmployee.setFont(new Font("Dialog", Font.BOLD, 25));
 		GroupLayout gl_dashBoardPanel = new GroupLayout(dashBoardPanel);
 		gl_dashBoardPanel.setHorizontalGroup(
 			gl_dashBoardPanel.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 830, Short.MAX_VALUE)
 				.addGroup(gl_dashBoardPanel.createSequentialGroup()
-					.addGap(59)
-					.addComponent(txtrWarmlyWelcomeTo, GroupLayout.PREFERRED_SIZE, 639, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(132, Short.MAX_VALUE))
+					.addGap(61)
+					.addComponent(lblEmployee, GroupLayout.PREFERRED_SIZE, 440, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(263, Short.MAX_VALUE))
 		);
 		gl_dashBoardPanel.setVerticalGroup(
 			gl_dashBoardPanel.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 509, Short.MAX_VALUE)
 				.addGroup(gl_dashBoardPanel.createSequentialGroup()
-					.addGap(65)
-					.addComponent(txtrWarmlyWelcomeTo, GroupLayout.PREFERRED_SIZE, 254, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(190, Short.MAX_VALUE))
+					.addGap(101)
+					.addComponent(lblEmployee)
+					.addContainerGap(411, Short.MAX_VALUE))
 		);
 		dashBoardPanel.setLayout(gl_dashBoardPanel);
 		
@@ -1521,17 +1523,24 @@ public class ImsMainPage extends ImsDesktopApplication {
 		JButton btnOpen = new JButton("OPEN");
 		btnOpen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				error = "";
-				layeredMainPane.removeAll();
-				layeredMainPane.add(transactionsPanel);
-				layeredMainPane.repaint();
-				layeredMainPane.revalidate();
-				btnDashboard.setForeground(Color.GREEN);
-				btnProducts.setForeground(Color.GREEN);
-				btnAccounts.setForeground(Color.GREEN);
 				
-				refreshTransactionPanel();
-				refreshTransactionDetail();
+				try {
+					refreshTransactionPanel();
+					refreshTransactionDetail();
+				} catch (InvalidInputException exc) {
+					error = exc.getMessage();
+				}
+				
+				if (error.length() == 0) {
+					layeredMainPane.removeAll();
+					layeredMainPane.add(transactionsPanel);
+					layeredMainPane.repaint();
+					layeredMainPane.revalidate();
+					btnDashboard.setForeground(Color.GREEN);
+					btnProducts.setForeground(Color.GREEN);
+					btnAccounts.setForeground(Color.GREEN);
+				}
+						
 			}
 		});
 		btnOpen.setBounds(223, 449, 70, 29);
@@ -1557,7 +1566,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			}
 		});
 		btnDelete_2.setForeground(Color.RED);
-		btnDelete_2.setBounds(290, 449, 81, 29);
+		btnDelete_2.setBounds(312, 449, 81, 29);
 		accountsPanel.add(btnDelete_2);
 		
 		receiptPanel = new JPanel();
@@ -2096,4 +2105,11 @@ public class ImsMainPage extends ImsDesktopApplication {
 		        // handle exception
 		  }
 		}
+	
+	private void refreshDashBoard() {
+		Employee currentEmployee = ImsDesktopApplication.getCurrentEmployee();
+		String employeeFirstName = currentEmployee.getFirstName();
+		String employeeLastName = currentEmployee.getLastName();
+		lblEmployee.setText(employeeFirstName + " " + employeeLastName); 
+	}
 }
