@@ -1468,13 +1468,13 @@ public class ImsMainPage extends ImsDesktopApplication {
 				return columnTypes[columnIndex];
 			}
 			boolean[] columnEditables = new boolean[] {
-				false, true, true, true, true
+				false, true, true, true
 			};
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
 			}
 		});
-		tableCustomerTransactions.getColumnModel().getColumn(3).setResizable(false);
+		//tableCustomerTransactions.getColumnModel().getColumn(3).setResizable(false);
 		scrollPane_2.setViewportView(tableCustomerTransactions);
 		
 		JButton button_16 = new JButton("UPDATE");

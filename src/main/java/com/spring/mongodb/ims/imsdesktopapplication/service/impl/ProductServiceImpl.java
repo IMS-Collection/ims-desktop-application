@@ -243,15 +243,13 @@ public class ProductServiceImpl implements ProductService{
 	public List<ProductDTO> getProducts(String employeeId) {
 		
 		List<ProductDTO> returnValue = new ArrayList<ProductDTO>();
-		
-		// test performance
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
-		LocalDateTime now = LocalDateTime.now();  
-		System.out.println("find employee by id start" + dtf.format(now)); 
-		// end performance test
+		 
+		long startTime = System.currentTimeMillis();
 		Employee employee = employeeRepository.findByEmployeeId(employeeId);
-		now = LocalDateTime.now();  
-		System.out.println("find employee by id end" +dtf.format(now));
+		long endTime = System.currentTimeMillis();
+		//System.out.println("Find employee by id: " + (endTime - startTime));
+		
+		
 		boolean loggedIn = false;
 		if (employee == null) {
 			throw new InvalidInputException("An employee must log in.");
@@ -265,11 +263,10 @@ public class ProductServiceImpl implements ProductService{
 			throw new InvalidInputException("Error! an employee must log in..");
 		}  
 		ModelMapper modelMapper = new ModelMapper();
-		now = LocalDateTime.now();  
-		System.out.println("find all product start" +dtf.format(now));
+		startTime = System.currentTimeMillis();
 		Iterable<Product> products = productRepository.findAll();
-		now = LocalDateTime.now();  
-		System.out.println("find all products end" +dtf.format(now));
+		endTime = System.currentTimeMillis();
+		//System.out.println("Find all products: " + (endTime - startTime));
 
 		for (Product p : products) {
 			returnValue.add(modelMapper.map(p, ProductDTO.class));
