@@ -1,5 +1,7 @@
 package com.spring.mongodb.ims.imsdesktopapplication.service.impl;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -241,8 +243,13 @@ public class ProductServiceImpl implements ProductService{
 	public List<ProductDTO> getProducts(String employeeId) {
 		
 		List<ProductDTO> returnValue = new ArrayList<ProductDTO>();
-		
+		 
+		long startTime = System.currentTimeMillis();
 		Employee employee = employeeRepository.findByEmployeeId(employeeId);
+		long endTime = System.currentTimeMillis();
+		//System.out.println("Find employee by id: " + (endTime - startTime));
+		
+		
 		boolean loggedIn = false;
 		if (employee == null) {
 			throw new InvalidInputException("An employee must log in.");
@@ -256,7 +263,10 @@ public class ProductServiceImpl implements ProductService{
 			throw new InvalidInputException("Error! an employee must log in..");
 		}  
 		ModelMapper modelMapper = new ModelMapper();
+		startTime = System.currentTimeMillis();
 		Iterable<Product> products = productRepository.findAll();
+		endTime = System.currentTimeMillis();
+		//System.out.println("Find all products: " + (endTime - startTime));
 
 		for (Product p : products) {
 			returnValue.add(modelMapper.map(p, ProductDTO.class));

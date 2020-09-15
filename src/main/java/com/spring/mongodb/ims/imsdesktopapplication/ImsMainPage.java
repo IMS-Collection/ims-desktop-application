@@ -73,6 +73,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private JPasswordField passwordField;
 	private String error = "";
 	private String currentTransactionID;
+	private List<ProductDTO> products;
 	private int countRefresh = 1;
 	private int productIndex;
 	
@@ -93,7 +94,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 	
 	//data elements
 	//Products
-	private HashMap<Integer, String> products;
+	private HashMap<Integer, String> comboBoxProductsMap;
 	private HashMap<Integer, String> transactionProducts;
 		
 	//Customers
@@ -180,6 +181,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 	 * Create the frame.
 	 */
 	public ImsMainPage() {
+		products = new ArrayList<ProductDTO>();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 965, 649);
 		contentPane = new JPanel();
@@ -461,16 +463,25 @@ public class ImsMainPage extends ImsDesktopApplication {
 		btnProducts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				error = "";
-				layeredMainPane.removeAll();
-				layeredMainPane.add(productsPanel);
-				layeredMainPane.repaint();
-				layeredMainPane.revalidate();
-				btnDashboard.setForeground(Color.GREEN);
-				btnProducts.setForeground(Color.decode("#0f03fc"));
-				btnAccounts.setForeground(Color.GREEN);
+				try {
+					products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
+				} catch (InvalidInputException exc) {
+					error = exc.getMessage();
+				} if (error.length() == 0) {
+					layeredMainPane.removeAll();
+					layeredMainPane.add(productsPanel);
+					layeredMainPane.repaint();
+					layeredMainPane.revalidate();
+					btnDashboard.setForeground(Color.GREEN);
+					btnProducts.setForeground(Color.decode("#0f03fc"));
+					btnAccounts.setForeground(Color.GREEN);
+					
+					refreshProductTable();
+					refreshProductPanel();
+				}
 				
-				refreshProductTable();
-				refreshProductPanel();
+				lblErrorMEssage.setText(error);
+				
 			}
 		});
 		btnProducts.setFont(new Font("Tahoma", Font.BOLD, 24));
@@ -660,7 +671,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			public void actionPerformed(ActionEvent e) {
 				error = "";
 				int selectedIndex = comboBoxProduct.getSelectedIndex();
-				String productName = products.get(selectedIndex);
+				String productName = comboBoxProductsMap.get(selectedIndex);
 				if (productName != null) {
 					for (ProductDTO p : productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId())) {
 						if (productName.equals(p.getName())) {
@@ -733,7 +744,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 				
 				try {
 					int selectedIndex = comboBoxProduct.getSelectedIndex();
-					String oldName = products.get(selectedIndex);
+					String oldName = comboBoxProductsMap.get(selectedIndex);
 					ProductDTO productDTO = new ProductDTO();
 					productDTO.setName(newName);
 					productDTO.setItemPrice(updatePrice);
@@ -755,7 +766,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			public void actionPerformed(ActionEvent earg0) {
 				error = "";
 				int selectedIndex = comboBoxProduct.getSelectedIndex();
-				String productName = products.get(selectedIndex);
+				String productName = comboBoxProductsMap.get(selectedIndex);
 				try {
 					productService.deleteProduct(productName, ImsDesktopApplication.getCurrentEmployeeId());
 				} catch (InvalidInputException er) {
@@ -1457,13 +1468,13 @@ public class ImsMainPage extends ImsDesktopApplication {
 				return columnTypes[columnIndex];
 			}
 			boolean[] columnEditables = new boolean[] {
-				false, true, true, true, true
+				false, true, true, true
 			};
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
 			}
 		});
-		tableCustomerTransactions.getColumnModel().getColumn(3).setResizable(false);
+		//tableCustomerTransactions.getColumnModel().getColumn(3).setResizable(false);
 		scrollPane_2.setViewportView(tableCustomerTransactions);
 		
 		JButton button_16 = new JButton("UPDATE");
@@ -1857,7 +1868,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			textFieldProductQuantity.setText("");
 			
 			//Update product
-			products = new HashMap<Integer, String>();
+			comboBoxProductsMap = new HashMap<Integer, String>();
 			//comboBoxProduct.removeAll();
 			int index = 0;
 			List<String> names = new ArrayList<String>();
@@ -1869,7 +1880,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			}
 			Collections.sort(names);
 			for (String name : names) {
-				products.put(index, name);
+				comboBoxProductsMap.put(index, name);
 				comboBoxProduct.addItem(name);
 				index++;
 			}
