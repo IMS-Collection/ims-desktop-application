@@ -28,11 +28,13 @@ public class ImsServiceImpl implements ImsService {
 			currentEmployee = employeeService.getEmployeeByUserName(username, password);
 		}
 		ImsDesktopApplication.setCurrentEmployeeId(currentEmployee.getEmployeeId());
+		ImsDesktopApplication.setCurrentEmployee(currentEmployee);
 	}
 
 	@Override
 	public void logout() {
 		ImsDesktopApplication.setCurrentEmployeeId(null);
+		ImsDesktopApplication.setCurrentEmployee(null);
 		
 	}
 

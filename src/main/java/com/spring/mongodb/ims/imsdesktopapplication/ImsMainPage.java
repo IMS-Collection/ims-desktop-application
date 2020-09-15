@@ -48,6 +48,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.spring.mongodb.ims.imsdesktopapplication.exceptions.InvalidInputException;
+import com.spring.mongodb.ims.imsdesktopapplication.model.Employee;
 import com.spring.mongodb.ims.imsdesktopapplication.service.CustomerService;
 import com.spring.mongodb.ims.imsdesktopapplication.service.EmployeeService;
 import com.spring.mongodb.ims.imsdesktopapplication.service.ImsService;
@@ -72,6 +73,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private JPasswordField passwordField;
 	private String error = "";
 	private String currentTransactionID;
+	private List<ProductDTO> products;
 	private int countRefresh = 1;
 	private int productIndex;
 	
@@ -92,7 +94,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 	
 	//data elements
 	//Products
-	private HashMap<Integer, String> products;
+	private HashMap<Integer, String> comboBoxProductsMap;
 	private HashMap<Integer, String> transactionProducts;
 		
 	//Customers
@@ -124,11 +126,6 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private JTextField textFieldCustomerID;
 	private JTextField textFieldUpdateCustomerFirstName;
 	private JTextField textFieldUpdateCustomerUN;
-	private JTextField textFieldCurrentPaid;
-	private JTextField textFieldUpdatePaid;
-	private JLabel lblTransaction;
-	private JLabel lblAccounts;
-	private JLabel lblDashboard;
 	private JPanel productsPanel;
 	private JPanel dashBoardPanel;
 	private JPanel accountsPanel;
@@ -157,6 +154,10 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private JLabel labelTranAmountPaid;
 	private JLabel labelTranAmountLeft;
 	private JPanel panel_4;
+	private JButton btnDashboard;
+	private JButton btnProducts;
+	private JButton btnAccounts;
+	private JLabel lblEmployee;
 
 	/**
 	 * Launch the application.
@@ -178,6 +179,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 	 * Create the frame.
 	 */
 	public ImsMainPage() {
+		products = new ArrayList<ProductDTO>();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 965, 649);
 		contentPane = new JPanel();
@@ -324,7 +326,11 @@ public class ImsMainPage extends ImsDesktopApplication {
 				
 				//update visuals
 				refreshLoginData();
-			}
+				
+				if (!(error.length() > 0)) {
+					refreshDashBoard();
+				}
+				}
 		});
 		
 		JButton btnExit = new JButton("EXIT");
@@ -410,47 +416,6 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_3.setBounds(6, 66, 176, 543);
 		imsPagePanel.add(panel_3);
 		
-		JLabel lblProducts = new JLabel("Products");
-		lblProducts.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				error = "";
-				layeredMainPane.removeAll();
-				layeredMainPane.add(productsPanel);
-				layeredMainPane.repaint();
-				layeredMainPane.revalidate();
-				lblDashboard.setForeground(Color.GREEN);
-				lblProducts.setForeground(Color.WHITE);
-				lblAccounts.setForeground(Color.GREEN);
-				lblTransaction.setForeground(Color.GREEN);
-				
-				refreshProductTable();
-				refreshProductPanel();
-			}
-		});
-		lblProducts.setForeground(Color.GREEN);
-		lblProducts.setFont(new Font("Tahoma", Font.BOLD, 24));
-		lblProducts.setBackground(new Color(85, 107, 47));
-		
-		lblDashboard = new JLabel("Dashboard");
-		lblDashboard.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				error = "";
-				layeredMainPane.removeAll();
-				layeredMainPane.add(dashBoardPanel);
-				layeredMainPane.repaint();
-				layeredMainPane.revalidate();
-				lblDashboard.setForeground(Color.WHITE);
-				lblProducts.setForeground(Color.GREEN);
-				lblAccounts.setForeground(Color.GREEN);
-				lblTransaction.setForeground(Color.GREEN);
-			}
-		});
-		lblDashboard.setForeground(Color.WHITE);
-		lblDashboard.setFont(new Font("Tahoma", Font.BOLD, 24));
-		lblDashboard.setBackground(new Color(85, 107, 47));
-		
 		JButton btnLogout = new JButton("LOGOUT");
 		btnLogout.addMouseListener(new MouseAdapter() {
 			@Override
@@ -476,81 +441,102 @@ public class ImsMainPage extends ImsDesktopApplication {
 		btnLogout.setFont(new Font("Tahoma", Font.BOLD, 24));
 		btnLogout.setBorder(new LineBorder(new Color(0, 0, 255)));
 		
-		lblTransaction = new JLabel("Transactions");
-		lblTransaction.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
+		btnDashboard = new JButton("Dashboard");
+		btnDashboard.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				error = "";
 				layeredMainPane.removeAll();
-				layeredMainPane.add(transactionsPanel);
+				layeredMainPane.add(dashBoardPanel);
 				layeredMainPane.repaint();
 				layeredMainPane.revalidate();
-				lblDashboard.setForeground(Color.GREEN);
-				lblProducts.setForeground(Color.GREEN);
-				lblAccounts.setForeground(Color.GREEN);
-				lblTransaction.setForeground(Color.white);
+				btnDashboard.setForeground(Color.decode("#0f03fc"));
+				btnProducts.setForeground(Color.GREEN);
+				btnAccounts.setForeground(Color.GREEN);
 				
-//				refreshTransactionPanel();
+				refreshDashBoard();
 			}
 		});
-		lblTransaction.setForeground(Color.GREEN);
-		lblTransaction.setFont(new Font("Tahoma", Font.BOLD, 24));
-		lblTransaction.setBackground(new Color(85, 107, 47));
+		btnDashboard.setFont(new Font("Tahoma", Font.BOLD, 24));
+		btnDashboard.setBackground(new Color(85, 107, 47));
+		btnDashboard.setForeground(Color.GREEN);
 		
-		lblAccounts = new JLabel("Accounts");
-		lblAccounts.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
+		btnProducts = new JButton("Products");
+		btnProducts.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				error = "";
+				try {
+					products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
+				} catch (InvalidInputException exc) {
+					error = exc.getMessage();
+				} if (error.length() == 0) {
+					layeredMainPane.removeAll();
+					layeredMainPane.add(productsPanel);
+					layeredMainPane.repaint();
+					layeredMainPane.revalidate();
+					btnDashboard.setForeground(Color.GREEN);
+					btnProducts.setForeground(Color.decode("#0f03fc"));
+					btnAccounts.setForeground(Color.GREEN);
+					
+					refreshProductTable();
+					refreshProductPanel();
+				}
+				
+				lblErrorMEssage.setText(error);
+				
+			}
+		});
+		btnProducts.setFont(new Font("Tahoma", Font.BOLD, 24));
+		btnProducts.setBackground(new Color(85, 107, 47));
+		btnProducts.setForeground(Color.GREEN);
+		
+		btnAccounts = new JButton("Accounts");
+		btnAccounts.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				error = "";
 				layeredMainPane.removeAll();
 				layeredMainPane.add(accountsPanel);
 				layeredMainPane.repaint();
 				layeredMainPane.revalidate();
-				lblDashboard.setForeground(Color.GREEN);
-				lblProducts.setForeground(Color.GREEN);
-				lblAccounts.setForeground(Color.WHITE);
-				lblTransaction.setForeground(Color.GREEN);
+				btnDashboard.setForeground(Color.GREEN);
+				btnProducts.setForeground(Color.GREEN);
+				btnAccounts.setForeground(Color.decode("#0f03fc"));
 				
 				refreshAccountPanel();
 				//refreshCustomerTransactionTable();
 			}
 		});
-		lblAccounts.setForeground(Color.GREEN);
-		lblAccounts.setFont(new Font("Tahoma", Font.BOLD, 24));
+		btnAccounts.setFont(new Font("Tahoma", Font.BOLD, 24));
+		btnAccounts.setBackground(new Color(85, 107, 47));
+		btnAccounts.setForeground(Color.GREEN);
 		
-		JLabel lblWelcome = new JLabel("Welcome");
-		lblWelcome.setForeground(Color.MAGENTA);
-		lblWelcome.setFont(new Font("Times New Roman", Font.BOLD, 36));
 		GroupLayout gl_panel_3 = new GroupLayout(panel_3);
 		gl_panel_3.setHorizontalGroup(
-			gl_panel_3.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, gl_panel_3.createSequentialGroup()
-					.addGap(15)
+			gl_panel_3.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_3.createSequentialGroup()
 					.addGroup(gl_panel_3.createParallelGroup(Alignment.LEADING)
-						.addComponent(btnLogout)
-						.addComponent(lblAccounts, GroupLayout.PREFERRED_SIZE, 127, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_panel_3.createParallelGroup(Alignment.LEADING, false)
-							.addComponent(lblProducts, GroupLayout.PREFERRED_SIZE, 127, GroupLayout.PREFERRED_SIZE)
-							.addComponent(lblDashboard, GroupLayout.PREFERRED_SIZE, 139, GroupLayout.PREFERRED_SIZE)
-							.addComponent(lblWelcome, GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
-							.addComponent(lblTransaction, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-					.addContainerGap(111, Short.MAX_VALUE))
+						.addGroup(gl_panel_3.createSequentialGroup()
+							.addGap(3)
+							.addGroup(gl_panel_3.createParallelGroup(Alignment.LEADING)
+								.addComponent(btnProducts, GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+								.addComponent(btnDashboard, GroupLayout.PREFERRED_SIZE, 164, Short.MAX_VALUE)
+								.addComponent(btnAccounts, GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)))
+						.addGroup(Alignment.TRAILING, gl_panel_3.createSequentialGroup()
+							.addContainerGap(61, Short.MAX_VALUE)
+							.addComponent(btnLogout)))
+					.addContainerGap())
 		);
 		gl_panel_3.setVerticalGroup(
 			gl_panel_3.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_3.createSequentialGroup()
-					.addComponent(lblWelcome)
-					.addGap(18)
-					.addComponent(lblDashboard)
-					.addGap(18)
-					.addComponent(lblProducts)
-					.addGap(28)
-					.addComponent(lblTransaction)
-					.addGap(18)
-					.addComponent(lblAccounts)
-					.addGap(40)
+					.addGap(14)
+					.addComponent(btnDashboard)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(btnProducts)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(btnAccounts)
+					.addGap(50)
 					.addComponent(btnLogout)
-					.addGap(183))
+					.addGap(307))
 		);
 		panel_3.setLayout(gl_panel_3);
 		
@@ -562,26 +548,23 @@ public class ImsMainPage extends ImsDesktopApplication {
 		dashBoardPanel = new JPanel();
 		layeredMainPane.add(dashBoardPanel, "name_118134937110699");
 		
-		JTextArea textArea = new JTextArea();
-		textArea.setText("Warmly welcome to De Don Motors Inventory \r\nManagement Application. Please, feel free explore \r\nand thoroughly test the app and get to me with the\r\n comhrehensive feed back including bugs!");
-		textArea.setForeground(new Color(128, 128, 0));
-		textArea.setFont(new Font("Monospaced", Font.PLAIN, 20));
+		lblEmployee = new JLabel("");
+		lblEmployee.setHorizontalAlignment(SwingConstants.CENTER);
+		lblEmployee.setFont(new Font("Dialog", Font.BOLD, 25));
 		GroupLayout gl_dashBoardPanel = new GroupLayout(dashBoardPanel);
 		gl_dashBoardPanel.setHorizontalGroup(
 			gl_dashBoardPanel.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 830, Short.MAX_VALUE)
 				.addGroup(gl_dashBoardPanel.createSequentialGroup()
-					.addGap(59)
-					.addComponent(textArea, GroupLayout.PREFERRED_SIZE, 639, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(132, Short.MAX_VALUE))
+					.addGap(61)
+					.addComponent(lblEmployee, GroupLayout.PREFERRED_SIZE, 440, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(263, Short.MAX_VALUE))
 		);
 		gl_dashBoardPanel.setVerticalGroup(
 			gl_dashBoardPanel.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 509, Short.MAX_VALUE)
 				.addGroup(gl_dashBoardPanel.createSequentialGroup()
-					.addGap(65)
-					.addComponent(textArea, GroupLayout.PREFERRED_SIZE, 254, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(190, Short.MAX_VALUE))
+					.addGap(101)
+					.addComponent(lblEmployee)
+					.addContainerGap(411, Short.MAX_VALUE))
 		);
 		dashBoardPanel.setLayout(gl_dashBoardPanel);
 		
@@ -689,7 +672,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			public void actionPerformed(ActionEvent e) {
 				error = "";
 				int selectedIndex = comboBoxProduct.getSelectedIndex();
-				String productName = products.get(selectedIndex);
+				String productName = comboBoxProductsMap.get(selectedIndex);
 				if (productName != null) {
 					for (ProductDTO p : productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId())) {
 						if (productName.equals(p.getName())) {
@@ -762,7 +745,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 				
 				try {
 					int selectedIndex = comboBoxProduct.getSelectedIndex();
-					String oldName = products.get(selectedIndex);
+					String oldName = comboBoxProductsMap.get(selectedIndex);
 					ProductDTO productDTO = new ProductDTO();
 					productDTO.setName(newName);
 					productDTO.setItemPrice(updatePrice);
@@ -784,7 +767,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			public void actionPerformed(ActionEvent earg0) {
 				error = "";
 				int selectedIndex = comboBoxProduct.getSelectedIndex();
-				String productName = products.get(selectedIndex);
+				String productName = comboBoxProductsMap.get(selectedIndex);
 				try {
 					productService.deleteProduct(productName, ImsDesktopApplication.getCurrentEmployeeId());
 				} catch (InvalidInputException er) {
@@ -1036,7 +1019,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		label_24.setBounds(128, 0, 178, 20);
 		panel_8.add(label_24);
 		
-		JButton btnShowReceipt = new JButton("SHOW RECEIPT");
+		JButton btnShowReceipt = new JButton("PRINT");
 		btnShowReceipt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// TODO add your handling code here:
@@ -1486,39 +1469,19 @@ public class ImsMainPage extends ImsDesktopApplication {
 				return columnTypes[columnIndex];
 			}
 			boolean[] columnEditables = new boolean[] {
-				false, true, true, true, true
+				false, true, true, true
 			};
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
 			}
 		});
-		tableCustomerTransactions.getColumnModel().getColumn(3).setResizable(false);
+		//tableCustomerTransactions.getColumnModel().getColumn(3).setResizable(false);
 		scrollPane_2.setViewportView(tableCustomerTransactions);
-		
-		JButton button_16 = new JButton("UPDATE");
-		button_16.setBorder(new LineBorder(new Color(128, 0, 0)));
-		button_16.setBounds(614, 472, 115, 20);
-		accountsPanel.add(button_16);
-		
-		textFieldCurrentPaid = new JTextField();
-		textFieldCurrentPaid.setColumns(10);
-		textFieldCurrentPaid.setBounds(467, 449, 124, 20);
-		accountsPanel.add(textFieldCurrentPaid);
 		
 		JLabel label_34 = new JLabel("");
 		label_34.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		label_34.setBounds(644, 457, 105, 20);
 		accountsPanel.add(label_34);
-		
-		textFieldUpdatePaid = new JTextField();
-		textFieldUpdatePaid.setColumns(10);
-		textFieldUpdatePaid.setBounds(614, 448, 115, 20);
-		accountsPanel.add(textFieldUpdatePaid);
-		
-		JLabel label_35 = new JLabel("AMOUNT PAID");
-		label_35.setBorder(new LineBorder(new Color(128, 0, 0)));
-		label_35.setBounds(477, 475, 101, 14);
-		accountsPanel.add(label_35);
 		
 		JButton button = new JButton("+");
 		button.setForeground(new Color(0, 128, 0));
@@ -1552,18 +1515,24 @@ public class ImsMainPage extends ImsDesktopApplication {
 		JButton btnOpen = new JButton("OPEN");
 		btnOpen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				error = "";
-				layeredMainPane.removeAll();
-				layeredMainPane.add(transactionsPanel);
-				layeredMainPane.repaint();
-				layeredMainPane.revalidate();
-				lblDashboard.setForeground(Color.GREEN);
-				lblProducts.setForeground(Color.GREEN);
-				lblAccounts.setForeground(Color.GREEN);
-				lblTransaction.setForeground(Color.white);
 				
-				refreshTransactionPanel();
-				refreshTransactionDetail();
+				try {
+					refreshTransactionPanel();
+					refreshTransactionDetail();
+				} catch (InvalidInputException exc) {
+					error = exc.getMessage();
+				}
+				
+				if (error.length() == 0) {
+					layeredMainPane.removeAll();
+					layeredMainPane.add(transactionsPanel);
+					layeredMainPane.repaint();
+					layeredMainPane.revalidate();
+					btnDashboard.setForeground(Color.GREEN);
+					btnProducts.setForeground(Color.GREEN);
+					btnAccounts.setForeground(Color.GREEN);
+				}
+						
 			}
 		});
 		btnOpen.setBounds(223, 449, 70, 29);
@@ -1589,7 +1558,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			}
 		});
 		btnDelete_2.setForeground(Color.RED);
-		btnDelete_2.setBounds(290, 449, 81, 29);
+		btnDelete_2.setBounds(312, 449, 81, 29);
 		accountsPanel.add(btnDelete_2);
 		
 		receiptPanel = new JPanel();
@@ -1880,7 +1849,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			textFieldProductQuantity.setText("");
 			
 			//Update product
-			products = new HashMap<Integer, String>();
+			comboBoxProductsMap = new HashMap<Integer, String>();
 			//comboBoxProduct.removeAll();
 			int index = 0;
 			List<String> names = new ArrayList<String>();
@@ -1892,7 +1861,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			}
 			Collections.sort(names);
 			for (String name : names) {
-				products.put(index, name);
+				comboBoxProductsMap.put(index, name);
 				comboBoxProduct.addItem(name);
 				index++;
 			}
@@ -2115,7 +2084,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 
 		      Graphics2D g2 = (Graphics2D) pg;
 		      g2.translate(pf.getImageableX(), pf.getImageableY());
-		      component.paint(g2);
+		      component.paintAll(g2);
 		      return Printable.PAGE_EXISTS;
 		    }
 		  });
@@ -2128,4 +2097,11 @@ public class ImsMainPage extends ImsDesktopApplication {
 		        // handle exception
 		  }
 		}
+	
+	private void refreshDashBoard() {
+		Employee currentEmployee = ImsDesktopApplication.getCurrentEmployee();
+		String employeeFirstName = currentEmployee.getFirstName();
+		String employeeLastName = currentEmployee.getLastName();
+		lblEmployee.setText(employeeFirstName + " " + employeeLastName); 
+	}
 }
