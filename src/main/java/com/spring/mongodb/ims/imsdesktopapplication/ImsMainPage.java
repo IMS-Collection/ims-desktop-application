@@ -328,8 +328,11 @@ public class ImsMainPage extends ImsDesktopApplication {
 				
 				//update visuals
 				refreshLoginData();
-				refreshDashBoard();
-			}
+				
+				if (!(error.length() > 0)) {
+					refreshDashBoard();
+				}
+				}
 		});
 		
 		JButton btnExit = new JButton("EXIT");
