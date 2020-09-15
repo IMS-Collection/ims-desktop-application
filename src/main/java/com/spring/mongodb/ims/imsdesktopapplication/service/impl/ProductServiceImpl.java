@@ -266,7 +266,7 @@ public class ProductServiceImpl implements ProductService{
 		startTime = System.currentTimeMillis();
 		Iterable<Product> products = productRepository.findAll();
 		endTime = System.currentTimeMillis();
-		//System.out.println("Find all products: " + (endTime - startTime));
+		System.out.println("Find all products: " + (endTime - startTime));
 
 		for (Product p : products) {
 			returnValue.add(modelMapper.map(p, ProductDTO.class));
