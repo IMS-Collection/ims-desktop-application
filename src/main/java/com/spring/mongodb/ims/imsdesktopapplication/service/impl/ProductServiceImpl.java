@@ -79,16 +79,30 @@ public class ProductServiceImpl implements ProductService{
 		
 		ModelMapper modelMapper = new ModelMapper();
 		
-		Product newProduct = modelMapper.map(productDTO, Product.class);
-		String publicProductId = utils.generateEmployeeId(30);
-		newProduct.setProductId(publicProductId);
-		
-		try {
-			productRepository.save(newProduct);
-		} catch (Exception e) {
-			//TODO: fine-tune the response
-			throw new InvalidInputException("Error!, seems the name already exist");
+		for (int i = 1; i < 101; i++) {
+			productDTO.setName("Tire" + i);
+			Product newProduct = modelMapper.map(productDTO, Product.class);
+			String publicProductId = utils.generateEmployeeId(30);
+			newProduct.setProductId(publicProductId);
+			
+			try {
+				productRepository.save(newProduct);
+			} catch (Exception e) {
+				//TODO: fine-tune the response
+				throw new InvalidInputException("Error!, seems the name already exist");
+			}
 		}
+		
+//		Product newProduct = modelMapper.map(productDTO, Product.class);
+//		String publicProductId = utils.generateEmployeeId(30);
+//		newProduct.setProductId(publicProductId);
+//		
+//		try {
+//			productRepository.save(newProduct);
+//		} catch (Exception e) {
+//			//TODO: fine-tune the response
+//			throw new InvalidInputException("Error!, seems the name already exist");
+//		}
 		
 		
 	}
