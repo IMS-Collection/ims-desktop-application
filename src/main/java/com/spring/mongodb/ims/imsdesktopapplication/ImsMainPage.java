@@ -126,8 +126,6 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private JTextField textFieldCustomerID;
 	private JTextField textFieldUpdateCustomerFirstName;
 	private JTextField textFieldUpdateCustomerUN;
-	private JTextField textFieldCurrentPaid;
-	private JTextField textFieldUpdatePaid;
 	private JPanel productsPanel;
 	private JPanel dashBoardPanel;
 	private JPanel accountsPanel;
@@ -328,8 +326,11 @@ public class ImsMainPage extends ImsDesktopApplication {
 				
 				//update visuals
 				refreshLoginData();
-				refreshDashBoard();
-			}
+				
+				if (!(error.length() > 0)) {
+					refreshDashBoard();
+				}
+				}
 		});
 		
 		JButton btnExit = new JButton("EXIT");
@@ -1018,7 +1019,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		label_24.setBounds(128, 0, 178, 20);
 		panel_8.add(label_24);
 		
-		JButton btnShowReceipt = new JButton("SHOW RECEIPT");
+		JButton btnShowReceipt = new JButton("PRINT");
 		btnShowReceipt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// TODO add your handling code here:
@@ -1477,30 +1478,10 @@ public class ImsMainPage extends ImsDesktopApplication {
 		//tableCustomerTransactions.getColumnModel().getColumn(3).setResizable(false);
 		scrollPane_2.setViewportView(tableCustomerTransactions);
 		
-		JButton button_16 = new JButton("UPDATE");
-		button_16.setBorder(new LineBorder(new Color(128, 0, 0)));
-		button_16.setBounds(614, 472, 115, 20);
-		accountsPanel.add(button_16);
-		
-		textFieldCurrentPaid = new JTextField();
-		textFieldCurrentPaid.setColumns(10);
-		textFieldCurrentPaid.setBounds(467, 449, 124, 20);
-		accountsPanel.add(textFieldCurrentPaid);
-		
 		JLabel label_34 = new JLabel("");
 		label_34.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		label_34.setBounds(644, 457, 105, 20);
 		accountsPanel.add(label_34);
-		
-		textFieldUpdatePaid = new JTextField();
-		textFieldUpdatePaid.setColumns(10);
-		textFieldUpdatePaid.setBounds(614, 448, 115, 20);
-		accountsPanel.add(textFieldUpdatePaid);
-		
-		JLabel label_35 = new JLabel("AMOUNT PAID");
-		label_35.setBorder(new LineBorder(new Color(128, 0, 0)));
-		label_35.setBounds(477, 475, 101, 14);
-		accountsPanel.add(label_35);
 		
 		JButton button = new JButton("+");
 		button.setForeground(new Color(0, 128, 0));
@@ -2103,7 +2084,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 
 		      Graphics2D g2 = (Graphics2D) pg;
 		      g2.translate(pf.getImageableX(), pf.getImageableY());
-		      component.paint(g2);
+		      component.paintAll(g2);
 		      return Printable.PAGE_EXISTS;
 		    }
 		  });
