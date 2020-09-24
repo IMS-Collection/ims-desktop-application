@@ -193,7 +193,7 @@ public class TransactionServiceImpl implements TransactionService {
 			throw new InvalidInputException(error);
 		}
 		if (quantity > product.getQuantity()) {
-			error = "Sorry! we do not have enough product in store.";
+			error = "Sorry! we do not have enough product in store, " + product.getQuantity() + " left";
 		}
 		if (error.length() > 0) {
 			throw new InvalidInputException(error);
