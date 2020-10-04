@@ -54,12 +54,16 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<!-- <plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration> <encoding>UTF-8</encoding> <source>11</source> <target>11</target> 
-					</configuration>
-			</plugin> -->
+
+<!-- Follow this instruction to change java version		 -->	
+<!-- Pick the version you want to be the default (1.6.0_65-b14-462 for arguments sake) then:
+
+export JAVA_HOME=`/usr/libexec/java_home -v 1.6.0_65-b14-462`
+or you can specify just the major version, like:
+
+export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
+Now when you run java -version you will see:
+ -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
