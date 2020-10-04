@@ -21,6 +21,7 @@ import com.spring.mongodb.ims.imsdesktopapplication.ImsDesktopApplication;
 import com.spring.mongodb.ims.imsdesktopapplication.exceptions.InvalidInputException;
 import com.spring.mongodb.ims.imsdesktopapplication.model.Customer;
 import com.spring.mongodb.ims.imsdesktopapplication.model.Employee;
+import com.spring.mongodb.ims.imsdesktopapplication.model.ProductTransaction;
 import com.spring.mongodb.ims.imsdesktopapplication.model.Transaction;
 import com.spring.mongodb.ims.imsdesktopapplication.repository.CustomerRepository;
 import com.spring.mongodb.ims.imsdesktopapplication.repository.EmployeeRepository;
@@ -403,7 +404,16 @@ public class CustomerServiceImpl implements CustomerService {
 		List<TransactionDTO> transactionDTOs = new ArrayList<TransactionDTO>();
 		
 		for (Transaction transaction : transactions) {
-			transactionDTOs.add(modelMapper.map(transaction, TransactionDTO.class));
+			TransactionDTO transactionDTO = modelMapper.map(transaction, TransactionDTO.class);
+			transactionDTOs.add(transactionDTO);
+			double totalAmount = 0;
+			List<ProductTransaction> tranzactions = transaction.getProductTransactions();
+			if (tranzactions != null) {
+				for (ProductTransaction pt : tranzactions) {
+					totalAmount = totalAmount + pt.getPrice();
+				}
+			}
+			transactionDTO.setTotalAmount(totalAmount);
 		}
 		returnValue = modelMapper.map(customer, CustomerDTO.class);
 		returnValue.setTransactions(transactionDTOs);

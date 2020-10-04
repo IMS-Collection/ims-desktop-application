@@ -65,7 +65,7 @@ public class TransactionServiceImpl implements TransactionService {
 		if (!isManagerLoggedIn(employeeId)) {
 			error = "Manager must be logged in.";
 		} else if (customerUserName == null || customerUserName.length() == 0) {
-			error = "Please, enter the customer user name.";
+			error = "Please, select a customer.";
 		}
 
 		if (error.length() > 0) {
@@ -192,8 +192,8 @@ public class TransactionServiceImpl implements TransactionService {
 		if (error.length() > 0) {
 			throw new InvalidInputException(error);
 		}
-		if (quantity > product.getQuantity()) {
-			error = "Sorry! we do not have enough product in store, " + product.getQuantity() + " left";
+		if (quantity > product.getQuantity() - product.getLimit()) {
+			error = "Sorry! we do not have enough product in store, " + "left: " + product.getQuantity() + ", limit: " + product.getLimit();
 		}
 		if (error.length() > 0) {
 			throw new InvalidInputException(error);
@@ -471,10 +471,15 @@ public class TransactionServiceImpl implements TransactionService {
 			throw new InvalidInputException("This item transaction doesn't exist");
 		}
 		int differenceQuantity = newQuantity - pTransaction.getQuantity();
-
-		if (product.getQuantity() - differenceQuantity < 0) {
-			throw new InvalidInputException("Sorry!, we do not have enough products for this quantity.");
+		
+		if (differenceQuantity > product.getQuantity() - product.getLimit()) {
+			throw new InvalidInputException("Sorry! we do not have enough product in store, " + "left: " 
+					+ product.getQuantity() + ", limit: " + product.getLimit());
 		}
+
+//		if (product.getQuantity() - differenceQuantity < 0) {
+//			throw new InvalidInputException("Sorry!, we do not have enough products for this quantity.");
+//		}
 
 		pTransaction.setQuantity(newQuantity);
 		pTransaction.setPrice(newQuantity * product.getItemPrice());

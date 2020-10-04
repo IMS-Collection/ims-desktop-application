@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Product {
 	private double itemPrice;
 	private int quantity;
+	private int limit;
 	@Indexed(unique = true)
 	private String name;
 	@Id
@@ -93,6 +94,20 @@ public class Product {
 		if (quantity != other.quantity)
 			return false;
 		return true;
+	}
+
+	/**
+	 * @return the limit
+	 */
+	public int getLimit() {
+		return limit;
+	}
+
+	/**
+	 * @param limit the limit to set
+	 */
+	public void setLimit(int limit) {
+		this.limit = limit;
 	}
 	
 	
