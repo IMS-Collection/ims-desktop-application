@@ -5,6 +5,7 @@ public class ProductDTO {
 	private String name;
 	private double itemPrice;
 	private int quantity;
+	private int limit;
 
 	public String getName() {
 		return name;
@@ -29,5 +30,15 @@ public class ProductDTO {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
+
+	public int getLimit() {
+		return limit;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
+	}
+	
+	
 
 }

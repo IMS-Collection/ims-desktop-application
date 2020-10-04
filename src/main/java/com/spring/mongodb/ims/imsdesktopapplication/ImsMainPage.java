@@ -96,6 +96,11 @@ public class ImsMainPage extends ImsDesktopApplication {
 	//Products
 	private HashMap<Integer, String> comboBoxProductsMap;
 	private HashMap<Integer, String> transactionProducts;
+	
+	/**
+	 * maps product name to its unit price.
+	 */
+	private HashMap<String, String> comboBoxAddProductMap;
 		
 	//Customers
 	private HashMap<Integer, String> customers;
@@ -158,6 +163,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private JButton btnProducts;
 	private JButton btnAccounts;
 	private JLabel lblEmployee;
+	private JTextField textFieldLimit;
+	private JTextField textFieldUpdateLimit;
 
 	/**
 	 * Launch the application.
@@ -578,19 +585,19 @@ public class ImsMainPage extends ImsDesktopApplication {
 		JLabel label_8 = new JLabel("Add Product");
 		label_8.setForeground(new Color(0, 100, 0));
 		label_8.setFont(new Font("Dialog", Font.BOLD, 24));
-		label_8.setBounds(73, 18, 158, 20);
+		label_8.setBounds(73, 12, 158, 20);
 		panel_6.add(label_8);
 		
 		JLabel label_9 = new JLabel("Name");
-		label_9.setBounds(13, 57, 41, 20);
+		label_9.setBounds(6, 46, 41, 20);
 		panel_6.add(label_9);
 		
 		JLabel label_10 = new JLabel("Price");
-		label_10.setBounds(13, 101, 34, 20);
+		label_10.setBounds(6, 84, 34, 20);
 		panel_6.add(label_10);
 		
 		JLabel label_11 = new JLabel("Quantity");
-		label_11.setBounds(13, 145, 60, 20);
+		label_11.setBounds(6, 126, 60, 20);
 		panel_6.add(label_11);
 		
 		JButton btnAddProduct = new JButton("ADD PRODUCT");
@@ -613,6 +620,14 @@ public class ImsMainPage extends ImsDesktopApplication {
 					error = "Quantity figure needs to be a integer value! ";
 				}
 				
+				int limit = 0;
+				try {
+					limit = Integer.parseInt(textFieldLimit.getText());
+				}
+				catch (NumberFormatException e) {
+					error = "Product limit needs to be an integer value! ";
+				}
+				
 				String name = textFieldProductName.getText();
 				
 				error.trim();
@@ -623,6 +638,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 						productDTO.setName(name);
 						productDTO.setItemPrice(price);
 						productDTO.setQuantity(quantity);
+						productDTO.setLimit(limit);
 						productService.createProduct(productDTO, ImsDesktopApplication.getCurrentEmployeeId());
 //						ImsProductController.callCreateProduct();
 					} catch (InvalidInputException e) {
@@ -635,25 +651,25 @@ public class ImsMainPage extends ImsDesktopApplication {
 			}
 		});
 		btnAddProduct.setBorder(new LineBorder(new Color(128, 0, 0), 1, true));
-		btnAddProduct.setBounds(88, 177, 143, 29);
+		btnAddProduct.setBounds(83, 198, 143, 29);
 		panel_6.add(btnAddProduct);
 		
 		textFieldProductQuantity = new JTextField();
 		textFieldProductQuantity.setColumns(10);
 		textFieldProductQuantity.setBorder(new LineBorder(new Color(0, 0, 255)));
-		textFieldProductQuantity.setBounds(88, 142, 200, 26);
+		textFieldProductQuantity.setBounds(83, 124, 200, 26);
 		panel_6.add(textFieldProductQuantity);
 		
 		textFieldProductPrice = new JTextField();
 		textFieldProductPrice.setColumns(10);
 		textFieldProductPrice.setBorder(new LineBorder(new Color(0, 0, 255)));
-		textFieldProductPrice.setBounds(88, 98, 200, 26);
+		textFieldProductPrice.setBounds(83, 84, 200, 26);
 		panel_6.add(textFieldProductPrice);
 		
 		textFieldProductName = new JTextField();
 		textFieldProductName.setColumns(10);
 		textFieldProductName.setBorder(new LineBorder(new Color(0, 0, 255)));
-		textFieldProductName.setBounds(88, 54, 200, 26);
+		textFieldProductName.setBounds(83, 44, 200, 26);
 		panel_6.add(textFieldProductName);
 		
 		JLabel label_12 = new JLabel("Products");
@@ -679,6 +695,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 							textFieldUpdateProductName.setText(productName);
 							textFieldUpdateProductPrice.setText(""+p.getItemPrice());
 							textFieldUpdateProductQuantity.setText(""+p.getQuantity());
+							textFieldUpdateLimit.setText("" + p.getLimit());
 						}
 					}
 				}
@@ -731,14 +748,22 @@ public class ImsMainPage extends ImsDesktopApplication {
 					updatePrice = Float.parseFloat(textFieldUpdateProductPrice.getText());
 				}
 				catch (NumberFormatException e) {
-					error = "Price figure needs to be a numerical value! ";
+					error = "Price figure needs to be an numerical value! ";
 				}
 				int updateQuantity = 0;
 				try {
 					updateQuantity = Integer.parseInt(textFieldUpdateProductQuantity.getText());
 				}
 				catch (NumberFormatException e) {
-					error = error + "Quantity figure needs to be a integer value! ";
+					error = "Quantity figure needs to be an integer value! ";
+				}
+				
+				int limit = 0;
+				try {
+					limit = Integer.parseInt(textFieldUpdateLimit.getText());
+				}
+				catch (NumberFormatException e) {
+					error = "The product needs to be an integer value! ";
 				}
 				
 				String newName = textFieldUpdateProductName.getText();
@@ -750,6 +775,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 					productDTO.setName(newName);
 					productDTO.setItemPrice(updatePrice);
 					productDTO.setQuantity(updateQuantity);
+					productDTO.setLimit(limit);
 					productService.updateProduct(oldName, productDTO, ImsDesktopApplication.getCurrentEmployeeId());
 				} catch (InvalidInputException e) {
 					error = e.getMessage();
@@ -759,7 +785,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			}
 		});
 		btnUpdateProduct.setBorder(new LineBorder(new Color(128, 0, 0), 1, true));
-		btnUpdateProduct.setBounds(88, 437, 102, 29);
+		btnUpdateProduct.setBounds(83, 502, 102, 29);
 		panel_6.add(btnUpdateProduct);
 		
 		JButton btnDelete = new JButton("DELETE");
@@ -778,7 +804,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			}
 		});
 		btnDelete.setBorder(new LineBorder(new Color(128, 0, 0), 1, true));
-		btnDelete.setBounds(199, 437, 89, 29);
+		btnDelete.setBounds(197, 502, 89, 29);
 		panel_6.add(btnDelete);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -810,6 +836,26 @@ public class ImsMainPage extends ImsDesktopApplication {
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 449, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
 		);
+		
+		JLabel lblLimit = new JLabel("Limit");
+		lblLimit.setBounds(6, 163, 60, 15);
+		panel_6.add(lblLimit);
+		
+		textFieldLimit = new JTextField();
+		textFieldLimit.setBorder(new LineBorder(Color.BLUE));
+		textFieldLimit.setBounds(83, 164, 200, 26);
+		panel_6.add(textFieldLimit);
+		textFieldLimit.setColumns(10);
+		
+		JLabel lblLimit_1 = new JLabel("Limit");
+		lblLimit_1.setBounds(13, 455, 60, 15);
+		panel_6.add(lblLimit_1);
+		
+		textFieldUpdateLimit = new JTextField();
+		textFieldUpdateLimit.setBorder(new LineBorder(Color.BLUE));
+		textFieldUpdateLimit.setBounds(89, 450, 200, 26);
+		panel_6.add(textFieldUpdateLimit);
+		textFieldUpdateLimit.setColumns(10);
 		
 		tableProducts = new JTable();
 		tableProducts.setAutoCreateRowSorter(true);
@@ -901,6 +947,18 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_8.add(label_20);
 		
 		comboBoxTransactionProduct = new JComboBox<String>();
+		comboBoxTransactionProduct.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				error = "";
+				//comboBoxAddProductMap.
+				int selectedIndex = comboBoxTransactionProduct.getSelectedIndex();
+				String productName = transactionProducts.get(selectedIndex);
+				if (productName != null) {
+					String unitPrice = comboBoxAddProductMap.get(productName);
+					lblItemPrice.setText("Unit Price: " + unitPrice);
+				}
+			}
+		});
 		comboBoxTransactionProduct.setBounds(81, 245, 154, 26);
 		panel_8.add(comboBoxTransactionProduct);
 		
@@ -1054,7 +1112,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		lblItemPrice = new JLabel("New label");
 		lblItemPrice.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
 		lblItemPrice.setForeground(Color.GREEN);
-		lblItemPrice.setBounds(97, 217, 105, 16);
+		lblItemPrice.setBounds(15, 217, 220, 16);
 		panel_8.add(lblItemPrice);
 		
 		JButton btnPay = new JButton("PAY");
@@ -1847,6 +1905,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			textFieldProductName.setText("");
 			textFieldProductPrice.setText("");
 			textFieldProductQuantity.setText("");
+			textFieldLimit.setText("");
 			
 			//Update product
 			comboBoxProductsMap = new HashMap<Integer, String>();
@@ -1870,6 +1929,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			textFieldUpdateProductName.setText("");
 			textFieldUpdateProductPrice.setText("");
 			textFieldUpdateProductQuantity.setText("");
+			textFieldUpdateLimit.setText("");
 			
 		}
 	}
@@ -1978,7 +2038,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			for (TransactionDTO tT : customerDTO.getTransactions()) {
 				String date = tT.getDate().substring(0, 10);
 				double balance = tT.getTotalAmount() - tT.getAmountPaid();
-				model.addRow(new Object[] {date, tT.getTotalAmount(), tT.getAmountPaid(), balance});
+				model.addRow(new Object[] {date, roundNumber(tT.getTotalAmount()), roundNumber(tT.getAmountPaid()), roundNumber(balance)});
 				totalBalance = (float) (totalBalance + balance);
 				transactionIds.put(row, tT.getTransactionId());
 				row++;
@@ -1991,6 +2051,14 @@ public class ImsMainPage extends ImsDesktopApplication {
 		
 	}
 	
+	private double roundNumber(double value) {
+		value = value*100;
+		value = (double)((int) value);
+		value = value /100;
+		
+		return value;
+	}
+	
 	private void refreshTransactionPanel() {
 		lblErrorMEssage.setText(error);
 		
@@ -2001,8 +2069,9 @@ public class ImsMainPage extends ImsDesktopApplication {
 			textFieldTranUpdateQuantity.setText("");
 			textFieldTransactionProductQuantity.setText("");
 			textFieldPay.setText("");
-			lblItemPrice.setText("");
 			
+			
+			comboBoxAddProductMap = new HashMap<String, String>();
 			
 			//Update transaction
 			transactionProducts = new HashMap<Integer, String>();
@@ -2012,6 +2081,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			comboBoxTransactionProduct.removeAllItems();
 			for (ProductDTO p : productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId())) {
 				names.add(p.getName());
+				comboBoxAddProductMap.put(p.getName(), "" + p.getItemPrice());
 			}
 			Collections.sort(names);
 			for (String name : names) {
@@ -2020,6 +2090,9 @@ public class ImsMainPage extends ImsDesktopApplication {
 				index++;
 			}
 			comboBoxTransactionProduct.setSelectedIndex(-1);
+			
+
+			lblItemPrice.setText("");
 			
 		}
 	}
@@ -2053,7 +2126,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 				if (!exception) {
 					if (transactionDetail.getpTransactions() != null) {
 						for (ProductTransactionDTO tp : transactionDetail.getpTransactions()) {
-							model.addRow(new Object[] {tp.getProductName(), tp.getPrice() / tp.getQuantity(), tp.getQuantity(), tp.getPrice()});
+							model.addRow(new Object[] {tp.getProductName(), tp.getPrice() / tp.getQuantity(), tp.getQuantity(), roundNumber(tp.getPrice())});
 							totalAmount = totalAmount + tp.getPrice();
 						}
 					}

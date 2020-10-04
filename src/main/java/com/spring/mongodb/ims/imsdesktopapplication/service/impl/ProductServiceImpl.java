@@ -215,6 +215,8 @@ public class ProductServiceImpl implements ProductService{
 			error = "The price of a product cannot be zero";
 		} else if (productDTO.getQuantity() <= 0) {
 			error = "Quantity of a product cannot be less than one.";
+		} else if (productDTO.getLimit() < 0) {
+			error = "Product limit cannot be less than 0";
 		}
 		if (error.length() > 0) {
 			throw new InvalidInputException(error);
@@ -223,10 +225,15 @@ public class ProductServiceImpl implements ProductService{
 		
 		Product product = productRepository.findByName(oldName);
 		
+		ModelMapper modelMapper = new ModelMapper();
+		
 		if (product != null) {
+			
+//			product = modelMapper.map(productDTO, Product.class);
 			product.setName(productDTO.getName());
 			product.setItemPrice(productDTO.getItemPrice());
 			product.setQuantity(productDTO.getQuantity());
+			product.setLimit(productDTO.getLimit());
 		}
 		
 		try {
