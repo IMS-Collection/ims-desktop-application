@@ -606,9 +606,9 @@ public class ImsMainPage extends ImsDesktopApplication {
 			public void actionPerformed(ActionEvent argo0) {
 
 				error = "";
-				float price = 0;
+				double price = 0;
 				try {
-					price = Float.parseFloat(textFieldProductPrice.getText());
+					price = Double.parseDouble(textFieldProductPrice.getText());
 				}
 				catch (NumberFormatException e) {
 					error = "Price figure needs to be a numerical value! ";
@@ -988,6 +988,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				error = "";
+				
+				// the index of the selected product to be added in a transaction
 				int selectedIndex = comboBoxTransactionProduct.getSelectedIndex();
 				int quantity = 0; 
 				if (selectedIndex < 0) {
@@ -2283,7 +2285,9 @@ public class ImsMainPage extends ImsDesktopApplication {
 				if (!exception) {
 					if (transactionDetail.getpTransactions() != null) {
 						for (ProductTransactionDTO tp : transactionDetail.getpTransactions()) {
-							model.addRow(new Object[] {tp.getProductName(), tp.getPrice() / tp.getQuantity(), tp.getQuantity(), roundNumber(tp.getPrice())});
+							// unit price = total price / quantity of products
+							double unitPrice = tp.getPrice() / tp.getQuantity();
+							model.addRow(new Object[] {tp.getProductName(), unitPrice, tp.getQuantity(), roundNumber(tp.getPrice())});
 							totalAmount = totalAmount + tp.getPrice();
 						}
 					}
