@@ -47,7 +47,7 @@ public class ProductServiceImpl implements ProductService{
 	 * @param productDTO is transfer object object which contains name, price, and quantity of the product
 	 */
 	@Override
-	public void createProduct(ProductDTO productDTO, String employeeId) throws InvalidInputException {
+	public ProductDTO createProduct(ProductDTO productDTO, String employeeId) throws InvalidInputException {
 		
 		Employee employee = employeeRepository.findByEmployeeId(employeeId);
 		boolean loggedIn = false;
@@ -90,7 +90,9 @@ public class ProductServiceImpl implements ProductService{
 			throw new InvalidInputException("Error!, seems the name already exist");
 		}
 		
+		ProductDTO newProductDTO = modelMapper.map(newProduct, ProductDTO.class);
 		
+		return newProductDTO;
 	}
 
 	@Override
