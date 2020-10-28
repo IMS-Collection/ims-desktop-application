@@ -648,6 +648,9 @@ public class ImsMainPage extends ImsDesktopApplication {
 				
 				refreshProductPanel();
 				refreshProductTable();
+				
+				// test printing table
+				printTable(tableProducts);
 			}
 		});
 		btnAddProduct.setBorder(new LineBorder(new Color(128, 0, 0), 1, true));
@@ -1959,6 +1962,17 @@ public class ImsMainPage extends ImsDesktopApplication {
 			for (ProductDTO p : products) {
 				model.addRow(new Object[] {p.getName(), p.getItemPrice(), p.getQuantity()});
 			}
+		}
+		
+	}
+	
+	private void printTable(JTable table) {
+		try {
+		    if (! table.print()) {
+		        System.err.println("User cancelled printing");
+		    }
+		} catch (java.awt.print.PrinterException e) {
+		    System.err.format("Cannot print %s%n", e.getMessage());
 		}
 	}
 	
