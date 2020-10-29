@@ -96,6 +96,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 	//Products
 	private HashMap<Integer, String> comboBoxProductsMap;
 	private HashMap<Integer, String> transactionProducts;
+	private List<ProductDTO> currentProducts;
 	
 	/**
 	 * maps product name to its unit price.
@@ -182,12 +183,16 @@ public class ImsMainPage extends ImsDesktopApplication {
 //			}
 //		});
 //	}
+	
+	
 
 	/**
 	 * Create the frame.
 	 */
 	public ImsMainPage() {
+		// initialize some data variables
 		products = new ArrayList<ProductDTO>();
+		currentProducts = new ArrayList<ProductDTO>();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 965, 649);
 		contentPane = new JPanel();
@@ -330,6 +335,9 @@ public class ImsMainPage extends ImsDesktopApplication {
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
+					// TODO load products
+					List<ProductDTO> productsFromDatabase = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
+					setCurrentProducts(productsFromDatabase);
 				}
 				
 				//update visuals
@@ -473,7 +481,11 @@ public class ImsMainPage extends ImsDesktopApplication {
 			public void actionPerformed(ActionEvent e) {
 				error = "";
 				try {
-					products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
+					// retrieve products from remote databse
+					//products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
+					
+					// retrieve products from current products
+					products = getCurrentProducts();
 				} catch (InvalidInputException exc) {
 					error = exc.getMessage();
 				} if (error.length() == 0) {
@@ -606,9 +618,9 @@ public class ImsMainPage extends ImsDesktopApplication {
 			public void actionPerformed(ActionEvent argo0) {
 
 				error = "";
-				float price = 0;
+				double price = 0;
 				try {
-					price = Float.parseFloat(textFieldProductPrice.getText());
+					price = Double.parseDouble(textFieldProductPrice.getText());
 				}
 				catch (NumberFormatException e) {
 					error = "Price figure needs to be a numerical value! ";
@@ -632,7 +644,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 				String name = textFieldProductName.getText();
 				
 				error.trim();
-				
+				ProductDTO newProductDTO = null;
 				if (error.length() == 0) {
 					try {
 						ProductDTO productDTO = new ProductDTO();
@@ -640,11 +652,18 @@ public class ImsMainPage extends ImsDesktopApplication {
 						productDTO.setItemPrice(price);
 						productDTO.setQuantity(quantity);
 						productDTO.setLimit(limit);
-						productService.createProduct(productDTO, ImsDesktopApplication.getCurrentEmployeeId());
+						newProductDTO = productService.createProduct(productDTO, ImsDesktopApplication.getCurrentEmployeeId());
 //						ImsProductController.callCreateProduct();
 					} catch (InvalidInputException e) {
 						error = e.getMessage();
 					}
+				}
+				
+				if (newProductDTO != null) {
+					// add it to the current products
+					List<ProductDTO> prdts = getCurrentProducts();
+					prdts.add(newProductDTO);
+					setCurrentProducts(prdts);
 				}
 				
 				refreshProductPanel();
@@ -692,7 +711,10 @@ public class ImsMainPage extends ImsDesktopApplication {
 				int selectedIndex = comboBoxProduct.getSelectedIndex();
 				String productName = comboBoxProductsMap.get(selectedIndex);
 				if (productName != null) {
-					for (ProductDTO p : productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId())) {
+					// retrieve products from remote database
+//					for (ProductDTO p : productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId())) {
+					// retrieve products from the current products
+					for (ProductDTO p : getCurrentProducts()) {
 						if (productName.equals(p.getName())) {
 							textFieldUpdateProductName.setText(productName);
 							textFieldUpdateProductPrice.setText(""+p.getItemPrice());
@@ -988,6 +1010,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				error = "";
+				
+				// the index of the selected product to be added in a transaction
 				int selectedIndex = comboBoxTransactionProduct.getSelectedIndex();
 				int quantity = 0; 
 				if (selectedIndex < 0) {
@@ -1208,16 +1232,16 @@ public class ImsMainPage extends ImsDesktopApplication {
 				.addGroup(gl_panel_4.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
-						.addComponent(panelInvoiceHeader, GroupLayout.PREFERRED_SIZE, 503, Short.MAX_VALUE)
-						.addComponent(scrollPaneTransaction, GroupLayout.PREFERRED_SIZE, 479, GroupLayout.PREFERRED_SIZE))
+						.addComponent(scrollPaneTransaction, GroupLayout.PREFERRED_SIZE, 479, GroupLayout.PREFERRED_SIZE)
+						.addComponent(panelInvoiceHeader, GroupLayout.PREFERRED_SIZE, 503, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		gl_panel_4.setVerticalGroup(
 			gl_panel_4.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_panel_4.createSequentialGroup()
-					.addComponent(panelInvoiceHeader, GroupLayout.PREFERRED_SIZE, 369, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-					.addComponent(scrollPaneTransaction, GroupLayout.PREFERRED_SIZE, 166, GroupLayout.PREFERRED_SIZE))
+				.addGroup(Alignment.LEADING, gl_panel_4.createSequentialGroup()
+					.addComponent(panelInvoiceHeader, GroupLayout.PREFERRED_SIZE, 346, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(scrollPaneTransaction, GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE))
 		);
 		
 		JLabel lblDeDonMotors = new JLabel("DE DON MOTORS CO. L.T.D");
@@ -1225,28 +1249,40 @@ public class ImsMainPage extends ImsDesktopApplication {
 		lblDeDonMotors.setForeground(Color.BLUE);
 		
 		JLabel lblCustomerName = new JLabel("Customer Name");
+		lblCustomerName.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		labelTranCustomerName = new JLabel("");
+		labelTranCustomerName.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		JLabel lblPhoneNumber_2 = new JLabel("Phone Number");
+		lblPhoneNumber_2.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		labelTranCustomerNumber = new JLabel("");
+		labelTranCustomerNumber.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		JLabel lblDate = new JLabel("Transaction Date");
+		lblDate.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		lbllabelTranDate = new JLabel("");
+		lbllabelTranDate.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		JLabel lblTotalAmount = new JLabel("Total Amount");
+		lblTotalAmount.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		labelTranAmount = new JLabel("");
+		labelTranAmount.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		JLabel lblAmountPaid = new JLabel("Amount Paid");
+		lblAmountPaid.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		labelTranAmountPaid = new JLabel("");
+		labelTranAmountPaid.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		JLabel lblAmountLeft = new JLabel("Amount Left");
+		lblAmountLeft.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		labelTranAmountLeft = new JLabel("");
+		labelTranAmountLeft.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		JLabel lblInGodWe = new JLabel("IN GOD WE TRUST");
 		lblInGodWe.setForeground(Color.BLACK);
@@ -1286,38 +1322,32 @@ public class ImsMainPage extends ImsDesktopApplication {
 		lblTel_2.setFont(new Font("Dialog", Font.PLAIN, 10));
 		GroupLayout gl_panelInvoiceHeader = new GroupLayout(panelInvoiceHeader);
 		gl_panelInvoiceHeader.setHorizontalGroup(
-			gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
+			gl_panelInvoiceHeader.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
 					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
 							.addContainerGap()
 							.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.TRAILING)
 								.addComponent(lblDeDonMotors)
-								.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
-									.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-										.addComponent(lblCustomerName, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
-										.addGap(18)
-										.addComponent(labelTranCustomerName, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE))
-									.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-										.addComponent(lblPhoneNumber_2, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
-										.addGap(18)
-										.addComponent(labelTranCustomerNumber, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE))
-									.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-										.addComponent(lblDate, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
-										.addGap(18)
-										.addComponent(lbllabelTranDate, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE))
-									.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-										.addComponent(lblTotalAmount, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
-										.addGap(32)
-										.addComponent(labelTranAmount, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE))
-									.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-										.addComponent(lblAmountPaid, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
-										.addGap(32)
-										.addComponent(labelTranAmountPaid, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE))
-									.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-										.addComponent(lblAmountLeft, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
-										.addGap(32)
-										.addComponent(labelTranAmountLeft, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE)))))
+								.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
+									.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
+										.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
+											.addComponent(lblCustomerName, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(labelTranCustomerName, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE))
+										.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
+											.addComponent(lblTotalAmount, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
+											.addGap(18)
+											.addComponent(labelTranAmount, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE))
+										.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
+											.addComponent(lblAmountPaid, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
+											.addGap(18)
+											.addComponent(labelTranAmountPaid, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE))
+										.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
+											.addComponent(lblAmountLeft, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
+											.addGap(18)
+											.addComponent(labelTranAmountLeft, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE)))
+									.addGap(12))))
 						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
 							.addGap(157)
 							.addComponent(lblInGodWe))
@@ -1325,7 +1355,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 							.addContainerGap()
 							.addComponent(lblSoleAgeentOf)))
 					.addContainerGap(15, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, gl_panelInvoiceHeader.createSequentialGroup()
+				.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
 					.addContainerGap(58, Short.MAX_VALUE)
 					.addComponent(lblheadOfficeTechiman)
 					.addGap(57))
@@ -1334,22 +1364,22 @@ public class ImsMainPage extends ImsDesktopApplication {
 					.addComponent(lblEmailDedonmotorsyahoocomdedonmotorsgmailcom)
 					.addContainerGap(126, Short.MAX_VALUE))
 				.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.TRAILING)
-						.addGroup(Alignment.LEADING, gl_panelInvoiceHeader.createSequentialGroup()
+					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
 							.addContainerGap()
 							.addComponent(lblWaAlongWa)
 							.addGap(36)
 							.addComponent(lblKumasiAlabafulaniChief)
 							.addGap(74)
 							.addComponent(lblBolga))
-						.addGroup(Alignment.LEADING, gl_panelInvoiceHeader.createSequentialGroup()
+						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
 							.addGap(190)
 							.addComponent(lblBranches)))
 					.addContainerGap(76, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, gl_panelInvoiceHeader.createSequentialGroup()
+				.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.TRAILING)
-						.addGroup(Alignment.LEADING, gl_panelInvoiceHeader.createSequentialGroup()
+					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
 							.addComponent(lblTel)
 							.addGap(37)
 							.addComponent(lblTel_1)
@@ -1357,59 +1387,74 @@ public class ImsMainPage extends ImsDesktopApplication {
 							.addComponent(lblTel_2))
 						.addComponent(lblNewLabel))
 					.addGap(28))
+				.addGroup(Alignment.LEADING, gl_panelInvoiceHeader.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblPhoneNumber_2, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(labelTranCustomerNumber, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(116, Short.MAX_VALUE))
+				.addGroup(Alignment.LEADING, gl_panelInvoiceHeader.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblDate, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(lbllabelTranDate, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(116, Short.MAX_VALUE))
 		);
 		gl_panelInvoiceHeader.setVerticalGroup(
 			gl_panelInvoiceHeader.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblDeDonMotors)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(lblInGodWe)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(lblSoleAgeentOf)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(lblheadOfficeTechiman)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(lblNewLabel)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(lblEmailDedonmotorsyahoocomdedonmotorsgmailcom)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(lblBranches)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblWaAlongWa)
-						.addComponent(lblKumasiAlabafulaniChief)
-						.addComponent(lblBolga, GroupLayout.PREFERRED_SIZE, 13, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblTel)
-						.addComponent(lblTel_1)
-						.addComponent(lblTel_2))
-					.addPreferredGap(ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblCustomerName)
-						.addComponent(labelTranCustomerName, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
-					.addGap(6)
-					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblPhoneNumber_2)
-						.addComponent(labelTranCustomerNumber, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
-					.addGap(6)
-					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblDate)
-						.addComponent(lbllabelTranDate, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
-					.addGap(6)
-					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblTotalAmount)
-						.addComponent(labelTranAmount, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
-					.addGap(6)
-					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblAmountPaid)
-						.addComponent(labelTranAmountPaid, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
-					.addGap(6)
-					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblAmountLeft)
-						.addComponent(labelTranAmountLeft, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap())
+						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
+							.addComponent(lblDeDonMotors)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblInGodWe)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(lblSoleAgeentOf)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblheadOfficeTechiman)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblNewLabel)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblEmailDedonmotorsyahoocomdedonmotorsgmailcom)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(lblBranches)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblWaAlongWa)
+								.addComponent(lblKumasiAlabafulaniChief)
+								.addComponent(lblBolga, GroupLayout.PREFERRED_SIZE, 13, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblTel)
+								.addComponent(lblTel_1)
+								.addComponent(lblTel_2))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(labelTranCustomerName, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
+								.addComponent(labelTranCustomerNumber, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblPhoneNumber_2))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
+								.addComponent(lbllabelTranDate, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblDate))
+							.addGap(6)
+							.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblTotalAmount)
+								.addComponent(labelTranAmount, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblAmountPaid)
+								.addComponent(labelTranAmountPaid, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblAmountLeft)
+								.addComponent(labelTranAmountLeft, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
+							.addContainerGap())
+						.addGroup(Alignment.TRAILING, gl_panelInvoiceHeader.createSequentialGroup()
+							.addComponent(lblCustomerName)
+							.addGap(123))))
 		);
 		panelInvoiceHeader.setLayout(gl_panelInvoiceHeader);
 		panel_4.setLayout(gl_panel_4);
@@ -1979,6 +2024,20 @@ public class ImsMainPage extends ImsDesktopApplication {
 		registerPanel.setLayout(gl_registerPanel);
 	}
 	
+	/**
+	 * @return the currentProducts
+	 */
+	private List<ProductDTO> getCurrentProducts() {
+		return currentProducts;
+	}
+
+	/**
+	 * @param currentProducts the currentProducts to set
+	 */
+	private void setCurrentProducts(List<ProductDTO> currentProducts) {
+		this.currentProducts = currentProducts;
+	}
+
 	private void registerActionPerformed(ActionEvent e) {
 		
 		error = "";
@@ -2060,8 +2119,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 			List<String> names = new ArrayList<String>();
 			names.clear();
 			comboBoxProduct.removeAllItems();
-			String employeeId = ImsDesktopApplication.getCurrentEmployeeId();
-			for (ProductDTO p : productService.getProducts(employeeId)) {
+			//String employeeId = ImsDesktopApplication.getCurrentEmployeeId();
+			for (ProductDTO p : getCurrentProducts()) {
 				names.add(p.getName());
 			}
 			Collections.sort(names);
@@ -2100,8 +2159,11 @@ public class ImsMainPage extends ImsDesktopApplication {
 			
 			//set the alignment of the quantity column
 			tableProducts.getColumnModel().getColumn(2).setCellRenderer(leftRenderer);
+			// from remote database
+//			List<ProductDTO> products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
 			
-			List<ProductDTO> products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
+			// from current database
+			List<ProductDTO> products = getCurrentProducts();
 			for (ProductDTO p : products) {
 				model.addRow(new Object[] {p.getName(), p.getItemPrice(), p.getQuantity()});
 			}
@@ -2236,7 +2298,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			List<String> names = new ArrayList<String>();
 			names.clear();
 			comboBoxTransactionProduct.removeAllItems();
-			for (ProductDTO p : productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId())) {
+			for (ProductDTO p : getCurrentProducts()) {
 				names.add(p.getName());
 				comboBoxAddProductMap.put(p.getName(), "" + p.getItemPrice());
 			}
@@ -2283,7 +2345,9 @@ public class ImsMainPage extends ImsDesktopApplication {
 				if (!exception) {
 					if (transactionDetail.getpTransactions() != null) {
 						for (ProductTransactionDTO tp : transactionDetail.getpTransactions()) {
-							model.addRow(new Object[] {tp.getProductName(), tp.getPrice() / tp.getQuantity(), tp.getQuantity(), roundNumber(tp.getPrice())});
+							// unit price = total price / quantity of products
+							double unitPrice = tp.getPrice() / tp.getQuantity();
+							model.addRow(new Object[] {tp.getProductName(), unitPrice, tp.getQuantity(), roundNumber(tp.getPrice())});
 							totalAmount = totalAmount + tp.getPrice();
 						}
 					}
