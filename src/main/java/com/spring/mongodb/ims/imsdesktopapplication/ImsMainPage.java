@@ -752,6 +752,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		});
 		
 		JLabel label_17 = new JLabel("Click each column to sort the items");
+		label_17.setForeground(new Color(0, 128, 0));
 		label_17.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		
 		JButton btnPrintProducts = new JButton("PRINT");
@@ -763,14 +764,19 @@ public class ImsMainPage extends ImsDesktopApplication {
 		btnPrintProducts.setBorder(new LineBorder(new Color(128, 0, 0), 1, true));
 		GroupLayout gl_productsPanel = new GroupLayout(productsPanel);
 		gl_productsPanel.setHorizontalGroup(
-			gl_productsPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_productsPanel.createSequentialGroup()
+			gl_productsPanel.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_productsPanel.createSequentialGroup()
 					.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 172, Short.MAX_VALUE)
-					.addGroup(gl_productsPanel.createParallelGroup(Alignment.LEADING)
-						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE)
-						.addComponent(label_17, GroupLayout.PREFERRED_SIZE, 443, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnPrintProducts, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)))
+					.addGroup(gl_productsPanel.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_productsPanel.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED, 18, GroupLayout.PREFERRED_SIZE)
+							.addGroup(gl_productsPanel.createParallelGroup(Alignment.LEADING)
+								.addComponent(label_17, GroupLayout.PREFERRED_SIZE, 443, GroupLayout.PREFERRED_SIZE)
+								.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 585, Short.MAX_VALUE)))
+						.addGroup(gl_productsPanel.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(btnPrintProducts, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap())
 		);
 		gl_productsPanel.setVerticalGroup(
 			gl_productsPanel.createParallelGroup(Alignment.LEADING)
@@ -778,11 +784,11 @@ public class ImsMainPage extends ImsDesktopApplication {
 					.addGap(6)
 					.addComponent(label_17, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 449, GroupLayout.PREFERRED_SIZE)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(btnPrintProducts, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
 					.addGap(13))
-				.addComponent(panel_6, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
+				.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 543, GroupLayout.PREFERRED_SIZE)
 		);
 		
 		JLabel lblLimit = new JLabel("Limit");
@@ -1946,8 +1952,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 				.addGroup(gl_imsPagePanel.createSequentialGroup()
 					.addGap(12)
 					.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-					.addComponent(layeredMainPane, GroupLayout.PREFERRED_SIZE, 543, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(layeredMainPane, GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
 					.addContainerGap())
 		);
 		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
