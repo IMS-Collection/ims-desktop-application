@@ -415,49 +415,15 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_2.setBounds(6, 6, 941, 60);
 		imsPagePanel.add(panel_2);
 		
-		JLabel lblDedonMotorsInventory = new JLabel("De-Don Motors Inventory Management System, In God We Trust");
-		lblDedonMotorsInventory.setForeground(Color.WHITE);
-		lblDedonMotorsInventory.setFont(new Font("Times New Roman", Font.PLAIN, 30));
-		lblDedonMotorsInventory.setBounds(63, 6, 818, 35);
-		panel_2.add(lblDedonMotorsInventory);
-		
 		lblErrorMEssage = new JLabel("");
 		lblErrorMEssage.setForeground(Color.RED);
 		lblErrorMEssage.setFont(new Font("Times New Roman", Font.PLAIN, 18));
 		lblErrorMEssage.setBounds(137, 34, 618, 20);
 		panel_2.add(lblErrorMEssage);
 		
-		JPanel panel_3 = new JPanel();
-		panel_3.setBackground(new Color(85, 107, 47));
-		panel_3.setBounds(6, 66, 176, 543);
-		imsPagePanel.add(panel_3);
-		
-		JButton btnLogout = new JButton("LOGOUT");
-		btnLogout.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int option = JOptionPane.showConfirmDialog(ImsDesktopApplication.getFrame(), 
-						"Do you really want to log out?", "Logout confirmation.", 
-						JOptionPane.YES_NO_CANCEL_OPTION);
-				if (option == 0) {
-					try {
-						imsService.logout();
-						error = "";
-						layeredPane.removeAll();
-						layeredPane.add(loginPanel);
-						layeredPane.repaint();
-						layeredPane.revalidate();
-					} catch (Exception e1) {
-						e1.printStackTrace();
-					}
-				}
-			}
-		});
-		btnLogout.setForeground(Color.MAGENTA);
-		btnLogout.setFont(new Font("Tahoma", Font.BOLD, 24));
-		btnLogout.setBorder(new LineBorder(new Color(0, 0, 255)));
-		
 		btnDashboard = new JButton("Dashboard");
+		btnDashboard.setBounds(29, 0, 170, 31);
+		panel_2.add(btnDashboard);
 		btnDashboard.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				error = "";
@@ -472,11 +438,13 @@ public class ImsMainPage extends ImsDesktopApplication {
 				refreshDashBoard();
 			}
 		});
-		btnDashboard.setFont(new Font("Tahoma", Font.BOLD, 24));
+		btnDashboard.setFont(new Font("Tahoma", Font.BOLD, 18));
 		btnDashboard.setBackground(new Color(85, 107, 47));
 		btnDashboard.setForeground(Color.GREEN);
 		
 		btnProducts = new JButton("Products");
+		btnProducts.setBounds(211, 0, 147, 31);
+		panel_2.add(btnProducts);
 		btnProducts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				error = "";
@@ -505,11 +473,13 @@ public class ImsMainPage extends ImsDesktopApplication {
 				
 			}
 		});
-		btnProducts.setFont(new Font("Tahoma", Font.BOLD, 24));
+		btnProducts.setFont(new Font("Tahoma", Font.BOLD, 18));
 		btnProducts.setBackground(new Color(85, 107, 47));
 		btnProducts.setForeground(Color.GREEN);
 		
 		btnAccounts = new JButton("Accounts");
+		btnAccounts.setBounds(370, 0, 152, 31);
+		panel_2.add(btnAccounts);
 		btnAccounts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				error = "";
@@ -525,40 +495,36 @@ public class ImsMainPage extends ImsDesktopApplication {
 				//refreshCustomerTransactionTable();
 			}
 		});
-		btnAccounts.setFont(new Font("Tahoma", Font.BOLD, 24));
+		btnAccounts.setFont(new Font("Tahoma", Font.BOLD, 18));
 		btnAccounts.setBackground(new Color(85, 107, 47));
 		btnAccounts.setForeground(Color.GREEN);
 		
-		GroupLayout gl_panel_3 = new GroupLayout(panel_3);
-		gl_panel_3.setHorizontalGroup(
-			gl_panel_3.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_3.createSequentialGroup()
-					.addGroup(gl_panel_3.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_3.createSequentialGroup()
-							.addGap(3)
-							.addGroup(gl_panel_3.createParallelGroup(Alignment.LEADING)
-								.addComponent(btnProducts, GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
-								.addComponent(btnDashboard, GroupLayout.PREFERRED_SIZE, 164, Short.MAX_VALUE)
-								.addComponent(btnAccounts, GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)))
-						.addGroup(Alignment.TRAILING, gl_panel_3.createSequentialGroup()
-							.addContainerGap(61, Short.MAX_VALUE)
-							.addComponent(btnLogout)))
-					.addContainerGap())
-		);
-		gl_panel_3.setVerticalGroup(
-			gl_panel_3.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_3.createSequentialGroup()
-					.addGap(14)
-					.addComponent(btnDashboard)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnProducts)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnAccounts)
-					.addGap(50)
-					.addComponent(btnLogout)
-					.addGap(307))
-		);
-		panel_3.setLayout(gl_panel_3);
+		JButton btnLogout = new JButton("LOGOUT");
+		btnLogout.setBounds(826, 0, 103, 31);
+		panel_2.add(btnLogout);
+		btnLogout.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int option = JOptionPane.showConfirmDialog(ImsDesktopApplication.getFrame(), 
+						"Do you really want to log out?", "Logout confirmation.", 
+						JOptionPane.YES_NO_CANCEL_OPTION);
+				if (option == 0) {
+					try {
+						imsService.logout();
+						error = "";
+						layeredPane.removeAll();
+						layeredPane.add(loginPanel);
+						layeredPane.repaint();
+						layeredPane.revalidate();
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		btnLogout.setForeground(Color.MAGENTA);
+		btnLogout.setFont(new Font("Tahoma", Font.BOLD, 18));
+		btnLogout.setBorder(new LineBorder(new Color(0, 0, 255)));
 		
 		layeredMainPane = new JLayeredPane();
 		layeredMainPane.setBounds(183, 66, 764, 543);
