@@ -766,16 +766,17 @@ public class ImsMainPage extends ImsDesktopApplication {
 		gl_productsPanel.setHorizontalGroup(
 			gl_productsPanel.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_productsPanel.createSequentialGroup()
+					.addContainerGap()
 					.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 325, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_productsPanel.createParallelGroup(Alignment.TRAILING)
-						.addGroup(Alignment.LEADING, gl_productsPanel.createSequentialGroup()
-							.addComponent(label_17, GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
-							.addGap(162))
-						.addGroup(Alignment.LEADING, gl_productsPanel.createSequentialGroup()
-							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 599, Short.MAX_VALUE)
+					.addGroup(gl_productsPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_productsPanel.createSequentialGroup()
+							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 596, Short.MAX_VALUE)
 							.addContainerGap())
 						.addGroup(gl_productsPanel.createSequentialGroup()
+							.addComponent(label_17, GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE)
+							.addGap(162))
+						.addGroup(Alignment.TRAILING, gl_productsPanel.createSequentialGroup()
 							.addComponent(btnPrintProducts, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
 							.addContainerGap())))
 		);
@@ -783,15 +784,15 @@ public class ImsMainPage extends ImsDesktopApplication {
 			gl_productsPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_productsPanel.createSequentialGroup()
 					.addGap(6)
-					.addComponent(label_17, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnPrintProducts, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
-					.addGap(27))
-				.addGroup(gl_productsPanel.createSequentialGroup()
-					.addGap(41)
-					.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 543, GroupLayout.PREFERRED_SIZE))
+					.addGroup(gl_productsPanel.createParallelGroup(Alignment.LEADING, false)
+						.addGroup(gl_productsPanel.createSequentialGroup()
+							.addComponent(label_17, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(scrollPane)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(btnPrintProducts, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE))
+						.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 538, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap())
 		);
 		
 		JLabel lblLimit = new JLabel("Limit");
@@ -1971,11 +1972,11 @@ public class ImsMainPage extends ImsDesktopApplication {
 		GroupLayout gl_imsPagePanel = new GroupLayout(imsPagePanel);
 		gl_imsPagePanel.setHorizontalGroup(
 			gl_imsPagePanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_imsPagePanel.createSequentialGroup()
+				.addGroup(Alignment.TRAILING, gl_imsPagePanel.createSequentialGroup()
 					.addGap(6)
-					.addGroup(gl_imsPagePanel.createParallelGroup(Alignment.LEADING)
-						.addComponent(layeredMainPane, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 941, Short.MAX_VALUE)
-						.addComponent(panel_2, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 941, Short.MAX_VALUE))
+					.addGroup(gl_imsPagePanel.createParallelGroup(Alignment.TRAILING)
+						.addComponent(layeredMainPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 941, Short.MAX_VALUE)
+						.addComponent(panel_2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 941, Short.MAX_VALUE))
 					.addGap(26))
 		);
 		gl_imsPagePanel.setVerticalGroup(
@@ -1984,8 +1985,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 					.addGap(12)
 					.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(layeredMainPane, GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
-					.addContainerGap())
+					.addComponent(layeredMainPane, GroupLayout.PREFERRED_SIZE, 551, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(44, Short.MAX_VALUE))
 		);
 		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
 		gl_panel_2.setHorizontalGroup(
