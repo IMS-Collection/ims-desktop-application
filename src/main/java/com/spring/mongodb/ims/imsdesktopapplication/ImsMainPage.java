@@ -977,6 +977,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		layeredMainPane.add(transactionsPanel, "name_118242517273668");
 		
 		JPanel panel_8 = new JPanel();
+		panel_8.setBounds(0, 0, 205, 537);
 		panel_8.setLayout(null);
 		panel_8.setBorder(new LineBorder(new Color(0, 0, 255)));
 		
@@ -1208,9 +1209,11 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_8.add(btnPay);
 		
 		JLabel label_25 = new JLabel("");
+		label_25.setBounds(713, 468, 102, 20);
 		label_25.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		
 		panel_4 = new JPanel();
+		panel_4.setBounds(217, 0, 714, 537);
 		
 		JScrollPane scrollPaneTransaction = new JScrollPane();
 		
@@ -1258,16 +1261,16 @@ public class ImsMainPage extends ImsDesktopApplication {
 		GroupLayout gl_panel_4 = new GroupLayout(panel_4);
 		gl_panel_4.setHorizontalGroup(
 			gl_panel_4.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_4.createSequentialGroup()
+				.addGroup(Alignment.TRAILING, gl_panel_4.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
-						.addComponent(scrollPaneTransaction, GroupLayout.PREFERRED_SIZE, 479, GroupLayout.PREFERRED_SIZE)
-						.addComponent(panelInvoiceHeader, GroupLayout.PREFERRED_SIZE, 503, Short.MAX_VALUE))
+					.addGroup(gl_panel_4.createParallelGroup(Alignment.TRAILING)
+						.addComponent(scrollPaneTransaction, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE)
+						.addComponent(panelInvoiceHeader, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 503, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		gl_panel_4.setVerticalGroup(
-			gl_panel_4.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, gl_panel_4.createSequentialGroup()
+			gl_panel_4.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_4.createSequentialGroup()
 					.addComponent(panelInvoiceHeader, GroupLayout.PREFERRED_SIZE, 346, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(scrollPaneTransaction, GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE))
@@ -1487,27 +1490,10 @@ public class ImsMainPage extends ImsDesktopApplication {
 		);
 		panelInvoiceHeader.setLayout(gl_panelInvoiceHeader);
 		panel_4.setLayout(gl_panel_4);
-		GroupLayout gl_transactionsPanel = new GroupLayout(transactionsPanel);
-		gl_transactionsPanel.setHorizontalGroup(
-			gl_transactionsPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_transactionsPanel.createSequentialGroup()
-					.addComponent(panel_8, GroupLayout.PREFERRED_SIZE, 205, GroupLayout.PREFERRED_SIZE)
-					.addGap(12)
-					.addGroup(gl_transactionsPanel.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_transactionsPanel.createSequentialGroup()
-							.addGap(496)
-							.addComponent(label_25, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE))
-						.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-		);
-		gl_transactionsPanel.setVerticalGroup(
-			gl_transactionsPanel.createParallelGroup(Alignment.LEADING)
-				.addComponent(panel_8, GroupLayout.PREFERRED_SIZE, 537, GroupLayout.PREFERRED_SIZE)
-				.addGroup(gl_transactionsPanel.createSequentialGroup()
-					.addGap(468)
-					.addComponent(label_25, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
-				.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-		);
-		transactionsPanel.setLayout(gl_transactionsPanel);
+		transactionsPanel.setLayout(null);
+		transactionsPanel.add(panel_8);
+		transactionsPanel.add(label_25);
+		transactionsPanel.add(panel_4);
 		
 		accountsPanel = new JPanel();
 		layeredMainPane.add(accountsPanel, "name_118280808053760");
@@ -1949,8 +1935,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 				.addGroup(gl_imsPagePanel.createSequentialGroup()
 					.addGap(12)
 					.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-					.addComponent(layeredMainPane, GroupLayout.PREFERRED_SIZE, 543, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(layeredMainPane, GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
 					.addContainerGap())
 		);
 		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
