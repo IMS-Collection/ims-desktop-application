@@ -443,10 +443,10 @@ public class ImsMainPage extends ImsDesktopApplication {
 				error = "";
 				try {
 					// retrieve products from remote databse
-					//products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
+					products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
 					
 					// retrieve products from current products
-					products = getCurrentProducts();
+					// products = getCurrentProducts();
 				} catch (InvalidInputException exc) {
 					error = exc.getMessage();
 				} if (error.length() == 0) {
@@ -458,8 +458,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 					btnProducts.setForeground(Color.decode("#0f03fc"));
 					btnAccounts.setForeground(Color.GREEN);
 					
-					refreshProductTable();
-					refreshProductPanel();
+					refreshProductTable(products);
+					refreshProductPanel(products);
 				}
 				
 				lblErrorMEssage.setText(error);
@@ -2235,19 +2235,19 @@ public class ImsMainPage extends ImsDesktopApplication {
 		contentPane.setLayout(gl_contentPane);
 	}
 	
-	/**
-	 * @return the currentProducts
-	 */
-	private List<ProductDTO> getCurrentProducts() {
-		return currentProducts;
-	}
-
-	/**
-	 * @param currentProducts the currentProducts to set
-	 */
-	private void setCurrentProducts(List<ProductDTO> currentProducts) {
-		this.currentProducts = currentProducts;
-	}
+//	/**
+//	 * @return the currentProducts
+//	 */
+//	private List<ProductDTO> getCurrentProducts() {
+//		return currentProducts;
+//	}
+//
+//	/**
+//	 * @param currentProducts the currentProducts to set
+//	 */
+//	private void setCurrentProducts(List<ProductDTO> currentProducts) {
+//		this.currentProducts = currentProducts;
+//	}
 
 	private void registerActionPerformed(ActionEvent e) {
 		
@@ -2311,7 +2311,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		confirmPasswordField.setText("");
 	}
 	
-	private void refreshProductPanel() {
+	private void refreshProductPanel(List<ProductDTO> products) {
 		lblErrorMEssage.setText(error);
 		
 		if (error == null || error.length() == 0) {
@@ -2331,7 +2331,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			names.clear();
 			comboBoxProduct.removeAllItems();
 			//String employeeId = ImsDesktopApplication.getCurrentEmployeeId();
-			for (ProductDTO p : getCurrentProducts()) {
+			for (ProductDTO p : products) {
 				names.add(p.getName());
 			}
 			Collections.sort(names);
@@ -2350,7 +2350,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		}
 	}
 	
-	private void refreshProductTable() {
+	private void refreshProductTable(List<ProductDTO> products) {
 		
 		if (error == null || error.length() == 0) {
 			// some user settings
@@ -2374,7 +2374,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 //			List<ProductDTO> products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
 			
 			// from current database
-			List<ProductDTO> products = getCurrentProducts();
+			//List<ProductDTO> products = getCurrentProducts();
 			for (ProductDTO p : products) {
 				model.addRow(new Object[] {p.getName(), p.getItemPrice(), p.getQuantity()});
 			}
