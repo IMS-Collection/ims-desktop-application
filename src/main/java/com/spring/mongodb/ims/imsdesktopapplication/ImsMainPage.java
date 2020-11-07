@@ -60,6 +60,7 @@ import com.spring.mongodb.ims.imsdesktopapplication.shared.dto.ProductDTO;
 import com.spring.mongodb.ims.imsdesktopapplication.shared.dto.ProductTransactionDTO;
 import com.spring.mongodb.ims.imsdesktopapplication.shared.dto.TransactionDTO;
 import com.spring.mongodb.ims.imsdesktopapplication.shared.dto.TransactionDetail;
+import javax.swing.JTextPane;
 
 @SpringBootApplication
 public class ImsMainPage extends ImsDesktopApplication {
@@ -1299,37 +1300,37 @@ public class ImsMainPage extends ImsDesktopApplication {
 		lblDeDonMotors.setFont(new Font("Dialog", Font.BOLD, 18));
 		lblDeDonMotors.setForeground(Color.BLUE);
 		
-		JLabel lblCustomerName = new JLabel("Customer Name");
+		JLabel lblCustomerName = new JLabel("Customer Name:");
 		lblCustomerName.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		labelTranCustomerName = new JLabel("");
 		labelTranCustomerName.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
-		JLabel lblPhoneNumber_2 = new JLabel("Phone Number");
+		JLabel lblPhoneNumber_2 = new JLabel("Phone Number:");
 		lblPhoneNumber_2.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		labelTranCustomerNumber = new JLabel("");
 		labelTranCustomerNumber.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
-		JLabel lblDate = new JLabel("Transaction Date");
+		JLabel lblDate = new JLabel("Transaction Date:");
 		lblDate.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		lbllabelTranDate = new JLabel("");
 		lbllabelTranDate.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
-		JLabel lblTotalAmount = new JLabel("Total Amount");
+		JLabel lblTotalAmount = new JLabel("Total Amount:");
 		lblTotalAmount.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		labelTranAmount = new JLabel("");
 		labelTranAmount.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
-		JLabel lblAmountPaid = new JLabel("Amount Paid");
+		JLabel lblAmountPaid = new JLabel("Amount Paid:");
 		lblAmountPaid.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		labelTranAmountPaid = new JLabel("");
 		labelTranAmountPaid.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
-		JLabel lblAmountLeft = new JLabel("Amount Left");
+		JLabel lblAmountLeft = new JLabel("Amount Left:");
 		lblAmountLeft.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		labelTranAmountLeft = new JLabel("");
@@ -1946,8 +1947,6 @@ public class ImsMainPage extends ImsDesktopApplication {
 		JButton btnClose = new JButton("CLOSE");
 		
 		JScrollPane scrollPane_3 = new JScrollPane();
-		
-		JLabel lblNewLabel_1 = new JLabel("New label");
 		GroupLayout gl_receiptPanel = new GroupLayout(receiptPanel);
 		gl_receiptPanel.setHorizontalGroup(
 			gl_receiptPanel.createParallelGroup(Alignment.LEADING)
@@ -1957,10 +1956,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 						.addComponent(btnPrint, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
 						.addComponent(btnClose, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE))
 					.addGap(13)
-					.addComponent(scrollPane_3, GroupLayout.PREFERRED_SIZE, 632, GroupLayout.PREFERRED_SIZE)
-					.addGap(60)
-					.addComponent(lblNewLabel_1)
-					.addContainerGap(63, Short.MAX_VALUE))
+					.addComponent(scrollPane_3, GroupLayout.DEFAULT_SIZE, 805, Short.MAX_VALUE)
+					.addContainerGap())
 		);
 		gl_receiptPanel.setVerticalGroup(
 			gl_receiptPanel.createParallelGroup(Alignment.LEADING)
@@ -1970,14 +1967,15 @@ public class ImsMainPage extends ImsDesktopApplication {
 							.addGap(36)
 							.addComponent(btnPrint, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
 							.addGap(24)
-							.addComponent(btnClose, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
-							.addGap(9)
-							.addComponent(lblNewLabel_1))
+							.addComponent(btnClose, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_receiptPanel.createSequentialGroup()
 							.addGap(6)
 							.addComponent(scrollPane_3, GroupLayout.PREFERRED_SIZE, 477, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(60, Short.MAX_VALUE))
+					.addContainerGap(68, Short.MAX_VALUE))
 		);
+		
+		JTextPane textPane = new JTextPane();
+		scrollPane_3.setViewportView(textPane);
 		receiptPanel.setLayout(gl_receiptPanel);
 		GroupLayout gl_imsPagePanel = new GroupLayout(imsPagePanel);
 		gl_imsPagePanel.setHorizontalGroup(
