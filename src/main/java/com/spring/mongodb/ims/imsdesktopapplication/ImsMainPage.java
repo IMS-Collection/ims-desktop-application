@@ -784,15 +784,15 @@ public class ImsMainPage extends ImsDesktopApplication {
 			gl_productsPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_productsPanel.createSequentialGroup()
 					.addGap(6)
-					.addGroup(gl_productsPanel.createParallelGroup(Alignment.LEADING, false)
+					.addGroup(gl_productsPanel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_productsPanel.createSequentialGroup()
 							.addComponent(label_17, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(scrollPane)
+							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(btnPrintProducts, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE))
 						.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 538, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap())
+					.addGap(7))
 		);
 		
 		JLabel lblLimit = new JLabel("Limit");
@@ -1903,7 +1903,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		gl_accountsPanel.setVerticalGroup(
 			gl_accountsPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_accountsPanel.createSequentialGroup()
-					.addGroup(gl_accountsPanel.createParallelGroup(Alignment.TRAILING, false)
+					.addGroup(gl_accountsPanel.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_accountsPanel.createSequentialGroup()
 							.addGap(16)
 							.addGroup(gl_accountsPanel.createParallelGroup(Alignment.LEADING)
@@ -1916,7 +1916,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 									.addGap(4)
 									.addComponent(lblTotalBalance, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)))
 							.addGap(3)
-							.addComponent(scrollPane_2))
+							.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE))
 						.addComponent(panel_10, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 492, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_accountsPanel.createParallelGroup(Alignment.LEADING)
@@ -1924,7 +1924,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 						.addGroup(gl_accountsPanel.createParallelGroup(Alignment.BASELINE)
 							.addComponent(btnOpen, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
 							.addComponent(btnDelete_2, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)))
-					.addGap(57))
+					.addGap(24))
 		);
 		accountsPanel.setLayout(gl_accountsPanel);
 		
