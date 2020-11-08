@@ -6,8 +6,6 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.PrintJob;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -96,6 +94,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 	//Products
 	private HashMap<Integer, String> comboBoxProductsMap;
 	private HashMap<Integer, String> transactionProducts;
+	private HashMap<Integer, ProductDTO> tableProductsMap;
 	private List<ProductDTO> currentProducts;
 	
 	/**
@@ -166,6 +165,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private JLabel lblEmployee;
 	private JTextField textFieldLimit;
 	private JTextField textFieldUpdateLimit;
+	private JTextArea textArea;
 	private JPanel panelInvoiceHeader;
 
 	/**
@@ -191,24 +191,19 @@ public class ImsMainPage extends ImsDesktopApplication {
 	 */
 	public ImsMainPage() {
 		// initialize some data variables
-		products = new ArrayList<ProductDTO>();
+		//products = new ArrayList<ProductDTO>();
 		currentProducts = new ArrayList<ProductDTO>();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 965, 649);
+		setBounds(100, 100, 984, 666);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.decode("#d3d2d4"));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
 		
 		JLayeredPane layeredPane = new JLayeredPane();
-		layeredPane.setBounds(6, 6, 953, 615);
-		contentPane.add(layeredPane);
-		layeredPane.setLayout(new CardLayout(0, 0));
 		
 		JPanel loginPanel = new JPanel();
 		loginPanel.setBackground(Color.decode("#d3d2d4"));
-		layeredPane.add(loginPanel, "name_60650339811448");
 		
 		JLabel lblLoginPage = new JLabel("DE-DEDON MOTORS INVENTORY ");
 		lblLoginPage.setForeground(Color.decode("#2dad5a"));
@@ -245,25 +240,29 @@ public class ImsMainPage extends ImsDesktopApplication {
 		gl_loginPanel.setHorizontalGroup(
 			gl_loginPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_loginPanel.createSequentialGroup()
-					.addContainerGap(320, Short.MAX_VALUE)
-					.addGroup(gl_loginPanel.createParallelGroup(Alignment.LEADING)
-						.addGroup(Alignment.TRAILING, gl_loginPanel.createSequentialGroup()
+					.addGap(292)
+					.addGroup(gl_loginPanel.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_loginPanel.createSequentialGroup()
 							.addGroup(gl_loginPanel.createParallelGroup(Alignment.LEADING)
-								.addComponent(panel, GroupLayout.PREFERRED_SIZE, 411, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_loginPanel.createSequentialGroup()
+									.addComponent(panel, GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
+									.addGap(48))
 								.addComponent(lblLoginPage, GroupLayout.PREFERRED_SIZE, 459, GroupLayout.PREFERRED_SIZE))
 							.addGap(222))
-						.addGroup(Alignment.TRAILING, gl_loginPanel.createSequentialGroup()
-							.addComponent(lblManagementSystem, GroupLayout.PREFERRED_SIZE, 319, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_loginPanel.createSequentialGroup()
+							.addGap(56)
+							.addComponent(lblManagementSystem, GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
 							.addGap(306))
-						.addGroup(Alignment.TRAILING, gl_loginPanel.createSequentialGroup()
-							.addComponent(lblNotHaveAccount)
+						.addGroup(gl_loginPanel.createSequentialGroup()
+							.addGap(44)
+							.addComponent(lblNotHaveAccount, GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(btnRegister, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
+							.addComponent(btnRegister, GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
 							.addGap(341))))
 		);
 		gl_loginPanel.setVerticalGroup(
-			gl_loginPanel.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, gl_loginPanel.createSequentialGroup()
+			gl_loginPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_loginPanel.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(lblLoginPage, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
@@ -335,9 +334,6 @@ public class ImsMainPage extends ImsDesktopApplication {
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
-					// TODO load products
-					List<ProductDTO> productsFromDatabase = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
-					setCurrentProducts(productsFromDatabase);
 				}
 				
 				//update visuals
@@ -363,22 +359,27 @@ public class ImsMainPage extends ImsDesktopApplication {
 					.addGap(18)
 					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_panel.createSequentialGroup()
-							.addComponent(btnLogin)
+							.addGap(135)
+							.addComponent(btnLogin, GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(btnExit))
-						.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
-							.addComponent(lblUserName)
-							.addComponent(lblPassword)
+							.addComponent(btnExit, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+							.addGroup(gl_panel.createSequentialGroup()
+								.addComponent(lblUserName, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addGap(35))
+							.addGroup(gl_panel.createSequentialGroup()
+								.addComponent(lblPassword, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addGap(200))
 							.addComponent(passwordField)
 							.addComponent(userName, GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)))
 					.addGap(108))
 				.addGroup(gl_panel.createSequentialGroup()
 					.addGap(132)
-					.addComponent(lblUserLogin)
-					.addContainerGap(176, Short.MAX_VALUE))
+					.addComponent(lblUserLogin, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addGap(176))
 				.addGroup(gl_panel.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(errorMessage, GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
+					.addComponent(errorMessage, GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
 					.addContainerGap())
 		);
 		gl_panel.setVerticalGroup(
@@ -406,31 +407,74 @@ public class ImsMainPage extends ImsDesktopApplication {
 		
 		imsPagePanel = new JPanel();
 		imsPagePanel.setForeground(Color.decode("#d3d2d4"));
-		layeredPane.add(imsPagePanel, "name_60694851832107");
-		imsPagePanel.setLayout(null);
 		
 		JPanel panel_2 = new JPanel();
-		panel_2.setLayout(null);
 		panel_2.setBackground(new Color(47, 79, 79));
-		panel_2.setBounds(6, 6, 941, 60);
-		imsPagePanel.add(panel_2);
-		
-		JLabel lblDedonMotorsInventory = new JLabel("De-Don Motors Inventory Management System, In God We Trust");
-		lblDedonMotorsInventory.setForeground(Color.WHITE);
-		lblDedonMotorsInventory.setFont(new Font("Times New Roman", Font.PLAIN, 30));
-		lblDedonMotorsInventory.setBounds(63, 6, 818, 35);
-		panel_2.add(lblDedonMotorsInventory);
 		
 		lblErrorMEssage = new JLabel("");
 		lblErrorMEssage.setForeground(Color.RED);
 		lblErrorMEssage.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-		lblErrorMEssage.setBounds(137, 34, 618, 20);
-		panel_2.add(lblErrorMEssage);
 		
-		JPanel panel_3 = new JPanel();
-		panel_3.setBackground(new Color(85, 107, 47));
-		panel_3.setBounds(6, 66, 176, 543);
-		imsPagePanel.add(panel_3);
+		btnDashboard = new JButton("Dashboard");
+		btnDashboard.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				error = "";
+				layeredMainPane.removeAll();
+				layeredMainPane.add(dashBoardPanel);
+				layeredMainPane.repaint();
+				layeredMainPane.revalidate();
+				btnDashboard.setForeground(Color.decode("#0f03fc"));
+				btnProducts.setForeground(Color.GREEN);
+				btnAccounts.setForeground(Color.GREEN);
+				
+				refreshDashBoard();
+			}
+		});
+		btnDashboard.setFont(new Font("Tahoma", Font.BOLD, 18));
+		btnDashboard.setBackground(new Color(85, 107, 47));
+		btnDashboard.setForeground(Color.GREEN);
+		
+		btnProducts = new JButton("Products");
+		btnProducts.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				layeredMainPane.removeAll();
+				layeredMainPane.add(productsPanel);
+				layeredMainPane.repaint();
+				layeredMainPane.revalidate();
+				btnDashboard.setForeground(Color.GREEN);
+				btnProducts.setForeground(Color.decode("#0f03fc"));
+				btnAccounts.setForeground(Color.GREEN);
+				
+				List<ProductDTO> products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
+				refreshProductTable(products);
+				refreshProductPanel(products);
+				
+			}
+		});
+		btnProducts.setFont(new Font("Tahoma", Font.BOLD, 18));
+		btnProducts.setBackground(new Color(85, 107, 47));
+		btnProducts.setForeground(Color.GREEN);
+		
+		btnAccounts = new JButton("Accounts");
+		btnAccounts.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				error = "";
+				layeredMainPane.removeAll();
+				layeredMainPane.add(accountsPanel);
+				layeredMainPane.repaint();
+				layeredMainPane.revalidate();
+				btnDashboard.setForeground(Color.GREEN);
+				btnProducts.setForeground(Color.GREEN);
+				btnAccounts.setForeground(Color.decode("#0f03fc"));
+				
+				refreshAccountPanel();
+				//refreshCustomerTransactionTable();
+			}
+		});
+		btnAccounts.setFont(new Font("Tahoma", Font.BOLD, 18));
+		btnAccounts.setBackground(new Color(85, 107, 47));
+		btnAccounts.setForeground(Color.GREEN);
 		
 		JButton btnLogout = new JButton("LOGOUT");
 		btnLogout.addMouseListener(new MouseAdapter() {
@@ -454,115 +498,10 @@ public class ImsMainPage extends ImsDesktopApplication {
 			}
 		});
 		btnLogout.setForeground(Color.MAGENTA);
-		btnLogout.setFont(new Font("Tahoma", Font.BOLD, 24));
+		btnLogout.setFont(new Font("Tahoma", Font.BOLD, 18));
 		btnLogout.setBorder(new LineBorder(new Color(0, 0, 255)));
 		
-		btnDashboard = new JButton("Dashboard");
-		btnDashboard.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				error = "";
-				layeredMainPane.removeAll();
-				layeredMainPane.add(dashBoardPanel);
-				layeredMainPane.repaint();
-				layeredMainPane.revalidate();
-				btnDashboard.setForeground(Color.decode("#0f03fc"));
-				btnProducts.setForeground(Color.GREEN);
-				btnAccounts.setForeground(Color.GREEN);
-				
-				refreshDashBoard();
-			}
-		});
-		btnDashboard.setFont(new Font("Tahoma", Font.BOLD, 24));
-		btnDashboard.setBackground(new Color(85, 107, 47));
-		btnDashboard.setForeground(Color.GREEN);
-		
-		btnProducts = new JButton("Products");
-		btnProducts.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				error = "";
-				try {
-					// retrieve products from remote databse
-					//products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
-					
-					// retrieve products from current products
-					products = getCurrentProducts();
-				} catch (InvalidInputException exc) {
-					error = exc.getMessage();
-				} if (error.length() == 0) {
-					layeredMainPane.removeAll();
-					layeredMainPane.add(productsPanel);
-					layeredMainPane.repaint();
-					layeredMainPane.revalidate();
-					btnDashboard.setForeground(Color.GREEN);
-					btnProducts.setForeground(Color.decode("#0f03fc"));
-					btnAccounts.setForeground(Color.GREEN);
-					
-					refreshProductTable();
-					refreshProductPanel();
-				}
-				
-				lblErrorMEssage.setText(error);
-				
-			}
-		});
-		btnProducts.setFont(new Font("Tahoma", Font.BOLD, 24));
-		btnProducts.setBackground(new Color(85, 107, 47));
-		btnProducts.setForeground(Color.GREEN);
-		
-		btnAccounts = new JButton("Accounts");
-		btnAccounts.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				error = "";
-				layeredMainPane.removeAll();
-				layeredMainPane.add(accountsPanel);
-				layeredMainPane.repaint();
-				layeredMainPane.revalidate();
-				btnDashboard.setForeground(Color.GREEN);
-				btnProducts.setForeground(Color.GREEN);
-				btnAccounts.setForeground(Color.decode("#0f03fc"));
-				
-				refreshAccountPanel();
-				//refreshCustomerTransactionTable();
-			}
-		});
-		btnAccounts.setFont(new Font("Tahoma", Font.BOLD, 24));
-		btnAccounts.setBackground(new Color(85, 107, 47));
-		btnAccounts.setForeground(Color.GREEN);
-		
-		GroupLayout gl_panel_3 = new GroupLayout(panel_3);
-		gl_panel_3.setHorizontalGroup(
-			gl_panel_3.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_3.createSequentialGroup()
-					.addGroup(gl_panel_3.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_3.createSequentialGroup()
-							.addGap(3)
-							.addGroup(gl_panel_3.createParallelGroup(Alignment.LEADING)
-								.addComponent(btnProducts, GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
-								.addComponent(btnDashboard, GroupLayout.PREFERRED_SIZE, 164, Short.MAX_VALUE)
-								.addComponent(btnAccounts, GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)))
-						.addGroup(Alignment.TRAILING, gl_panel_3.createSequentialGroup()
-							.addContainerGap(61, Short.MAX_VALUE)
-							.addComponent(btnLogout)))
-					.addContainerGap())
-		);
-		gl_panel_3.setVerticalGroup(
-			gl_panel_3.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_3.createSequentialGroup()
-					.addGap(14)
-					.addComponent(btnDashboard)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnProducts)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnAccounts)
-					.addGap(50)
-					.addComponent(btnLogout)
-					.addGap(307))
-		);
-		panel_3.setLayout(gl_panel_3);
-		
 		layeredMainPane = new JLayeredPane();
-		layeredMainPane.setBounds(183, 66, 764, 543);
-		imsPagePanel.add(layeredMainPane);
 		layeredMainPane.setLayout(new CardLayout(0, 0));
 		
 		dashBoardPanel = new JPanel();
@@ -576,15 +515,15 @@ public class ImsMainPage extends ImsDesktopApplication {
 			gl_dashBoardPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_dashBoardPanel.createSequentialGroup()
 					.addGap(61)
-					.addComponent(lblEmployee, GroupLayout.PREFERRED_SIZE, 440, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(263, Short.MAX_VALUE))
+					.addComponent(lblEmployee, GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+					.addGap(263))
 		);
 		gl_dashBoardPanel.setVerticalGroup(
 			gl_dashBoardPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_dashBoardPanel.createSequentialGroup()
 					.addGap(101)
-					.addComponent(lblEmployee)
-					.addContainerGap(411, Short.MAX_VALUE))
+					.addComponent(lblEmployee, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addGap(442))
 		);
 		dashBoardPanel.setLayout(gl_dashBoardPanel);
 		
@@ -592,26 +531,18 @@ public class ImsMainPage extends ImsDesktopApplication {
 		layeredMainPane.add(productsPanel, "name_118179738325051");
 		
 		JPanel panel_6 = new JPanel();
-		panel_6.setLayout(null);
 		panel_6.setBorder(new LineBorder(new Color(0, 0, 255)));
 		
 		JLabel label_8 = new JLabel("Add Product");
 		label_8.setForeground(new Color(0, 100, 0));
 		label_8.setFont(new Font("Dialog", Font.BOLD, 24));
-		label_8.setBounds(73, 12, 158, 20);
-		panel_6.add(label_8);
 		
 		JLabel label_9 = new JLabel("Name");
-		label_9.setBounds(6, 46, 41, 20);
-		panel_6.add(label_9);
+		label_9.setFont(new Font("Dialog", Font.PLAIN, 12));
 		
 		JLabel label_10 = new JLabel("Price");
-		label_10.setBounds(6, 84, 34, 20);
-		panel_6.add(label_10);
 		
 		JLabel label_11 = new JLabel("Quantity");
-		label_11.setBounds(6, 126, 60, 20);
-		panel_6.add(label_11);
 		
 		JButton btnAddProduct = new JButton("ADD PRODUCT");
 		btnAddProduct.addActionListener(new ActionListener() {
@@ -659,50 +590,32 @@ public class ImsMainPage extends ImsDesktopApplication {
 					}
 				}
 				
-				if (newProductDTO != null) {
-					// add it to the current products
-					List<ProductDTO> prdts = getCurrentProducts();
-					prdts.add(newProductDTO);
-					setCurrentProducts(prdts);
-				}
-				
-				refreshProductPanel();
-				refreshProductTable();
+				List<ProductDTO> products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
+				refreshProductPanel(products);
+				refreshProductTable(products);
 				
 			}
 		});
 		btnAddProduct.setBorder(new LineBorder(new Color(128, 0, 0), 1, true));
-		btnAddProduct.setBounds(83, 198, 143, 29);
-		panel_6.add(btnAddProduct);
 		
 		textFieldProductQuantity = new JTextField();
 		textFieldProductQuantity.setColumns(10);
 		textFieldProductQuantity.setBorder(new LineBorder(new Color(0, 0, 255)));
-		textFieldProductQuantity.setBounds(83, 124, 200, 26);
-		panel_6.add(textFieldProductQuantity);
 		
 		textFieldProductPrice = new JTextField();
 		textFieldProductPrice.setColumns(10);
 		textFieldProductPrice.setBorder(new LineBorder(new Color(0, 0, 255)));
-		textFieldProductPrice.setBounds(83, 84, 200, 26);
-		panel_6.add(textFieldProductPrice);
 		
 		textFieldProductName = new JTextField();
 		textFieldProductName.setColumns(10);
 		textFieldProductName.setBorder(new LineBorder(new Color(0, 0, 255)));
-		textFieldProductName.setBounds(83, 44, 200, 26);
-		panel_6.add(textFieldProductName);
 		
 		JLabel label_12 = new JLabel("Products");
 		label_12.setForeground(new Color(0, 128, 0));
 		label_12.setFont(new Font("Dialog", Font.BOLD, 24));
-		label_12.setBounds(94, 242, 158, 29);
-		panel_6.add(label_12);
 		
 		JSeparator separator = new JSeparator();
 		separator.setBackground(Color.BLUE);
-		separator.setBounds(0, 230, 324, 20);
-		panel_6.add(separator);
 		
 		comboBoxProduct = new JComboBox<String>();
 		comboBoxProduct.addActionListener(new ActionListener() {
@@ -711,10 +624,9 @@ public class ImsMainPage extends ImsDesktopApplication {
 				int selectedIndex = comboBoxProduct.getSelectedIndex();
 				String productName = comboBoxProductsMap.get(selectedIndex);
 				if (productName != null) {
-					// retrieve products from remote database
-//					for (ProductDTO p : productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId())) {
-					// retrieve products from the current products
-					for (ProductDTO p : getCurrentProducts()) {
+			
+					List<ProductDTO> databaseProducts = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
+					for (ProductDTO p : databaseProducts) {
 						if (productName.equals(p.getName())) {
 							textFieldUpdateProductName.setText(productName);
 							textFieldUpdateProductPrice.setText(""+p.getItemPrice());
@@ -726,42 +638,26 @@ public class ImsMainPage extends ImsDesktopApplication {
 			}
 		});
 		comboBoxProduct.setBorder(new LineBorder(new Color(0, 0, 255)));
-		comboBoxProduct.setBounds(88, 277, 200, 26);
-		panel_6.add(comboBoxProduct);
 		
 		textFieldUpdateProductName = new JTextField();
 		textFieldUpdateProductName.setColumns(10);
 		textFieldUpdateProductName.setBorder(new LineBorder(new Color(0, 0, 255)));
-		textFieldUpdateProductName.setBounds(88, 319, 200, 26);
-		panel_6.add(textFieldUpdateProductName);
 		
 		textFieldUpdateProductPrice = new JTextField();
 		textFieldUpdateProductPrice.setColumns(10);
 		textFieldUpdateProductPrice.setBorder(new LineBorder(new Color(0, 0, 255)));
-		textFieldUpdateProductPrice.setBounds(88, 361, 200, 26);
-		panel_6.add(textFieldUpdateProductPrice);
 		
 		textFieldUpdateProductQuantity = new JTextField();
 		textFieldUpdateProductQuantity.setColumns(10);
 		textFieldUpdateProductQuantity.setBorder(new LineBorder(new Color(0, 0, 255)));
-		textFieldUpdateProductQuantity.setBounds(88, 403, 200, 26);
-		panel_6.add(textFieldUpdateProductQuantity);
 		
 		JLabel label_13 = new JLabel("Product");
-		label_13.setBounds(13, 280, 69, 20);
-		panel_6.add(label_13);
 		
 		JLabel label_14 = new JLabel("Name");
-		label_14.setBounds(13, 322, 69, 20);
-		panel_6.add(label_14);
 		
 		JLabel label_15 = new JLabel("Price");
-		label_15.setBounds(13, 364, 69, 20);
-		panel_6.add(label_15);
 		
 		JLabel label_16 = new JLabel("Quantity");
-		label_16.setBounds(13, 409, 69, 20);
-		panel_6.add(label_16);
 		
 		JButton btnUpdateProduct = new JButton("UPDATE");
 		btnUpdateProduct.addActionListener(new ActionListener() {
@@ -804,13 +700,13 @@ public class ImsMainPage extends ImsDesktopApplication {
 				} catch (InvalidInputException e) {
 					error = e.getMessage();
 				}
-				refreshProductTable();
-				refreshProductPanel();
+
+				List<ProductDTO> products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
+				refreshProductTable(products);
+				refreshProductPanel(products);
 			}
 		});
 		btnUpdateProduct.setBorder(new LineBorder(new Color(128, 0, 0), 1, true));
-		btnUpdateProduct.setBounds(83, 502, 102, 29);
-		panel_6.add(btnUpdateProduct);
 		
 		JButton btnDelete = new JButton("DELETE");
 		btnDelete.addActionListener(new ActionListener() {
@@ -823,22 +719,34 @@ public class ImsMainPage extends ImsDesktopApplication {
 				} catch (InvalidInputException er) {
 					error = er.getMessage();
 				}
-				refreshProductPanel();
-				refreshProductTable();
+				
+				List<ProductDTO> products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
+				refreshProductPanel(products);
+				refreshProductTable(products);
 			}
 		});
 		btnDelete.setBorder(new LineBorder(new Color(128, 0, 0), 1, true));
-		btnDelete.setBounds(197, 502, 89, 29);
-		panel_6.add(btnDelete);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				
+				error = "";
+				int selectedProductRow = tableProducts.getSelectedRow();
+				// the selected product
+				ProductDTO product = tableProductsMap.get(selectedProductRow);
+				
+				textFieldUpdateProductName.setText(product.getName());
+				textFieldUpdateProductPrice.setText(""+product.getItemPrice());
+				textFieldUpdateProductQuantity.setText(""+product.getQuantity());
+				textFieldUpdateLimit.setText("" + product.getLimit());
+				
 			}
 		});
 		
 		JLabel label_17 = new JLabel("Click each column to sort the items");
+		label_17.setForeground(new Color(0, 128, 0));
 		label_17.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		
 		JButton btnPrintProducts = new JButton("PRINT");
@@ -850,51 +758,185 @@ public class ImsMainPage extends ImsDesktopApplication {
 		btnPrintProducts.setBorder(new LineBorder(new Color(128, 0, 0), 1, true));
 		GroupLayout gl_productsPanel = new GroupLayout(productsPanel);
 		gl_productsPanel.setHorizontalGroup(
-			gl_productsPanel.createParallelGroup(Alignment.LEADING)
+			gl_productsPanel.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_productsPanel.createSequentialGroup()
-					.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 324, GroupLayout.PREFERRED_SIZE)
-					.addGroup(gl_productsPanel.createParallelGroup(Alignment.LEADING)
+					.addContainerGap()
+					.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 325, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_productsPanel.createParallelGroup(Alignment.TRAILING)
+						.addGroup(Alignment.LEADING, gl_productsPanel.createSequentialGroup()
+							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 596, Short.MAX_VALUE)
+							.addContainerGap())
+						.addGroup(Alignment.LEADING, gl_productsPanel.createSequentialGroup()
+							.addComponent(label_17, GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE)
+							.addGap(162))
 						.addGroup(gl_productsPanel.createSequentialGroup()
-							.addGap(18)
-							.addGroup(gl_productsPanel.createParallelGroup(Alignment.LEADING)
-								.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE)
-								.addComponent(label_17, GroupLayout.PREFERRED_SIZE, 443, GroupLayout.PREFERRED_SIZE)))
-						.addGroup(gl_productsPanel.createSequentialGroup()
-							.addGap(18)
-							.addComponent(btnPrintProducts, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE))))
+							.addComponent(btnPrintProducts, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap())))
 		);
 		gl_productsPanel.setVerticalGroup(
 			gl_productsPanel.createParallelGroup(Alignment.LEADING)
-				.addComponent(panel_6, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
 				.addGroup(gl_productsPanel.createSequentialGroup()
 					.addGap(6)
-					.addComponent(label_17, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 449, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnPrintProducts, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
-					.addGap(13))
+					.addGroup(gl_productsPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_productsPanel.createSequentialGroup()
+							.addComponent(label_17, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(btnPrintProducts, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+							.addGap(5))
+						.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 538, GroupLayout.PREFERRED_SIZE))
+					.addGap(7))
 		);
 		
 		JLabel lblLimit = new JLabel("Limit");
-		lblLimit.setBounds(6, 163, 60, 15);
-		panel_6.add(lblLimit);
 		
 		textFieldLimit = new JTextField();
 		textFieldLimit.setBorder(new LineBorder(Color.BLUE));
-		textFieldLimit.setBounds(83, 164, 200, 26);
-		panel_6.add(textFieldLimit);
 		textFieldLimit.setColumns(10);
 		
 		JLabel lblLimit_1 = new JLabel("Limit");
-		lblLimit_1.setBounds(13, 455, 60, 15);
-		panel_6.add(lblLimit_1);
 		
 		textFieldUpdateLimit = new JTextField();
 		textFieldUpdateLimit.setBorder(new LineBorder(Color.BLUE));
-		textFieldUpdateLimit.setBounds(89, 450, 200, 26);
-		panel_6.add(textFieldUpdateLimit);
 		textFieldUpdateLimit.setColumns(10);
+		GroupLayout gl_panel_6 = new GroupLayout(panel_6);
+		gl_panel_6.setHorizontalGroup(
+			gl_panel_6.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_6.createSequentialGroup()
+					.addGap(6)
+					.addComponent(lblLimit, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+					.addGap(17)
+					.addComponent(textFieldLimit, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_panel_6.createSequentialGroup()
+					.addGap(83)
+					.addComponent(btnAddProduct, GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_panel_6.createSequentialGroup()
+					.addGap(94)
+					.addComponent(label_12, GroupLayout.PREFERRED_SIZE, 158, GroupLayout.PREFERRED_SIZE))
+				.addComponent(separator, GroupLayout.PREFERRED_SIZE, 324, GroupLayout.PREFERRED_SIZE)
+				.addGroup(gl_panel_6.createSequentialGroup()
+					.addGap(13)
+					.addComponent(label_13, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+					.addGap(6)
+					.addComponent(comboBoxProduct, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_panel_6.createSequentialGroup()
+					.addGap(13)
+					.addComponent(label_14, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+					.addGap(6)
+					.addComponent(textFieldUpdateProductName, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_panel_6.createSequentialGroup()
+					.addGap(13)
+					.addComponent(label_15, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+					.addGap(6)
+					.addComponent(textFieldUpdateProductPrice, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_panel_6.createSequentialGroup()
+					.addGap(13)
+					.addComponent(label_16, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+					.addGap(6)
+					.addComponent(textFieldUpdateProductQuantity, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_panel_6.createSequentialGroup()
+					.addGap(13)
+					.addComponent(lblLimit_1, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+					.addGap(16)
+					.addComponent(textFieldUpdateLimit, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_panel_6.createSequentialGroup()
+					.addGap(85)
+					.addComponent(btnUpdateProduct, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnDelete, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
+					.addGap(196))
+				.addGroup(gl_panel_6.createSequentialGroup()
+					.addGap(6)
+					.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_6.createSequentialGroup()
+							.addComponent(label_11, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+							.addGap(17)
+							.addComponent(textFieldProductQuantity, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panel_6.createSequentialGroup()
+							.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
+								.addComponent(label_10)
+								.addComponent(label_9))
+							.addGap(46)
+							.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
+								.addComponent(textFieldProductName)
+								.addComponent(textFieldProductPrice, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))))
+					.addContainerGap(195, Short.MAX_VALUE))
+				.addGroup(gl_panel_6.createSequentialGroup()
+					.addGap(107)
+					.addComponent(label_8)
+					.addContainerGap(228, Short.MAX_VALUE))
+		);
+		gl_panel_6.setVerticalGroup(
+			gl_panel_6.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_6.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(label_8)
+					.addGap(10)
+					.addGroup(gl_panel_6.createParallelGroup(Alignment.BASELINE)
+						.addComponent(textFieldProductName, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+						.addComponent(label_9))
+					.addGap(18)
+					.addGroup(gl_panel_6.createParallelGroup(Alignment.BASELINE)
+						.addComponent(textFieldProductPrice, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+						.addComponent(label_10))
+					.addGap(14)
+					.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_6.createSequentialGroup()
+							.addGap(2)
+							.addComponent(label_11, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+						.addComponent(textFieldProductQuantity, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE))
+					.addGap(13)
+					.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblLimit)
+						.addGroup(gl_panel_6.createSequentialGroup()
+							.addGap(1)
+							.addComponent(textFieldLimit, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)))
+					.addGap(8)
+					.addComponent(btnAddProduct, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
+					.addGap(3)
+					.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_6.createSequentialGroup()
+							.addGap(12)
+							.addComponent(label_12, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE))
+						.addComponent(separator, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+					.addGap(6)
+					.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_6.createSequentialGroup()
+							.addGap(3)
+							.addComponent(label_13, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+						.addComponent(comboBoxProduct, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(16)
+					.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_6.createSequentialGroup()
+							.addGap(3)
+							.addComponent(label_14, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+						.addComponent(textFieldUpdateProductName, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE))
+					.addGap(16)
+					.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_6.createSequentialGroup()
+							.addGap(3)
+							.addComponent(label_15, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+						.addComponent(textFieldUpdateProductPrice, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE))
+					.addGap(16)
+					.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_6.createSequentialGroup()
+							.addGap(6)
+							.addComponent(label_16, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+						.addComponent(textFieldUpdateProductQuantity, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE))
+					.addGap(21)
+					.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_6.createSequentialGroup()
+							.addGap(5)
+							.addComponent(lblLimit_1))
+						.addComponent(textFieldUpdateLimit, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_panel_6.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnUpdateProduct, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnDelete, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)))
+		);
+		panel_6.setLayout(gl_panel_6);
 		
 		tableProducts = new JTable();
 		tableProducts.setAutoCreateRowSorter(true);
@@ -904,9 +946,23 @@ public class ImsMainPage extends ImsDesktopApplication {
 				DefaultTableModel model = (DefaultTableModel) tableProducts.getModel();
 				int selectedRow = tableProducts.getSelectedRow();
 				
+				error = "";
+				int selectedProductRow = tableProducts.getSelectedRow();
+				// the selected product
+				ProductDTO product = tableProductsMap.get(selectedProductRow);
+				
+				// suspended
+				
+//				textFieldUpdateProductName.setText(product.getName());
+//				textFieldUpdateProductPrice.setText(""+product.getItemPrice());
+//				textFieldUpdateProductQuantity.setText(""+product.getQuantity());
+//				textFieldUpdateLimit.setText("" + product.getLimit());
+				
 				String name = model.getValueAt(selectedRow, 0).toString();
 				String price = model.getValueAt(selectedRow, 1).toString();
 				String quantity = model.getValueAt(selectedRow, 2).toString();
+				
+//				System.out.println("name: " + name +"\nPrice: " + price +"\nquantity: " + quantity);
 			}
 		});
 		tableProducts.setModel(new DefaultTableModel(
@@ -938,19 +994,16 @@ public class ImsMainPage extends ImsDesktopApplication {
 		productsPanel.setLayout(gl_productsPanel);
 		
 		transactionsPanel = new JPanel();
-		transactionsPanel.setLayout(null);
 		layeredMainPane.add(transactionsPanel, "name_118242517273668");
 		
 		JPanel panel_8 = new JPanel();
 		panel_8.setLayout(null);
 		panel_8.setBorder(new LineBorder(new Color(0, 0, 255)));
-		panel_8.setBounds(0, 0, 205, 537);
-		transactionsPanel.add(panel_8);
 		
 		lblProductTransaction = new JLabel("Product");
 		lblProductTransaction.setHorizontalAlignment(SwingConstants.CENTER);
 		lblProductTransaction.setFont(new Font("Dialog", Font.PLAIN, 20));
-		lblProductTransaction.setBounds(25, 36, 140, 29);
+		lblProductTransaction.setBounds(58, 38, 140, 29);
 		panel_8.add(lblProductTransaction);
 		
 		JButton btnUpdateTransaction = new JButton("UPDATE");
@@ -970,7 +1023,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			}
 		});
 		btnUpdateTransaction.setBorder(new LineBorder(new Color(128, 0, 0)));
-		btnUpdateTransaction.setBounds(25, 107, 80, 29);
+		btnUpdateTransaction.setBounds(48, 107, 80, 29);
 		panel_8.add(btnUpdateTransaction);
 		
 		JSeparator separator_1 = new JSeparator();
@@ -978,6 +1031,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_8.add(separator_1);
 		
 		JLabel label_19 = new JLabel("Add Products for Purchase");
+		label_19.setForeground(new Color(0, 128, 0));
+		label_19.setFont(new Font("Dialog", Font.BOLD, 13));
 		label_19.setBounds(15, 170, 193, 20);
 		panel_8.add(label_19);
 		
@@ -1052,7 +1107,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_8.add(btnAdd);
 		
 		JSeparator separator_2 = new JSeparator();
-		separator_2.setBounds(0, 363, 253, 10);
+		separator_2.setBounds(0, 363, 276, 20);
 		panel_8.add(separator_2);
 		
 		JButton btnSubmit = new JButton("FINALIZE");
@@ -1100,19 +1155,13 @@ public class ImsMainPage extends ImsDesktopApplication {
 			}
 		});
 		btnRemoveProduct.setBorder(new LineBorder(new Color(128, 0, 0)));
-		btnRemoveProduct.setBounds(107, 107, 91, 29);
+		btnRemoveProduct.setBounds(138, 107, 91, 29);
 		panel_8.add(btnRemoveProduct);
 		
 		JButton btnClear = new JButton("CLEAR");
 		btnClear.setBorder(new LineBorder(new Color(128, 0, 0)));
 		btnClear.setBounds(80, 502, 115, 29);
 		panel_8.add(btnClear);
-		
-		JLabel label_24 = new JLabel("");
-		label_24.setForeground(Color.GRAY);
-		label_24.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		label_24.setBounds(63, 4, 178, 20);
-		panel_8.add(label_24);
 		
 		JButton btnShowReceipt = new JButton("PRINT");
 		btnShowReceipt.addActionListener(new ActionListener() {
@@ -1130,6 +1179,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 			    
 			    // print details in the table
 			    printTable(tableTransaction);
+			    
+			    //showInvoice();
 			}
 		});
 		btnShowReceipt.setBorder(new LineBorder(new Color(128, 0, 0)));
@@ -1139,7 +1190,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		JLabel lblUpdateTransaction = new JLabel("Update Transaction");
 		lblUpdateTransaction.setForeground(new Color(0, 128, 0));
 		lblUpdateTransaction.setFont(new Font("Dialog", Font.BOLD, 17));
-		lblUpdateTransaction.setBounds(0, 4, 178, 27);
+		lblUpdateTransaction.setBounds(51, 0, 178, 27);
 		panel_8.add(lblUpdateTransaction);
 		
 		JLabel lblNewQuantity = new JLabel("New Quantity");
@@ -1147,7 +1198,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_8.add(lblNewQuantity);
 		
 		textFieldTranUpdateQuantity = new JTextField();
-		textFieldTranUpdateQuantity.setBounds(96, 77, 98, 26);
+		textFieldTranUpdateQuantity.setBounds(96, 77, 112, 26);
 		panel_8.add(textFieldTranUpdateQuantity);
 		textFieldTranUpdateQuantity.setColumns(10);
 		
@@ -1176,12 +1227,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 		
 		JLabel label_25 = new JLabel("");
 		label_25.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		label_25.setBounds(713, 468, 102, 20);
-		transactionsPanel.add(label_25);
 		
 		panel_4 = new JPanel();
-		panel_4.setBounds(217, 0, 527, 537);
-		transactionsPanel.add(panel_4);
 		
 		JScrollPane scrollPaneTransaction = new JScrollPane();
 		
@@ -1228,79 +1275,51 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panelInvoiceHeader = new JPanel();
 		GroupLayout gl_panel_4 = new GroupLayout(panel_4);
 		gl_panel_4.setHorizontalGroup(
-			gl_panel_4.createParallelGroup(Alignment.LEADING)
+			gl_panel_4.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel_4.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
-						.addComponent(scrollPaneTransaction, GroupLayout.PREFERRED_SIZE, 479, GroupLayout.PREFERRED_SIZE)
-						.addComponent(panelInvoiceHeader, GroupLayout.PREFERRED_SIZE, 503, Short.MAX_VALUE))
+					.addGroup(gl_panel_4.createParallelGroup(Alignment.TRAILING)
+						.addComponent(scrollPaneTransaction, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE)
+						.addComponent(panelInvoiceHeader, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		gl_panel_4.setVerticalGroup(
 			gl_panel_4.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, gl_panel_4.createSequentialGroup()
-					.addComponent(panelInvoiceHeader, GroupLayout.PREFERRED_SIZE, 346, GroupLayout.PREFERRED_SIZE)
+				.addGroup(gl_panel_4.createSequentialGroup()
+					.addComponent(panelInvoiceHeader, GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPaneTransaction, GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE))
+					.addComponent(scrollPaneTransaction, GroupLayout.PREFERRED_SIZE, 258, GroupLayout.PREFERRED_SIZE))
 		);
 		
 		JLabel lblDeDonMotors = new JLabel("DE DON MOTORS CO. L.T.D");
-		lblDeDonMotors.setFont(new Font("Dialog", Font.BOLD, 24));
+		lblDeDonMotors.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDeDonMotors.setFont(new Font("Dialog", Font.BOLD, 18));
 		lblDeDonMotors.setForeground(Color.BLUE);
 		
-		JLabel lblCustomerName = new JLabel("Customer Name");
-		lblCustomerName.setFont(new Font("Dialog", Font.PLAIN, 10));
-		
-		labelTranCustomerName = new JLabel("");
-		labelTranCustomerName.setFont(new Font("Dialog", Font.PLAIN, 10));
-		
-		JLabel lblPhoneNumber_2 = new JLabel("Phone Number");
-		lblPhoneNumber_2.setFont(new Font("Dialog", Font.PLAIN, 10));
-		
-		labelTranCustomerNumber = new JLabel("");
-		labelTranCustomerNumber.setFont(new Font("Dialog", Font.PLAIN, 10));
-		
-		JLabel lblDate = new JLabel("Transaction Date");
-		lblDate.setFont(new Font("Dialog", Font.PLAIN, 10));
-		
-		lbllabelTranDate = new JLabel("");
-		lbllabelTranDate.setFont(new Font("Dialog", Font.PLAIN, 10));
-		
-		JLabel lblTotalAmount = new JLabel("Total Amount");
-		lblTotalAmount.setFont(new Font("Dialog", Font.PLAIN, 10));
-		
-		labelTranAmount = new JLabel("");
-		labelTranAmount.setFont(new Font("Dialog", Font.PLAIN, 10));
-		
-		JLabel lblAmountPaid = new JLabel("Amount Paid");
-		lblAmountPaid.setFont(new Font("Dialog", Font.PLAIN, 10));
-		
-		labelTranAmountPaid = new JLabel("");
-		labelTranAmountPaid.setFont(new Font("Dialog", Font.PLAIN, 10));
-		
-		JLabel lblAmountLeft = new JLabel("Amount Left");
-		lblAmountLeft.setFont(new Font("Dialog", Font.PLAIN, 10));
-		
-		labelTranAmountLeft = new JLabel("");
-		labelTranAmountLeft.setFont(new Font("Dialog", Font.PLAIN, 10));
-		
 		JLabel lblInGodWe = new JLabel("IN GOD WE TRUST");
-		lblInGodWe.setForeground(Color.BLACK);
-		lblInGodWe.setFont(new Font("Dialog", Font.ITALIC, 16));
+		lblInGodWe.setHorizontalAlignment(SwingConstants.CENTER);
+		lblInGodWe.setForeground(Color.MAGENTA);
+		lblInGodWe.setFont(new Font("Dialog", Font.ITALIC, 10));
 		
 		JLabel lblSoleAgeentOf = new JLabel("SOLE AGEENT OF AVATA SPECIAL QUALITY MOTORCYCLE/SPARE PARTS AND DIAMONG TIRES/TUBES");
+		lblSoleAgeentOf.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSoleAgeentOf.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		JLabel lblheadOfficeTechiman = new JLabel("(Head Office: Techiman, B/E Along Kintampo Road Before Toll Booth Tuobodom)");
+		lblheadOfficeTechiman.setHorizontalAlignment(SwingConstants.CENTER);
 		lblheadOfficeTechiman.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		JLabel lblNewLabel = new JLabel("Box 120 TECHIMAN. B.E/R Ghana: Tel: 0243679200/0209380084/0553552147/0247832338");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		JLabel lblEmailDedonmotorsyahoocomdedonmotorsgmailcom = new JLabel("E-mail: dedon.motors@yahoo.com/dedonmotors@gmail.com");
-		lblEmailDedonmotorsyahoocomdedonmotorsgmailcom.setFont(new Font("Dialog", Font.PLAIN, 9));
+		lblEmailDedonmotorsyahoocomdedonmotorsgmailcom.setHorizontalAlignment(SwingConstants.CENTER);
+		lblEmailDedonmotorsyahoocomdedonmotorsgmailcom.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		JLabel lblBranches = new JLabel("Branches");
+		lblBranches.setHorizontalAlignment(SwingConstants.CENTER);
+		lblBranches.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblBranches.setForeground(Color.BLUE);
 		
 		JLabel lblWaAlongWa = new JLabel("Wa: Along Wa Poly Road");
@@ -1310,164 +1329,217 @@ public class ImsMainPage extends ImsDesktopApplication {
 		lblTel.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		JLabel lblKumasiAlabafulaniChief = new JLabel("Kumasi: AlabaFulani Chief House");
+		lblKumasiAlabafulaniChief.setHorizontalAlignment(SwingConstants.CENTER);
 		lblKumasiAlabafulaniChief.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		JLabel lblTel_1 = new JLabel("Tel: 0551939054");
 		lblTel_1.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		JLabel lblBolga = new JLabel("Bolga");
+		lblBolga.setHorizontalAlignment(SwingConstants.CENTER);
 		lblBolga.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		JLabel lblTel_2 = new JLabel("Tel: 0209784545/0553818004");
 		lblTel_2.setFont(new Font("Dialog", Font.PLAIN, 10));
+		
+		JLabel lblCustomerName = new JLabel("Customer Name:");
+		lblCustomerName.setFont(new Font("Dialog", Font.PLAIN, 10));
+		
+		labelTranCustomerName = new JLabel("");
+		labelTranCustomerName.setFont(new Font("Dialog", Font.PLAIN, 10));
+		
+		JLabel lblPhoneNumber_2 = new JLabel("Phone Number:");
+		lblPhoneNumber_2.setFont(new Font("Dialog", Font.PLAIN, 10));
+		
+		labelTranCustomerNumber = new JLabel("");
+		labelTranCustomerNumber.setFont(new Font("Dialog", Font.PLAIN, 10));
+		
+		JLabel lblDate = new JLabel("Transaction Date:");
+		lblDate.setFont(new Font("Dialog", Font.PLAIN, 10));
+		
+		lbllabelTranDate = new JLabel("");
+		lbllabelTranDate.setFont(new Font("Dialog", Font.PLAIN, 10));
+		
+		JLabel lblTotalAmount = new JLabel("Total Amount:");
+		lblTotalAmount.setFont(new Font("Dialog", Font.PLAIN, 10));
+		
+		JLabel lblAmountPaid = new JLabel("Amount Paid:");
+		lblAmountPaid.setFont(new Font("Dialog", Font.PLAIN, 10));
+		
+		labelTranAmountPaid = new JLabel("");
+		labelTranAmountPaid.setFont(new Font("Dialog", Font.PLAIN, 10));
+		
+		JLabel lblAmountLeft = new JLabel("Amount Left:");
+		lblAmountLeft.setFont(new Font("Dialog", Font.PLAIN, 10));
+		
+		labelTranAmountLeft = new JLabel("");
+		labelTranAmountLeft.setFont(new Font("Dialog", Font.PLAIN, 10));
+		
+		labelTranAmount = new JLabel("");
+		labelTranAmount.setFont(new Font("Dialog", Font.PLAIN, 10));
 		GroupLayout gl_panelInvoiceHeader = new GroupLayout(panelInvoiceHeader);
 		gl_panelInvoiceHeader.setHorizontalGroup(
-			gl_panelInvoiceHeader.createParallelGroup(Alignment.TRAILING)
+			gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
+					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
+							.addGap(121)
+							.addComponent(lblDeDonMotors, GroupLayout.PREFERRED_SIZE, 355, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
+							.addGap(160)
+							.addComponent(lblInGodWe, GroupLayout.PREFERRED_SIZE, 272, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
+							.addGap(43)
+							.addComponent(lblheadOfficeTechiman, GroupLayout.PREFERRED_SIZE, 472, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
+							.addGap(20)
+							.addComponent(lblSoleAgeentOf, GroupLayout.PREFERRED_SIZE, 568, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
+							.addGap(72)
+							.addComponent(lblEmailDedonmotorsyahoocomdedonmotorsgmailcom, GroupLayout.PREFERRED_SIZE, 406, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 526, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap(25, Short.MAX_VALUE))
+				.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
+					.addGap(151)
+					.addComponent(lblBranches, GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+					.addGap(204))
 				.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
 					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
 							.addContainerGap()
-							.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.TRAILING)
-								.addComponent(lblDeDonMotors)
-								.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-									.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
-										.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-											.addComponent(lblCustomerName, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(labelTranCustomerName, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE))
-										.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-											.addComponent(lblTotalAmount, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
-											.addGap(18)
-											.addComponent(labelTranAmount, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE))
-										.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-											.addComponent(lblAmountPaid, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
-											.addGap(18)
-											.addComponent(labelTranAmountPaid, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE))
-										.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-											.addComponent(lblAmountLeft, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
-											.addGap(18)
-											.addComponent(labelTranAmountLeft, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE)))
-									.addGap(12))))
+							.addComponent(lblTel, GroupLayout.PREFERRED_SIZE, 159, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-							.addGap(157)
-							.addComponent(lblInGodWe))
-						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(lblSoleAgeentOf)))
-					.addContainerGap(15, Short.MAX_VALUE))
-				.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-					.addContainerGap(58, Short.MAX_VALUE)
-					.addComponent(lblheadOfficeTechiman)
-					.addGap(57))
-				.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-					.addGap(99)
-					.addComponent(lblEmailDedonmotorsyahoocomdedonmotorsgmailcom)
-					.addContainerGap(126, Short.MAX_VALUE))
-				.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
+							.addGap(22)
+							.addComponent(lblWaAlongWa, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)))
 					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(lblWaAlongWa)
-							.addGap(36)
-							.addComponent(lblKumasiAlabafulaniChief)
-							.addGap(74)
-							.addComponent(lblBolga))
+							.addGap(18)
+							.addComponent(lblKumasiAlabafulaniChief, GroupLayout.PREFERRED_SIZE, 215, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-							.addGap(190)
-							.addComponent(lblBranches)))
-					.addContainerGap(76, Short.MAX_VALUE))
-				.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-					.addContainerGap()
+							.addGap(73)
+							.addComponent(lblTel_1, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE)))
+					.addGap(18)
 					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-							.addComponent(lblTel)
-							.addGap(37)
-							.addComponent(lblTel_1)
-							.addPreferredGap(ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
-							.addComponent(lblTel_2))
-						.addComponent(lblNewLabel))
+						.addComponent(lblTel_2, GroupLayout.PREFERRED_SIZE, 169, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblBolga, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE))
 					.addGap(28))
-				.addGroup(Alignment.LEADING, gl_panelInvoiceHeader.createSequentialGroup()
+				.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(lblPhoneNumber_2, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
+					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING, false)
+						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
+							.addComponent(lblDate, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lbllabelTranDate, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
+							.addComponent(lblCustomerName, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(labelTranCustomerName, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
+							.addComponent(lblPhoneNumber_2, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(labelTranCustomerNumber, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE)))
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(labelTranCustomerNumber, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(116, Short.MAX_VALUE))
-				.addGroup(Alignment.LEADING, gl_panelInvoiceHeader.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblDate, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(lbllabelTranDate, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(116, Short.MAX_VALUE))
+					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblTotalAmount, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
+							.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblAmountPaid, GroupLayout.PREFERRED_SIZE, 78, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblAmountLeft, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
+								.addComponent(labelTranAmountPaid, GroupLayout.PREFERRED_SIZE, 132, GroupLayout.PREFERRED_SIZE)
+								.addComponent(labelTranAmountLeft, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE)
+								.addComponent(labelTranAmount, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE))))
+					.addContainerGap(167, Short.MAX_VALUE))
 		);
 		gl_panelInvoiceHeader.setVerticalGroup(
-			gl_panelInvoiceHeader.createParallelGroup(Alignment.TRAILING)
+			gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(lblDeDonMotors)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(lblInGodWe)
+					.addGap(11)
+					.addComponent(lblSoleAgeentOf)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(lblheadOfficeTechiman, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 9, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(lblEmailDedonmotorsyahoocomdedonmotorsgmailcom, GroupLayout.PREFERRED_SIZE, 12, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(lblBranches)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblKumasiAlabafulaniChief)
+						.addComponent(lblWaAlongWa)
+						.addComponent(lblBolga, GroupLayout.PREFERRED_SIZE, 13, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblTel)
+						.addComponent(lblTel_1)
+						.addComponent(lblTel_2))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.TRAILING, false)
+						.addComponent(lblCustomerName, GroupLayout.DEFAULT_SIZE, 21, Short.MAX_VALUE)
+						.addComponent(labelTranCustomerName, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
+							.addComponent(labelTranAmount, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+							.addComponent(lblTotalAmount)))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
-							.addComponent(lblDeDonMotors)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(lblInGodWe)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(lblSoleAgeentOf)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(lblheadOfficeTechiman)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(lblNewLabel)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(lblEmailDedonmotorsyahoocomdedonmotorsgmailcom)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(lblBranches)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblWaAlongWa)
-								.addComponent(lblKumasiAlabafulaniChief)
-								.addComponent(lblBolga, GroupLayout.PREFERRED_SIZE, 13, GroupLayout.PREFERRED_SIZE))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblTel)
-								.addComponent(lblTel_1)
-								.addComponent(lblTel_2))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(labelTranCustomerName, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
+						.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.TRAILING)
 							.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
-								.addComponent(labelTranCustomerNumber, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblPhoneNumber_2))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
-								.addComponent(lbllabelTranDate, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblDate))
-							.addGap(6)
-							.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblTotalAmount)
-								.addComponent(labelTranAmount, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblPhoneNumber_2)
+								.addComponent(labelTranCustomerNumber, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
+							.addGroup(gl_panelInvoiceHeader.createSequentialGroup()
 								.addComponent(lblAmountPaid)
-								.addComponent(labelTranAmountPaid, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblAmountLeft)
-								.addComponent(labelTranAmountLeft, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
-							.addContainerGap())
-						.addGroup(Alignment.TRAILING, gl_panelInvoiceHeader.createSequentialGroup()
-							.addComponent(lblCustomerName)
-							.addGap(123))))
+								.addGap(2)))
+						.addComponent(labelTranAmountPaid, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.TRAILING)
+							.addComponent(lblDate)
+							.addComponent(lbllabelTranDate, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panelInvoiceHeader.createParallelGroup(Alignment.TRAILING)
+							.addComponent(labelTranAmountLeft, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+							.addComponent(lblAmountLeft)))
+					.addContainerGap(12, Short.MAX_VALUE))
 		);
 		panelInvoiceHeader.setLayout(gl_panelInvoiceHeader);
 		panel_4.setLayout(gl_panel_4);
+		GroupLayout gl_transactionsPanel = new GroupLayout(transactionsPanel);
+		gl_transactionsPanel.setHorizontalGroup(
+			gl_transactionsPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_transactionsPanel.createSequentialGroup()
+					.addComponent(panel_8, GroupLayout.PREFERRED_SIZE, 276, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 637, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(label_25, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		gl_transactionsPanel.setVerticalGroup(
+			gl_transactionsPanel.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_transactionsPanel.createSequentialGroup()
+					.addGap(468)
+					.addComponent(label_25, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_transactionsPanel.createSequentialGroup()
+					.addComponent(panel_4, GroupLayout.DEFAULT_SIZE, 545, Short.MAX_VALUE)
+					.addGap(6))
+				.addGroup(gl_transactionsPanel.createSequentialGroup()
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(panel_8, GroupLayout.PREFERRED_SIZE, 537, GroupLayout.PREFERRED_SIZE))
+		);
+		transactionsPanel.setLayout(gl_transactionsPanel);
 		
 		accountsPanel = new JPanel();
-		accountsPanel.setLayout(null);
 		layeredMainPane.add(accountsPanel, "name_118280808053760");
 		
 		JPanel panel_10 = new JPanel();
 		panel_10.setLayout(null);
 		panel_10.setBorder(new LineBorder(new Color(0, 0, 255)));
-		panel_10.setBounds(0, 0, 211, 492);
-		accountsPanel.add(panel_10);
 		
 		JLabel label_26 = new JLabel("Register Customer");
 		label_26.setForeground(new Color(0, 128, 0));
@@ -1481,7 +1553,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		
 		textFieldCustomerLastName = new JTextField();
 		textFieldCustomerLastName.setColumns(10);
-		textFieldCustomerLastName.setBounds(96, 82, 106, 26);
+		textFieldCustomerLastName.setBounds(96, 82, 137, 26);
 		panel_10.add(textFieldCustomerLastName);
 		
 		JLabel lblUserName_3 = new JLabel("User Name");
@@ -1490,7 +1562,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		
 		textFieldCustomerID = new JTextField();
 		textFieldCustomerID.setColumns(10);
-		textFieldCustomerID.setBounds(96, 120, 106, 26);
+		textFieldCustomerID.setBounds(96, 120, 137, 26);
 		panel_10.add(textFieldCustomerID);
 		
 		JButton btnRegisterCustomer = new JButton("REGISTER");
@@ -1515,7 +1587,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			}
 		});
 		btnRegisterCustomer.setBorder(new LineBorder(new Color(128, 0, 0)));
-		btnRegisterCustomer.setBounds(128, 191, 69, 29);
+		btnRegisterCustomer.setBounds(128, 191, 90, 29);
 		panel_10.add(btnRegisterCustomer);
 		
 		JSeparator separator_3 = new JSeparator();
@@ -1550,7 +1622,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 				//refreshCustomerPanel();
 			}
 		});
-		comboBoxCustomer.setBounds(96, 279, 106, 26);
+		comboBoxCustomer.setBounds(96, 279, 137, 26);
 		panel_10.add(comboBoxCustomer);
 		
 		JLabel label_30 = new JLabel("Customer");
@@ -1559,7 +1631,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		
 		textFieldUpdateCustomerFirstName = new JTextField();
 		textFieldUpdateCustomerFirstName.setColumns(10);
-		textFieldUpdateCustomerFirstName.setBounds(96, 317, 106, 26);
+		textFieldUpdateCustomerFirstName.setBounds(96, 317, 137, 26);
 		panel_10.add(textFieldUpdateCustomerFirstName);
 		
 		JLabel lblFirstName_1 = new JLabel("First Name");
@@ -1568,7 +1640,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		
 		textFieldUpdateCustomerUN = new JTextField();
 		textFieldUpdateCustomerUN.setColumns(10);
-		textFieldUpdateCustomerUN.setBounds(96, 377, 106, 26);
+		textFieldUpdateCustomerUN.setBounds(96, 377, 137, 26);
 		panel_10.add(textFieldUpdateCustomerUN);
 		
 		JLabel lblUserName_2 = new JLabel("User Name");
@@ -1592,7 +1664,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			}
 		});
 		btnDelete_1.setBorder(new LineBorder(new Color(128, 0, 0)));
-		btnDelete_1.setBounds(120, 445, 69, 29);
+		btnDelete_1.setBounds(148, 445, 85, 29);
 		panel_10.add(btnDelete_1);
 		
 		JButton btnUpdate = new JButton("UPDATE");
@@ -1620,7 +1692,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			}
 		});
 		btnUpdate.setBorder(new LineBorder(new Color(128, 0, 0)));
-		btnUpdate.setBounds(25, 445, 83, 29);
+		btnUpdate.setBounds(53, 445, 83, 29);
 		panel_10.add(btnUpdate);
 		
 		JLabel lblPhoneNumber = new JLabel("Phone N0.");
@@ -1628,12 +1700,12 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_10.add(lblPhoneNumber);
 		
 		textFieldPhoneNumber = new JTextField();
-		textFieldPhoneNumber.setBounds(96, 155, 106, 26);
+		textFieldPhoneNumber.setBounds(96, 155, 137, 26);
 		panel_10.add(textFieldPhoneNumber);
 		textFieldPhoneNumber.setColumns(10);
 		
 		textFieldCustomerFirstName = new JTextField();
-		textFieldCustomerFirstName.setBounds(95, 44, 106, 26);
+		textFieldCustomerFirstName.setBounds(95, 44, 138, 26);
 		panel_10.add(textFieldCustomerFirstName);
 		textFieldCustomerFirstName.setColumns(10);
 		
@@ -1646,7 +1718,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_10.add(lblLastName_2);
 		
 		textFieldUpdateCustomerLastName = new JTextField();
-		textFieldUpdateCustomerLastName.setBounds(96, 347, 106, 26);
+		textFieldUpdateCustomerLastName.setBounds(96, 347, 137, 26);
 		panel_10.add(textFieldUpdateCustomerLastName);
 		textFieldUpdateCustomerLastName.setColumns(10);
 		
@@ -1655,19 +1727,15 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_10.add(lblPhoneNumber_1);
 		
 		textFieldUpdateCustomerNumber = new JTextField();
-		textFieldUpdateCustomerNumber.setBounds(96, 412, 106, 26);
+		textFieldUpdateCustomerNumber.setBounds(96, 412, 137, 26);
 		panel_10.add(textFieldUpdateCustomerNumber);
 		textFieldUpdateCustomerNumber.setColumns(10);
 		
 		JLabel label_33 = new JLabel("Transactions");
 		label_33.setForeground(new Color(0, 128, 0));
 		label_33.setFont(new Font("Dialog", Font.BOLD, 20));
-		label_33.setBounds(223, 16, 148, 20);
-		accountsPanel.add(label_33);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(217, 48, 541, 389);
-		accountsPanel.add(scrollPane_2);
 		
 		tableCustomerTransactions = new JTable();
 		scrollPane_2.setColumnHeaderView(tableCustomerTransactions);
@@ -1727,11 +1795,6 @@ public class ImsMainPage extends ImsDesktopApplication {
 		//tableCustomerTransactions.getColumnModel().getColumn(3).setResizable(false);
 		scrollPane_2.setViewportView(tableCustomerTransactions);
 		
-		JLabel label_34 = new JLabel("");
-		label_34.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		label_34.setBounds(644, 457, 105, 20);
-		accountsPanel.add(label_34);
-		
 		JButton button = new JButton("+");
 		button.setForeground(new Color(0, 128, 0));
 		button.addActionListener(new ActionListener() {
@@ -1748,18 +1811,12 @@ public class ImsMainPage extends ImsDesktopApplication {
 				refreshCustomerTransactionTable();
 			}
 		});
-		button.setBounds(363, 16, 44, 29);
-		accountsPanel.add(button);
 		
 		JLabel lblTotalAmountLeft = new JLabel("Total Amount Left:");
 		lblTotalAmountLeft.setFont(new Font("Dialog", Font.BOLD, 20));
 		lblTotalAmountLeft.setForeground(new Color(0, 128, 0));
-		lblTotalAmountLeft.setBounds(433, 21, 194, 16);
-		accountsPanel.add(lblTotalAmountLeft);
 		
 		lblTotalBalance = new JLabel("");
-		lblTotalBalance.setBounds(641, 20, 108, 16);
-		accountsPanel.add(lblTotalBalance);
 		
 		JButton btnOpen = new JButton("OPEN");
 		btnOpen.addActionListener(new ActionListener() {
@@ -1784,8 +1841,6 @@ public class ImsMainPage extends ImsDesktopApplication {
 						
 			}
 		});
-		btnOpen.setBounds(223, 449, 70, 29);
-		accountsPanel.add(btnOpen);
 		
 		JButton btnDelete_2 = new JButton("DELETE");
 		btnDelete_2.addActionListener(new ActionListener() {
@@ -1807,28 +1862,146 @@ public class ImsMainPage extends ImsDesktopApplication {
 			}
 		});
 		btnDelete_2.setForeground(Color.RED);
-		btnDelete_2.setBounds(312, 449, 81, 29);
-		accountsPanel.add(btnDelete_2);
+		GroupLayout gl_accountsPanel = new GroupLayout(accountsPanel);
+		gl_accountsPanel.setHorizontalGroup(
+			gl_accountsPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_accountsPanel.createSequentialGroup()
+					.addComponent(panel_10, GroupLayout.PREFERRED_SIZE, 245, GroupLayout.PREFERRED_SIZE)
+					.addGroup(gl_accountsPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_accountsPanel.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+							.addGroup(gl_accountsPanel.createParallelGroup(Alignment.TRAILING, false)
+								.addGroup(gl_accountsPanel.createSequentialGroup()
+									.addComponent(btnOpen, GroupLayout.PREFERRED_SIZE, 88, GroupLayout.PREFERRED_SIZE)
+									.addGap(18)
+									.addComponent(btnDelete_2, GroupLayout.PREFERRED_SIZE, 81, GroupLayout.PREFERRED_SIZE)
+									.addGap(42))
+								.addGroup(gl_accountsPanel.createSequentialGroup()
+									.addComponent(label_33, GroupLayout.PREFERRED_SIZE, 148, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(button)
+									.addGap(74)
+									.addComponent(lblTotalAmountLeft)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(lblTotalBalance, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE)
+									.addGap(101))))
+						.addGroup(gl_accountsPanel.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 648, Short.MAX_VALUE)
+							.addGap(33))))
+		);
+		gl_accountsPanel.setVerticalGroup(
+			gl_accountsPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_accountsPanel.createSequentialGroup()
+					.addGroup(gl_accountsPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_accountsPanel.createSequentialGroup()
+							.addGap(16)
+							.addGroup(gl_accountsPanel.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_accountsPanel.createParallelGroup(Alignment.BASELINE)
+									.addComponent(lblTotalAmountLeft, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+									.addComponent(label_33, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+									.addComponent(button, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE))
+								.addComponent(lblTotalBalance, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE))
+						.addComponent(panel_10, GroupLayout.PREFERRED_SIZE, 492, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_accountsPanel.createParallelGroup(Alignment.BASELINE, false)
+						.addComponent(btnDelete_2)
+						.addComponent(btnOpen, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE))
+					.addGap(21))
+		);
+		accountsPanel.setLayout(gl_accountsPanel);
 		
 		receiptPanel = new JPanel();
-		receiptPanel.setLayout(null);
 		layeredMainPane.add(receiptPanel, "name_118353732281874");
 		
 		JButton btnPrint = new JButton("PRINT");
-		btnPrint.setBounds(15, 36, 98, 29);
-		receiptPanel.add(btnPrint);
 		
 		JButton btnClose = new JButton("CLOSE");
-		btnClose.setBounds(15, 89, 98, 29);
-		receiptPanel.add(btnClose);
 		
 		JScrollPane scrollPane_3 = new JScrollPane();
-		scrollPane_3.setBounds(126, 6, 632, 477);
-		receiptPanel.add(scrollPane_3);
+		GroupLayout gl_receiptPanel = new GroupLayout(receiptPanel);
+		gl_receiptPanel.setHorizontalGroup(
+			gl_receiptPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_receiptPanel.createSequentialGroup()
+					.addGap(15)
+					.addGroup(gl_receiptPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(btnPrint, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnClose, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE))
+					.addGap(13)
+					.addComponent(scrollPane_3, GroupLayout.DEFAULT_SIZE, 805, Short.MAX_VALUE)
+					.addContainerGap())
+		);
+		gl_receiptPanel.setVerticalGroup(
+			gl_receiptPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_receiptPanel.createSequentialGroup()
+					.addGroup(gl_receiptPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_receiptPanel.createSequentialGroup()
+							.addGap(36)
+							.addComponent(btnPrint, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
+							.addGap(24)
+							.addComponent(btnClose, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_receiptPanel.createSequentialGroup()
+							.addGap(6)
+							.addComponent(scrollPane_3, GroupLayout.PREFERRED_SIZE, 477, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap(68, Short.MAX_VALUE))
+		);
+		
+		textArea = new JTextArea();
+		scrollPane_3.setViewportView(textArea);
+		receiptPanel.setLayout(gl_receiptPanel);
+		GroupLayout gl_imsPagePanel = new GroupLayout(imsPagePanel);
+		gl_imsPagePanel.setHorizontalGroup(
+			gl_imsPagePanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(Alignment.TRAILING, gl_imsPagePanel.createSequentialGroup()
+					.addGap(6)
+					.addGroup(gl_imsPagePanel.createParallelGroup(Alignment.TRAILING)
+						.addComponent(layeredMainPane, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 953, Short.MAX_VALUE)
+						.addComponent(panel_2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 977, Short.MAX_VALUE))
+					.addGap(26))
+		);
+		gl_imsPagePanel.setVerticalGroup(
+			gl_imsPagePanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_imsPagePanel.createSequentialGroup()
+					.addGap(12)
+					.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(layeredMainPane, GroupLayout.PREFERRED_SIZE, 551, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
+		gl_panel_2.setHorizontalGroup(
+			gl_panel_2.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_2.createSequentialGroup()
+					.addGap(29)
+					.addComponent(btnDashboard)
+					.addGap(12)
+					.addComponent(btnProducts)
+					.addGap(12)
+					.addComponent(btnAccounts)
+					.addPreferredGap(ComponentPlacement.RELATED, 451, Short.MAX_VALUE)
+					.addComponent(btnLogout))
+				.addGroup(gl_panel_2.createSequentialGroup()
+					.addGap(137)
+					.addComponent(lblErrorMEssage, GroupLayout.PREFERRED_SIZE, 618, GroupLayout.PREFERRED_SIZE))
+		);
+		gl_panel_2.setVerticalGroup(
+			gl_panel_2.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_2.createSequentialGroup()
+					.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
+						.addComponent(btnDashboard)
+						.addComponent(btnProducts)
+						.addComponent(btnAccounts)
+						.addComponent(btnLogout))
+					.addGap(2)
+					.addComponent(lblErrorMEssage, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+		);
+		panel_2.setLayout(gl_panel_2);
+		imsPagePanel.setLayout(gl_imsPagePanel);
 		
 		registerPanel = new JPanel();
 		registerPanel.setBackground(Color.decode("#d3d2d4"));
-		layeredPane.add(registerPanel, "name_61084217787461");
 		
 		JLabel lblRegisterPanel = new JLabel("REGISTRATION PAGE");
 		lblRegisterPanel.setFont(new Font("American Typewriter", Font.PLAIN, 15));
@@ -2022,21 +2195,40 @@ public class ImsMainPage extends ImsDesktopApplication {
 		);
 		panel_1.setLayout(gl_panel_1);
 		registerPanel.setLayout(gl_registerPanel);
+		GroupLayout gl_contentPane = new GroupLayout(contentPane);
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGap(1)
+					.addComponent(layeredPane, GroupLayout.DEFAULT_SIZE, 973, Short.MAX_VALUE))
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGap(1)
+					.addComponent(layeredPane, GroupLayout.DEFAULT_SIZE, 621, Short.MAX_VALUE)
+					.addContainerGap())
+		);
+		layeredPane.setLayout(new CardLayout(0, 0));
+		layeredPane.add(loginPanel, "name_23923162085563");
+		layeredPane.add(imsPagePanel, "name_23923199800925");
+		layeredPane.add(registerPanel, "name_23923251166128");
+		contentPane.setLayout(gl_contentPane);
 	}
 	
-	/**
-	 * @return the currentProducts
-	 */
-	private List<ProductDTO> getCurrentProducts() {
-		return currentProducts;
-	}
-
-	/**
-	 * @param currentProducts the currentProducts to set
-	 */
-	private void setCurrentProducts(List<ProductDTO> currentProducts) {
-		this.currentProducts = currentProducts;
-	}
+//	/**
+//	 * @return the currentProducts
+//	 */
+//	private List<ProductDTO> getCurrentProducts() {
+//		return currentProducts;
+//	}
+//
+//	/**
+//	 * @param currentProducts the currentProducts to set
+//	 */
+//	private void setCurrentProducts(List<ProductDTO> currentProducts) {
+//		this.currentProducts = currentProducts;
+//	}
 
 	private void registerActionPerformed(ActionEvent e) {
 		
@@ -2100,7 +2292,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		confirmPasswordField.setText("");
 	}
 	
-	private void refreshProductPanel() {
+	private void refreshProductPanel(List<ProductDTO> products) {
 		lblErrorMEssage.setText(error);
 		
 		if (error == null || error.length() == 0) {
@@ -2119,8 +2311,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 			List<String> names = new ArrayList<String>();
 			names.clear();
 			comboBoxProduct.removeAllItems();
-			//String employeeId = ImsDesktopApplication.getCurrentEmployeeId();
-			for (ProductDTO p : getCurrentProducts()) {
+
+			for (ProductDTO p : products) {
 				names.add(p.getName());
 			}
 			Collections.sort(names);
@@ -2139,7 +2331,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		}
 	}
 	
-	private void refreshProductTable() {
+	private void refreshProductTable(List<ProductDTO> products) {
 		
 		if (error == null || error.length() == 0) {
 			// some user settings
@@ -2159,13 +2351,12 @@ public class ImsMainPage extends ImsDesktopApplication {
 			
 			//set the alignment of the quantity column
 			tableProducts.getColumnModel().getColumn(2).setCellRenderer(leftRenderer);
-			// from remote database
-//			List<ProductDTO> products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
-			
-			// from current database
-			List<ProductDTO> products = getCurrentProducts();
+			int row = 0;
+			tableProductsMap = new HashMap<Integer, ProductDTO>();
 			for (ProductDTO p : products) {
 				model.addRow(new Object[] {p.getName(), p.getItemPrice(), p.getQuantity()});
+				tableProductsMap.put(row, p);
+				row++;
 			}
 		}
 		
@@ -2298,7 +2489,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 			List<String> names = new ArrayList<String>();
 			names.clear();
 			comboBoxTransactionProduct.removeAllItems();
-			for (ProductDTO p : getCurrentProducts()) {
+			List<ProductDTO> databaseProducts = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
+			for (ProductDTO p : databaseProducts) {
 				names.add(p.getName());
 				comboBoxAddProductMap.put(p.getName(), "" + p.getItemPrice());
 			}
@@ -2397,5 +2589,60 @@ public class ImsMainPage extends ImsDesktopApplication {
 		String employeeFirstName = currentEmployee.getFirstName();
 		String employeeLastName = currentEmployee.getLastName();
 		lblEmployee.setText(employeeFirstName + " " + employeeLastName); 
+	}
+	
+	private void showInvoice() {
+		TransactionDetail transactionDetail = transactionService.getTransactionDetail(
+				ImsDesktopApplication.getCurrentEmployeeId(), currentTransactionID, selectedCustomerUserName);
+		textArea.setText("");
+		System.out.println(textArea.getAlignmentX());
+		textArea.setAlignmentX(CENTER_ALIGNMENT);
+//		textArea.append("\tDE DON MOTORS CO. L.T.D");
+//		textArea.append("IN GOD WE TRUST\n");
+//		textArea.append("LET LOVE LEAD\n\n");
+		
+		textArea.append(" 			DE DON MOTORS CO. L.T.D                                  \r\n"
+				      + "			 IN WE TRUST                                          \r\n"
+				      + "  	SOLE AGENT OF AVATA SPECIAL QUALITY MOTORCYCLE/SPARE PARTS AND DIAMOND TIRES/TUBES  \r\n"
+				      + "   	 (Head Office: Techiman, B/E Along Kintampo Road Before Toll Booth Tuobodom)         \r\n"
+				      + "  	Box 120 TECHIMAN B.E/R GHANA: Tel: 0243679200/0209380084/055355214/0247832338       \r\n"
+				      + "  	E-mail: dedon.motors@yahoo.com/dedonmotor@gmail.com                                 \r\n"
+				      + "  	    			 Branches										   \r\n"
+				      + "  	Wa : Along Wa Poly Road (Tel: 0244485813/0246017637)								 \r\n"
+				      + "  	Kumasi: AlabaFulani Chief House (Tel: 0551939054)									 \r\n"
+				      + "  	Bolga (Tel: 0209784545/0553818004)  												 \r\n"
+				      + "			\r\n"
+				      + "");
+		
+		//textArea.setAlignmentY(LEFT_ALIGNMENT);
+		textArea.append("Name: "+ transactionDetail.getCustomerName()+"\n");
+		textArea.append("Date: "+ transactionDetail.getDate()+"\n\n");
+		textArea.append("NO\t");
+		textArea.append("NAME\t");
+		textArea.append("QUANTITY\t");
+		textArea.append("UNIT PRICE\t");
+		textArea.append("AMOUNT\n\n");
+		int count = 1;
+		for (ProductTransactionDTO pTransaction : transactionDetail.getpTransactions()) {
+			textArea.append(""+count+"\t");
+			textArea.append(pTransaction.getProductName()+"\t");
+			textArea.append(""+pTransaction.getQuantity()+"\t");
+			double unitPrice = pTransaction.getPrice() / pTransaction.getQuantity();
+			textArea.append(""+unitPrice+"\t");
+			//textArea.append(""+pTransaction.getPrice() * pTransaction.getQuantity()+"\n\n");
+			textArea.append(""+pTransaction.getPrice()+"\n\n");
+			count++;	
+		}
+		//textArea.setAlignmentY(RIGHT_ALIGNMENT);
+		//textArea.append("Total Amount : "+receipt.getTotalAmount());
+		
+		layeredMainPane.removeAll();
+		layeredMainPane.add(receiptPanel);
+		layeredMainPane.repaint();
+		layeredMainPane.revalidate();
+		btnDashboard.setForeground(Color.GREEN);
+		btnProducts.setForeground(Color.GREEN);
+		btnAccounts.setForeground(Color.GREEN);
+		
 	}
 }
