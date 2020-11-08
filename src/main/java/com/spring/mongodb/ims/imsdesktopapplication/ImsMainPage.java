@@ -1288,11 +1288,11 @@ public class ImsMainPage extends ImsDesktopApplication {
 					.addContainerGap())
 		);
 		gl_panel_4.setVerticalGroup(
-			gl_panel_4.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_4.createSequentialGroup()
-					.addComponent(panelInvoiceHeader, GroupLayout.PREFERRED_SIZE, 287, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(scrollPaneTransaction, GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE))
+			gl_panel_4.createParallelGroup(Alignment.TRAILING)
+				.addGroup(Alignment.LEADING, gl_panel_4.createSequentialGroup()
+					.addComponent(panelInvoiceHeader, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(scrollPaneTransaction, GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE))
 		);
 		
 		JLabel lblDeDonMotors = new JLabel("DE DON MOTORS CO. L.T.D");
@@ -2623,11 +2623,24 @@ public class ImsMainPage extends ImsDesktopApplication {
 		textArea.setText("");
 		System.out.println(textArea.getAlignmentX());
 		textArea.setAlignmentX(CENTER_ALIGNMENT);
-		textArea.append("\tDE DON MOTORS CO. L.T.D");
-		textArea.append("IN GOD WE TRUST\n");
-		textArea.append("LET LOVE LEAD\n\n");
+//		textArea.append("\tDE DON MOTORS CO. L.T.D");
+//		textArea.append("IN GOD WE TRUST\n");
+//		textArea.append("LET LOVE LEAD\n\n");
 		
-		textArea.setAlignmentY(LEFT_ALIGNMENT);
+		textArea.append(" 			DE DON MOTORS CO. L.T.D                                  \r\n"
+				      + "			 IN WE TRUST                                          \r\n"
+				      + "  	SOLE AGENT OF AVATA SPECIAL QUALITY MOTORCYCLE/SPARE PARTS AND DIAMOND TIRES/TUBES  \r\n"
+				      + "   	 (Head Office: Techiman, B/E Along Kintampo Road Before Toll Booth Tuobodom)         \r\n"
+				      + "  	Box 120 TECHIMAN B.E/R GHANA: Tel: 0243679200/0209380084/055355214/0247832338       \r\n"
+				      + "  	E-mail: dedon.motors@yahoo.com/dedonmotor@gmail.com                                 \r\n"
+				      + "  	    			 Branches										   \r\n"
+				      + "  	Wa : Along Wa Poly Road (Tel: 0244485813/0246017637)								 \r\n"
+				      + "  	Kumasi: AlabaFulani Chief House (Tel: 0551939054)									 \r\n"
+				      + "  	Bolga (Tel: 0209784545/0553818004)  												 \r\n"
+				      + "			\r\n"
+				      + "");
+		
+		//textArea.setAlignmentY(LEFT_ALIGNMENT);
 		textArea.append("Name: "+ transactionDetail.getCustomerName()+"\n");
 		textArea.append("Date: "+ transactionDetail.getDate()+"\n\n");
 		textArea.append("NO\t");
