@@ -6,8 +6,6 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.PrintJob;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -168,6 +166,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private JTextField textFieldLimit;
 	private JTextField textFieldUpdateLimit;
 	private JPanel panelInvoiceHeader;
+	private JTextArea textArea;
 
 	/**
 	 * Launch the application.
@@ -1180,10 +1179,12 @@ public class ImsMainPage extends ImsDesktopApplication {
 //			    pjp.end();
 				
 				// print the invoice and summary of transaction
-			    printComponenet(panelInvoiceHeader);
+			   // printComponenet(panelInvoiceHeader);
 			    
 			    // print details in the table
-			    printTable(tableTransaction);
+			    //printTable(tableTransaction);
+			    
+			    showInvoice();
 			}
 		});
 		btnShowReceipt.setBorder(new LineBorder(new Color(128, 0, 0)));
@@ -1287,11 +1288,11 @@ public class ImsMainPage extends ImsDesktopApplication {
 					.addContainerGap())
 		);
 		gl_panel_4.setVerticalGroup(
-			gl_panel_4.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_4.createSequentialGroup()
-					.addComponent(panelInvoiceHeader, GroupLayout.PREFERRED_SIZE, 287, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(scrollPaneTransaction, GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE))
+			gl_panel_4.createParallelGroup(Alignment.TRAILING)
+				.addGroup(Alignment.LEADING, gl_panel_4.createSequentialGroup()
+					.addComponent(panelInvoiceHeader, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(scrollPaneTransaction, GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE))
 		);
 		
 		JLabel lblDeDonMotors = new JLabel("DE DON MOTORS CO. L.T.D");
@@ -1299,37 +1300,37 @@ public class ImsMainPage extends ImsDesktopApplication {
 		lblDeDonMotors.setFont(new Font("Dialog", Font.BOLD, 18));
 		lblDeDonMotors.setForeground(Color.BLUE);
 		
-		JLabel lblCustomerName = new JLabel("Customer Name");
+		JLabel lblCustomerName = new JLabel("Customer Name:");
 		lblCustomerName.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		labelTranCustomerName = new JLabel("");
 		labelTranCustomerName.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
-		JLabel lblPhoneNumber_2 = new JLabel("Phone Number");
+		JLabel lblPhoneNumber_2 = new JLabel("Phone Number:");
 		lblPhoneNumber_2.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		labelTranCustomerNumber = new JLabel("");
 		labelTranCustomerNumber.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
-		JLabel lblDate = new JLabel("Transaction Date");
+		JLabel lblDate = new JLabel("Transaction Date:");
 		lblDate.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		lbllabelTranDate = new JLabel("");
 		lbllabelTranDate.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
-		JLabel lblTotalAmount = new JLabel("Total Amount");
+		JLabel lblTotalAmount = new JLabel("Total Amount:");
 		lblTotalAmount.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		labelTranAmount = new JLabel("");
 		labelTranAmount.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
-		JLabel lblAmountPaid = new JLabel("Amount Paid");
+		JLabel lblAmountPaid = new JLabel("Amount Paid:");
 		lblAmountPaid.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		labelTranAmountPaid = new JLabel("");
 		labelTranAmountPaid.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
-		JLabel lblAmountLeft = new JLabel("Amount Left");
+		JLabel lblAmountLeft = new JLabel("Amount Left:");
 		lblAmountLeft.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		labelTranAmountLeft = new JLabel("");
@@ -1946,8 +1947,6 @@ public class ImsMainPage extends ImsDesktopApplication {
 		JButton btnClose = new JButton("CLOSE");
 		
 		JScrollPane scrollPane_3 = new JScrollPane();
-		
-		JLabel lblNewLabel_1 = new JLabel("New label");
 		GroupLayout gl_receiptPanel = new GroupLayout(receiptPanel);
 		gl_receiptPanel.setHorizontalGroup(
 			gl_receiptPanel.createParallelGroup(Alignment.LEADING)
@@ -1957,10 +1956,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 						.addComponent(btnPrint, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
 						.addComponent(btnClose, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE))
 					.addGap(13)
-					.addComponent(scrollPane_3, GroupLayout.PREFERRED_SIZE, 632, GroupLayout.PREFERRED_SIZE)
-					.addGap(60)
-					.addComponent(lblNewLabel_1)
-					.addContainerGap(63, Short.MAX_VALUE))
+					.addComponent(scrollPane_3, GroupLayout.DEFAULT_SIZE, 805, Short.MAX_VALUE)
+					.addContainerGap())
 		);
 		gl_receiptPanel.setVerticalGroup(
 			gl_receiptPanel.createParallelGroup(Alignment.LEADING)
@@ -1970,14 +1967,15 @@ public class ImsMainPage extends ImsDesktopApplication {
 							.addGap(36)
 							.addComponent(btnPrint, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
 							.addGap(24)
-							.addComponent(btnClose, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
-							.addGap(9)
-							.addComponent(lblNewLabel_1))
+							.addComponent(btnClose, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_receiptPanel.createSequentialGroup()
 							.addGap(6)
 							.addComponent(scrollPane_3, GroupLayout.PREFERRED_SIZE, 477, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(60, Short.MAX_VALUE))
+					.addContainerGap(68, Short.MAX_VALUE))
 		);
+		
+		textArea = new JTextArea();
+		scrollPane_3.setViewportView(textArea);
 		receiptPanel.setLayout(gl_receiptPanel);
 		GroupLayout gl_imsPagePanel = new GroupLayout(imsPagePanel);
 		gl_imsPagePanel.setHorizontalGroup(
@@ -2617,5 +2615,60 @@ public class ImsMainPage extends ImsDesktopApplication {
 		String employeeFirstName = currentEmployee.getFirstName();
 		String employeeLastName = currentEmployee.getLastName();
 		lblEmployee.setText(employeeFirstName + " " + employeeLastName); 
+	}
+	
+	private void showInvoice() {
+		TransactionDetail transactionDetail = transactionService.getTransactionDetail(
+				ImsDesktopApplication.getCurrentEmployeeId(), currentTransactionID, selectedCustomerUserName);
+		textArea.setText("");
+		System.out.println(textArea.getAlignmentX());
+		textArea.setAlignmentX(CENTER_ALIGNMENT);
+//		textArea.append("\tDE DON MOTORS CO. L.T.D");
+//		textArea.append("IN GOD WE TRUST\n");
+//		textArea.append("LET LOVE LEAD\n\n");
+		
+		textArea.append(" 			DE DON MOTORS CO. L.T.D                                  \r\n"
+				      + "			 IN WE TRUST                                          \r\n"
+				      + "  	SOLE AGENT OF AVATA SPECIAL QUALITY MOTORCYCLE/SPARE PARTS AND DIAMOND TIRES/TUBES  \r\n"
+				      + "   	 (Head Office: Techiman, B/E Along Kintampo Road Before Toll Booth Tuobodom)         \r\n"
+				      + "  	Box 120 TECHIMAN B.E/R GHANA: Tel: 0243679200/0209380084/055355214/0247832338       \r\n"
+				      + "  	E-mail: dedon.motors@yahoo.com/dedonmotor@gmail.com                                 \r\n"
+				      + "  	    			 Branches										   \r\n"
+				      + "  	Wa : Along Wa Poly Road (Tel: 0244485813/0246017637)								 \r\n"
+				      + "  	Kumasi: AlabaFulani Chief House (Tel: 0551939054)									 \r\n"
+				      + "  	Bolga (Tel: 0209784545/0553818004)  												 \r\n"
+				      + "			\r\n"
+				      + "");
+		
+		//textArea.setAlignmentY(LEFT_ALIGNMENT);
+		textArea.append("Name: "+ transactionDetail.getCustomerName()+"\n");
+		textArea.append("Date: "+ transactionDetail.getDate()+"\n\n");
+		textArea.append("NO\t");
+		textArea.append("NAME\t");
+		textArea.append("QUANTITY\t");
+		textArea.append("UNIT PRICE\t");
+		textArea.append("AMOUNT\n\n");
+		int count = 1;
+		for (ProductTransactionDTO pTransaction : transactionDetail.getpTransactions()) {
+			textArea.append(""+count+"\t");
+			textArea.append(pTransaction.getProductName()+"\t");
+			textArea.append(""+pTransaction.getQuantity()+"\t");
+			double unitPrice = pTransaction.getPrice() / pTransaction.getQuantity();
+			textArea.append(""+unitPrice+"\t");
+			//textArea.append(""+pTransaction.getPrice() * pTransaction.getQuantity()+"\n\n");
+			textArea.append(""+pTransaction.getPrice()+"\n\n");
+			count++;	
+		}
+		//textArea.setAlignmentY(RIGHT_ALIGNMENT);
+		//textArea.append("Total Amount : "+receipt.getTotalAmount());
+		
+		layeredMainPane.removeAll();
+		layeredMainPane.add(receiptPanel);
+		layeredMainPane.repaint();
+		layeredMainPane.revalidate();
+		btnDashboard.setForeground(Color.GREEN);
+		btnProducts.setForeground(Color.GREEN);
+		btnAccounts.setForeground(Color.GREEN);
+		
 	}
 }
