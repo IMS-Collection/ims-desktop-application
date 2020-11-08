@@ -1553,7 +1553,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		
 		textFieldCustomerLastName = new JTextField();
 		textFieldCustomerLastName.setColumns(10);
-		textFieldCustomerLastName.setBounds(96, 82, 106, 26);
+		textFieldCustomerLastName.setBounds(96, 82, 137, 26);
 		panel_10.add(textFieldCustomerLastName);
 		
 		JLabel lblUserName_3 = new JLabel("User Name");
@@ -1562,7 +1562,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		
 		textFieldCustomerID = new JTextField();
 		textFieldCustomerID.setColumns(10);
-		textFieldCustomerID.setBounds(96, 120, 106, 26);
+		textFieldCustomerID.setBounds(96, 120, 137, 26);
 		panel_10.add(textFieldCustomerID);
 		
 		JButton btnRegisterCustomer = new JButton("REGISTER");
@@ -1587,7 +1587,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			}
 		});
 		btnRegisterCustomer.setBorder(new LineBorder(new Color(128, 0, 0)));
-		btnRegisterCustomer.setBounds(128, 191, 69, 29);
+		btnRegisterCustomer.setBounds(128, 191, 90, 29);
 		panel_10.add(btnRegisterCustomer);
 		
 		JSeparator separator_3 = new JSeparator();
@@ -1622,7 +1622,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 				//refreshCustomerPanel();
 			}
 		});
-		comboBoxCustomer.setBounds(96, 279, 106, 26);
+		comboBoxCustomer.setBounds(96, 279, 137, 26);
 		panel_10.add(comboBoxCustomer);
 		
 		JLabel label_30 = new JLabel("Customer");
@@ -1631,7 +1631,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		
 		textFieldUpdateCustomerFirstName = new JTextField();
 		textFieldUpdateCustomerFirstName.setColumns(10);
-		textFieldUpdateCustomerFirstName.setBounds(96, 317, 106, 26);
+		textFieldUpdateCustomerFirstName.setBounds(96, 317, 137, 26);
 		panel_10.add(textFieldUpdateCustomerFirstName);
 		
 		JLabel lblFirstName_1 = new JLabel("First Name");
@@ -1640,7 +1640,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		
 		textFieldUpdateCustomerUN = new JTextField();
 		textFieldUpdateCustomerUN.setColumns(10);
-		textFieldUpdateCustomerUN.setBounds(96, 377, 106, 26);
+		textFieldUpdateCustomerUN.setBounds(96, 377, 137, 26);
 		panel_10.add(textFieldUpdateCustomerUN);
 		
 		JLabel lblUserName_2 = new JLabel("User Name");
@@ -1664,7 +1664,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			}
 		});
 		btnDelete_1.setBorder(new LineBorder(new Color(128, 0, 0)));
-		btnDelete_1.setBounds(120, 445, 69, 29);
+		btnDelete_1.setBounds(148, 445, 85, 29);
 		panel_10.add(btnDelete_1);
 		
 		JButton btnUpdate = new JButton("UPDATE");
@@ -1692,7 +1692,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			}
 		});
 		btnUpdate.setBorder(new LineBorder(new Color(128, 0, 0)));
-		btnUpdate.setBounds(25, 445, 83, 29);
+		btnUpdate.setBounds(53, 445, 83, 29);
 		panel_10.add(btnUpdate);
 		
 		JLabel lblPhoneNumber = new JLabel("Phone N0.");
@@ -1700,12 +1700,12 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_10.add(lblPhoneNumber);
 		
 		textFieldPhoneNumber = new JTextField();
-		textFieldPhoneNumber.setBounds(96, 155, 106, 26);
+		textFieldPhoneNumber.setBounds(96, 155, 137, 26);
 		panel_10.add(textFieldPhoneNumber);
 		textFieldPhoneNumber.setColumns(10);
 		
 		textFieldCustomerFirstName = new JTextField();
-		textFieldCustomerFirstName.setBounds(95, 44, 106, 26);
+		textFieldCustomerFirstName.setBounds(95, 44, 138, 26);
 		panel_10.add(textFieldCustomerFirstName);
 		textFieldCustomerFirstName.setColumns(10);
 		
@@ -1718,7 +1718,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_10.add(lblLastName_2);
 		
 		textFieldUpdateCustomerLastName = new JTextField();
-		textFieldUpdateCustomerLastName.setBounds(96, 347, 106, 26);
+		textFieldUpdateCustomerLastName.setBounds(96, 347, 137, 26);
 		panel_10.add(textFieldUpdateCustomerLastName);
 		textFieldUpdateCustomerLastName.setColumns(10);
 		
@@ -1727,7 +1727,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_10.add(lblPhoneNumber_1);
 		
 		textFieldUpdateCustomerNumber = new JTextField();
-		textFieldUpdateCustomerNumber.setBounds(96, 412, 106, 26);
+		textFieldUpdateCustomerNumber.setBounds(96, 412, 137, 26);
 		panel_10.add(textFieldUpdateCustomerNumber);
 		textFieldUpdateCustomerNumber.setColumns(10);
 		
@@ -1794,9 +1794,6 @@ public class ImsMainPage extends ImsDesktopApplication {
 		});
 		//tableCustomerTransactions.getColumnModel().getColumn(3).setResizable(false);
 		scrollPane_2.setViewportView(tableCustomerTransactions);
-		
-		JLabel label_34 = new JLabel("");
-		label_34.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		
 		JButton button = new JButton("+");
 		button.setForeground(new Color(0, 128, 0));
@@ -1869,55 +1866,50 @@ public class ImsMainPage extends ImsDesktopApplication {
 		gl_accountsPanel.setHorizontalGroup(
 			gl_accountsPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_accountsPanel.createSequentialGroup()
-					.addComponent(panel_10, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE)
-					.addGap(6)
+					.addComponent(panel_10, GroupLayout.PREFERRED_SIZE, 245, GroupLayout.PREFERRED_SIZE)
 					.addGroup(gl_accountsPanel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_accountsPanel.createSequentialGroup()
-							.addGap(6)
-							.addGroup(gl_accountsPanel.createParallelGroup(Alignment.LEADING)
-								.addComponent(label_33, GroupLayout.PREFERRED_SIZE, 148, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+							.addGroup(gl_accountsPanel.createParallelGroup(Alignment.TRAILING, false)
 								.addGroup(gl_accountsPanel.createSequentialGroup()
-									.addGap(140)
-									.addComponent(button)))
-							.addGap(26)
-							.addComponent(lblTotalAmountLeft)
-							.addGap(14)
-							.addComponent(lblTotalBalance, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE))
+									.addComponent(btnOpen, GroupLayout.PREFERRED_SIZE, 88, GroupLayout.PREFERRED_SIZE)
+									.addGap(18)
+									.addComponent(btnDelete_2, GroupLayout.PREFERRED_SIZE, 81, GroupLayout.PREFERRED_SIZE)
+									.addGap(42))
+								.addGroup(gl_accountsPanel.createSequentialGroup()
+									.addComponent(label_33, GroupLayout.PREFERRED_SIZE, 148, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(button)
+									.addGap(74)
+									.addComponent(lblTotalAmountLeft)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(lblTotalBalance, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE)
+									.addGap(101))))
 						.addGroup(gl_accountsPanel.createSequentialGroup()
-							.addGap(427)
-							.addComponent(label_34, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(btnOpen, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
-							.addGap(18)
-							.addComponent(btnDelete_2, GroupLayout.PREFERRED_SIZE, 81, GroupLayout.PREFERRED_SIZE))
-						.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 714, Short.MAX_VALUE))
-					.addContainerGap())
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 648, Short.MAX_VALUE)
+							.addGap(33))))
 		);
 		gl_accountsPanel.setVerticalGroup(
 			gl_accountsPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_accountsPanel.createSequentialGroup()
-					.addGroup(gl_accountsPanel.createParallelGroup(Alignment.TRAILING)
+					.addGroup(gl_accountsPanel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_accountsPanel.createSequentialGroup()
 							.addGap(16)
 							.addGroup(gl_accountsPanel.createParallelGroup(Alignment.LEADING)
-								.addComponent(label_33, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-								.addComponent(button, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
-								.addGroup(gl_accountsPanel.createSequentialGroup()
-									.addGap(5)
-									.addComponent(lblTotalAmountLeft, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_accountsPanel.createSequentialGroup()
-									.addGap(4)
-									.addComponent(lblTotalBalance, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)))
-							.addGap(3)
-							.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE))
-						.addComponent(panel_10, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 492, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_accountsPanel.createParallelGroup(Alignment.BASELINE)
+									.addComponent(lblTotalAmountLeft, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+									.addComponent(label_33, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+									.addComponent(button, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE))
+								.addComponent(lblTotalBalance, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE))
+						.addComponent(panel_10, GroupLayout.PREFERRED_SIZE, 492, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_accountsPanel.createParallelGroup(Alignment.LEADING)
-						.addComponent(label_34, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_accountsPanel.createParallelGroup(Alignment.BASELINE)
-							.addComponent(btnOpen, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
-							.addComponent(btnDelete_2, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)))
-					.addGap(24))
+					.addGroup(gl_accountsPanel.createParallelGroup(Alignment.BASELINE, false)
+						.addComponent(btnDelete_2)
+						.addComponent(btnOpen, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE))
+					.addGap(21))
 		);
 		accountsPanel.setLayout(gl_accountsPanel);
 		
@@ -1961,16 +1953,13 @@ public class ImsMainPage extends ImsDesktopApplication {
 		receiptPanel.setLayout(gl_receiptPanel);
 		GroupLayout gl_imsPagePanel = new GroupLayout(imsPagePanel);
 		gl_imsPagePanel.setHorizontalGroup(
-			gl_imsPagePanel.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, gl_imsPagePanel.createSequentialGroup()
+			gl_imsPagePanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(Alignment.TRAILING, gl_imsPagePanel.createSequentialGroup()
 					.addGap(6)
-					.addGroup(gl_imsPagePanel.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_imsPagePanel.createSequentialGroup()
-							.addComponent(layeredMainPane, GroupLayout.PREFERRED_SIZE, 957, GroupLayout.PREFERRED_SIZE)
-							.addContainerGap())
-						.addGroup(gl_imsPagePanel.createSequentialGroup()
-							.addComponent(panel_2, GroupLayout.DEFAULT_SIZE, 1047, Short.MAX_VALUE)
-							.addGap(26))))
+					.addGroup(gl_imsPagePanel.createParallelGroup(Alignment.TRAILING)
+						.addComponent(layeredMainPane, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 953, Short.MAX_VALUE)
+						.addComponent(panel_2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 977, Short.MAX_VALUE))
+					.addGap(26))
 		);
 		gl_imsPagePanel.setVerticalGroup(
 			gl_imsPagePanel.createParallelGroup(Alignment.LEADING)
