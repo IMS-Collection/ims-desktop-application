@@ -1179,12 +1179,12 @@ public class ImsMainPage extends ImsDesktopApplication {
 //			    pjp.end();
 				
 				// print the invoice and summary of transaction
-			   // printComponenet(panelInvoiceHeader);
+			    printComponenet(panelInvoiceHeader);
 			    
 			    // print details in the table
-			    //printTable(tableTransaction);
+			    printTable(tableTransaction);
 			    
-			    showInvoice();
+			    //showInvoice();
 			}
 		});
 		btnShowReceipt.setBorder(new LineBorder(new Color(128, 0, 0)));
