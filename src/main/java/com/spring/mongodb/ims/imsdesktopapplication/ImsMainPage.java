@@ -6,8 +6,6 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.PrintJob;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -60,7 +58,6 @@ import com.spring.mongodb.ims.imsdesktopapplication.shared.dto.ProductDTO;
 import com.spring.mongodb.ims.imsdesktopapplication.shared.dto.ProductTransactionDTO;
 import com.spring.mongodb.ims.imsdesktopapplication.shared.dto.TransactionDTO;
 import com.spring.mongodb.ims.imsdesktopapplication.shared.dto.TransactionDetail;
-import javax.swing.JTextPane;
 
 @SpringBootApplication
 public class ImsMainPage extends ImsDesktopApplication {
@@ -169,6 +166,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private JTextField textFieldLimit;
 	private JTextField textFieldUpdateLimit;
 	private JPanel panelInvoiceHeader;
+	private JTextArea textArea;
 
 	/**
 	 * Launch the application.
@@ -1181,10 +1179,12 @@ public class ImsMainPage extends ImsDesktopApplication {
 //			    pjp.end();
 				
 				// print the invoice and summary of transaction
-			    printComponenet(panelInvoiceHeader);
+			   // printComponenet(panelInvoiceHeader);
 			    
 			    // print details in the table
-			    printTable(tableTransaction);
+			    //printTable(tableTransaction);
+			    
+			    showInvoice();
 			}
 		});
 		btnShowReceipt.setBorder(new LineBorder(new Color(128, 0, 0)));
@@ -1974,8 +1974,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 					.addContainerGap(68, Short.MAX_VALUE))
 		);
 		
-		JTextPane textPane = new JTextPane();
-		scrollPane_3.setViewportView(textPane);
+		textArea = new JTextArea();
+		scrollPane_3.setViewportView(textArea);
 		receiptPanel.setLayout(gl_receiptPanel);
 		GroupLayout gl_imsPagePanel = new GroupLayout(imsPagePanel);
 		gl_imsPagePanel.setHorizontalGroup(
@@ -2615,5 +2615,47 @@ public class ImsMainPage extends ImsDesktopApplication {
 		String employeeFirstName = currentEmployee.getFirstName();
 		String employeeLastName = currentEmployee.getLastName();
 		lblEmployee.setText(employeeFirstName + " " + employeeLastName); 
+	}
+	
+	private void showInvoice() {
+		TransactionDetail transactionDetail = transactionService.getTransactionDetail(
+				ImsDesktopApplication.getCurrentEmployeeId(), currentTransactionID, selectedCustomerUserName);
+		textArea.setText("");
+		System.out.println(textArea.getAlignmentX());
+		textArea.setAlignmentX(CENTER_ALIGNMENT);
+		textArea.append("\tDE DON MOTORS CO. L.T.D");
+		textArea.append("IN GOD WE TRUST\n");
+		textArea.append("LET LOVE LEAD\n\n");
+		
+		textArea.setAlignmentY(LEFT_ALIGNMENT);
+		textArea.append("Name: "+ transactionDetail.getCustomerName()+"\n");
+		textArea.append("Date: "+ transactionDetail.getDate()+"\n\n");
+		textArea.append("NO\t");
+		textArea.append("NAME\t");
+		textArea.append("QUANTITY\t");
+		textArea.append("UNIT PRICE\t");
+		textArea.append("AMOUNT\n\n");
+		int count = 1;
+		for (ProductTransactionDTO pTransaction : transactionDetail.getpTransactions()) {
+			textArea.append(""+count+"\t");
+			textArea.append(pTransaction.getProductName()+"\t");
+			textArea.append(""+pTransaction.getQuantity()+"\t");
+			double unitPrice = pTransaction.getPrice() / pTransaction.getQuantity();
+			textArea.append(""+unitPrice+"\t");
+			//textArea.append(""+pTransaction.getPrice() * pTransaction.getQuantity()+"\n\n");
+			textArea.append(""+pTransaction.getPrice()+"\n\n");
+			count++;	
+		}
+		//textArea.setAlignmentY(RIGHT_ALIGNMENT);
+		//textArea.append("Total Amount : "+receipt.getTotalAmount());
+		
+		layeredMainPane.removeAll();
+		layeredMainPane.add(receiptPanel);
+		layeredMainPane.repaint();
+		layeredMainPane.revalidate();
+		btnDashboard.setForeground(Color.GREEN);
+		btnProducts.setForeground(Color.GREEN);
+		btnAccounts.setForeground(Color.GREEN);
+		
 	}
 }
