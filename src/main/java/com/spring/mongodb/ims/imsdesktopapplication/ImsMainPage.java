@@ -728,22 +728,6 @@ public class ImsMainPage extends ImsDesktopApplication {
 		btnDelete.setBorder(new LineBorder(new Color(128, 0, 0), 1, true));
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				
-				error = "";
-				int selectedProductRow = tableProducts.getSelectedRow();
-				// the selected product
-				ProductDTO product = tableProductsMap.get(selectedProductRow);
-				
-				textFieldUpdateProductName.setText(product.getName());
-				textFieldUpdateProductPrice.setText(""+product.getItemPrice());
-				textFieldUpdateProductQuantity.setText(""+product.getQuantity());
-				textFieldUpdateLimit.setText("" + product.getLimit());
-				
-			}
-		});
 		
 		JLabel label_17 = new JLabel("Click each column to sort the items");
 		label_17.setForeground(new Color(0, 128, 0));
