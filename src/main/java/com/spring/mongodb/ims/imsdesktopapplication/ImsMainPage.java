@@ -108,6 +108,9 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private HashMap<Integer, String> transactionIds;
 	String selectedCustomerUserName;
 	
+	// Transactions
+	TransactionDetail transactionDetail;
+	
 	
 	private JPanel imsPagePanel;
 	private JLabel errorMessage;
@@ -1807,6 +1810,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				try {
+					transactionDetail = transactionService.getTransactionDetail(ImsDesktopApplication.getCurrentEmployeeId(), currentTransactionID, selectedCustomerUserName);
 					refreshTransactionPanel();
 					refreshTransactionDetail();
 				} catch (InvalidInputException exc) {
@@ -2496,7 +2500,6 @@ public class ImsMainPage extends ImsDesktopApplication {
 		lblErrorMEssage.setText(error);
 		if (error == null || error.length() == 0) {
 			String employeeId = ImsDesktopApplication.getCurrentEmployeeId();
-			TransactionDetail transactionDetail = null;
 			DefaultTableModel model = (DefaultTableModel) tableTransaction.getModel();
 			//set the alignment of total amount column
 			DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
@@ -2509,32 +2512,23 @@ public class ImsMainPage extends ImsDesktopApplication {
 			
 			model.setRowCount(0);
 			if (selectedCustomerUserName != null) {
-				boolean exception = false;
-				try {
-					transactionDetail = transactionService.getTransactionDetail(employeeId, currentTransactionID, selectedCustomerUserName);
-				} catch (InvalidInputException exc) {
-					error = exc.getMessage();
-					lblErrorMEssage.setText(error);
-					exception = true;
-				}
+				
 				double totalAmount = 0.0;
-				if (!exception) {
-					if (transactionDetail.getpTransactions() != null) {
-						for (ProductTransactionDTO tp : transactionDetail.getpTransactions()) {
-							// unit price = total price / quantity of products
-							double unitPrice = tp.getPrice() / tp.getQuantity();
-							model.addRow(new Object[] {tp.getProductName(), unitPrice, tp.getQuantity(), roundNumber(tp.getPrice())});
-							totalAmount = totalAmount + tp.getPrice();
-						}
+				if (transactionDetail.getpTransactions() != null) {
+					for (ProductTransactionDTO tp : transactionDetail.getpTransactions()) {
+						// unit price = total price / quantity of products
+						double unitPrice = tp.getPrice() / tp.getQuantity();
+						model.addRow(new Object[] {tp.getProductName(), unitPrice, tp.getQuantity(), roundNumber(tp.getPrice())});
+						totalAmount = totalAmount + tp.getPrice();
 					}
-					//update transaction details
-					labelTranCustomerName.setText(transactionDetail.getFirstName() + " " + transactionDetail.getLastName());
-					labelTranCustomerNumber.setText(transactionDetail.getPhoneNumber());
-					lbllabelTranDate.setText(transactionDetail.getDate());
-					labelTranAmount.setText(totalAmount + "");
-					labelTranAmountPaid.setText(transactionDetail.getAmountPaid() +"");
-					labelTranAmountLeft.setText(totalAmount -  transactionDetail.getAmountPaid() +"");
 				}
+				//update transaction details
+				labelTranCustomerName.setText(transactionDetail.getFirstName() + " " + transactionDetail.getLastName());
+				labelTranCustomerNumber.setText(transactionDetail.getPhoneNumber());
+				lbllabelTranDate.setText(transactionDetail.getDate());
+				labelTranAmount.setText(totalAmount + "");
+				labelTranAmountPaid.setText(transactionDetail.getAmountPaid() +"");
+				labelTranAmountLeft.setText(totalAmount -  transactionDetail.getAmountPaid() +"");
 				
 			}
 			
@@ -2629,4 +2623,5 @@ public class ImsMainPage extends ImsDesktopApplication {
 		btnAccounts.setForeground(Color.GREEN);
 		
 	}
+
 }
