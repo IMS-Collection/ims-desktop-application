@@ -1002,6 +1002,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 				try {
 					transactionService.updateQuantityTransaction(ImsDesktopApplication.getCurrentEmployeeId(), 
 							productName, newQuantity, currentTransactionID);
+					updateTransactionProduct(productName, newQuantity);
 				} catch (InvalidInputException e) {
 					error = e.getMessage();
 				}
@@ -2518,7 +2519,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 					for (ProductTransactionDTO tp : transactionDetail.getpTransactions()) {
 						// unit price = total price / quantity of products
 						double unitPrice = tp.getPrice() / tp.getQuantity();
-						model.addRow(new Object[] {tp.getProductName(), unitPrice, tp.getQuantity(), roundNumber(tp.getPrice())});
+						model.addRow(new Object[] {tp.getProduct().getName(), unitPrice, tp.getQuantity(), roundNumber(tp.getPrice())});
 						totalAmount = totalAmount + tp.getPrice();
 					}
 				}
@@ -2603,7 +2604,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		int count = 1;
 		for (ProductTransactionDTO pTransaction : transactionDetail.getpTransactions()) {
 			textArea.append(""+count+"\t");
-			textArea.append(pTransaction.getProductName()+"\t");
+			textArea.append(pTransaction.getProduct().getName()+"\t");
 			textArea.append(""+pTransaction.getQuantity()+"\t");
 			double unitPrice = pTransaction.getPrice() / pTransaction.getQuantity();
 			textArea.append(""+unitPrice+"\t");
@@ -2622,6 +2623,23 @@ public class ImsMainPage extends ImsDesktopApplication {
 		btnProducts.setForeground(Color.GREEN);
 		btnAccounts.setForeground(Color.GREEN);
 		
+	}
+	
+	/**
+	 * To improve speed, this method updates products in a transaction locally. This is done after the transaction has been updated
+	 * in the remote server.
+	 * @param productName
+	 * @param newQuantity
+	 */
+	private void updateTransactionProduct(String productName, int newQuantity) {
+		List<ProductTransactionDTO> productDtos = transactionDetail.getpTransactions();
+		for (ProductTransactionDTO p : productDtos) {
+			if (p.getProduct().getName().equals(productName)) {
+				p.setQuantity(newQuantity);
+				p.setPrice(newQuantity * p.getProduct().getItemPrice());
+				break;
+			}
+		}
 	}
 
 }
