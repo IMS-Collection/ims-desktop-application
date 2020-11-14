@@ -663,9 +663,9 @@ public class ImsMainPage extends ImsDesktopApplication {
 		btnUpdateProduct.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				error = "";
-				float updatePrice = 0;
+				double updatePrice = 0;
 				try {
-					updatePrice = Float.parseFloat(textFieldUpdateProductPrice.getText());
+					updatePrice = Double.parseDouble(textFieldUpdateProductPrice.getText());
 				}
 				catch (NumberFormatException e) {
 					error = "Price figure needs to be an numerical value! ";
