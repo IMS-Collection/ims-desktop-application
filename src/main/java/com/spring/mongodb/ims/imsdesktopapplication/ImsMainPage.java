@@ -1070,7 +1070,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 					String productName = transactionProducts.get(selectedIndex);
 					String employeeId = ImsDesktopApplication.getCurrentEmployeeId(); 
 					try {
-						transactionService.addTransactionProduct(employeeId, productName, quantity, currentTransactionID);
+						ProductTransactionDTO newProductTransaction = transactionService.addTransactionProduct(employeeId, productName, quantity, currentTransactionID);
+						addNewProductTransaction(newProductTransaction);
 					} catch (InvalidInputException e1) {
 						error = e1.getMessage();
 					}
@@ -1102,12 +1103,18 @@ public class ImsMainPage extends ImsDesktopApplication {
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				error = "";
-				try {
-					transactionService.finalizeTransaction(currentTransactionID, ImsDesktopApplication.getCurrentEmployeeId());
-				} catch (InvalidInputException exc) {
-					error = exc.getMessage();
+				int option = JOptionPane.showConfirmDialog(ImsDesktopApplication.getFrame(), 
+						"Do you really want to finalize the transaction?", "Conclude Transaction Confirmation.", 
+						JOptionPane.YES_NO_CANCEL_OPTION);
+				if (option == 0) {
+					try {
+						transactionService.finalizeTransaction(currentTransactionID, ImsDesktopApplication.getCurrentEmployeeId());
+					} catch (InvalidInputException exc) {
+						error = exc.getMessage();
+					}
+					refreshTransactionPanel();
 				}
-				refreshTransactionPanel();
+				
 			}
 		});
 		btnSubmit.setBorder(new LineBorder(new Color(128, 0, 0)));
@@ -1204,6 +1211,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 				double newAmount = Double.parseDouble((textFieldPay.getText()));
 				try {
 					transactionService.updateAmountPaidTransaction(newAmount, currentTransactionID, ImsDesktopApplication.getCurrentEmployeeId());
+					updateAmountPaid(newAmount);
 				} catch (InvalidInputException exc) {
 					error = exc.getMessage();
 				}
@@ -2428,7 +2436,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			//set the alignment of the balance column
 			tableCustomerTransactions.getColumnModel().getColumn(3).setCellRenderer(leftRenderer);
 			
-			float totalBalance = 0.0f;
+			double totalBalance = 0.0f;
 			transactionIds = new HashMap<Integer, String>();
 			String employeeId = ImsDesktopApplication.getCurrentEmployeeId();
 			int index = comboBoxCustomer.getSelectedIndex();
@@ -2439,7 +2447,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 				String date = tT.getDate().substring(0, 10);
 				double balance = tT.getTotalAmount() - tT.getAmountPaid();
 				model.addRow(new Object[] {date, roundNumber(tT.getTotalAmount()), roundNumber(tT.getAmountPaid()), roundNumber(balance)});
-				totalBalance = (float) (totalBalance + balance);
+				totalBalance = (double) (totalBalance + balance);
 				transactionIds.put(row, tT.getTransactionId());
 				row++;
 			}
@@ -2654,6 +2662,14 @@ public class ImsMainPage extends ImsDesktopApplication {
 		if (removeProductTransaction != null) {
 			transactionDetail.getpTransactions().remove(removeProductTransaction);
 		}
+	}
+	
+	private void addNewProductTransaction(ProductTransactionDTO newProductTransaction) {
+		transactionDetail.getpTransactions().add(newProductTransaction);
+	}
+	
+	private void updateAmountPaid(double newAmount) {
+		transactionDetail.setAmountPaid(transactionDetail.getAmountPaid() + newAmount);
 	}
 
 }
