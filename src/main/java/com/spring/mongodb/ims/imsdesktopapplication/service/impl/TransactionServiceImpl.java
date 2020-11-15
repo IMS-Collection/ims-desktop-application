@@ -172,17 +172,30 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 
 		boolean productExist = false;
+		
+		List<ProductTransaction> pTs = currentTransaction.getProductTransactions();
 
-		List<ProductTransaction> productTs = productTransactionRepository.findAllByTransaction(currentTransaction);
 		if (product != null) {
-			for (ProductTransaction pt : productTs) {
+			for (ProductTransaction pt : pTs) {
 				if (pt.getProduct().getProductId().equals(product.getProductId())) {
 					productExist = true;
+					break;
 				}
 			}
 		} else {
 			error = "The product does not exist.";
 		}
+		
+//		List<ProductTransaction> productTs = productTransactionRepository.findAllByTransaction(currentTransaction);
+//		if (product != null) {
+//			for (ProductTransaction pt : productTs) {
+//				if (pt.getProduct().getProductId().equals(product.getProductId())) {
+//					productExist = true;
+//				}
+//			}
+//		} else {
+//			error = "The product does not exist.";
+//		}
 
 		if (productExist) {
 			error = "The product is already added, you can edit it.";
