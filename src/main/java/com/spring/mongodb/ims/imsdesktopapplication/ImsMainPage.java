@@ -1132,6 +1132,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 				try {
 					String productName = lblProductTransaction.getText();
 					transactionService.removeProduct(ImsDesktopApplication.getCurrentEmployeeId(), productName, currentTransactionID);
+					removeProductTransaction(productName);
 				} catch (InvalidInputException exc) {
 					error = exc.getMessage();
 				}
@@ -2626,7 +2627,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 	}
 	
 	/**
-	 * To improve speed, this method updates products in a transaction locally. This is done after the transaction has been updated
+	 * To improve speed, this method updates products in a transaction in the view. This is done after the transaction has been updated
 	 * in the remote server.
 	 * @param productName
 	 * @param newQuantity
@@ -2639,6 +2640,19 @@ public class ImsMainPage extends ImsDesktopApplication {
 				p.setPrice(newQuantity * p.getProduct().getItemPrice());
 				break;
 			}
+		}
+	}
+	
+	private void removeProductTransaction(String productName) {
+		ProductTransactionDTO removeProductTransaction = null;
+		for (ProductTransactionDTO p : transactionDetail.getpTransactions()) {
+			if (p.getProduct().getName().equals(productName)) {
+				removeProductTransaction = p;
+				break;
+			}
+		}
+		if (removeProductTransaction != null) {
+			transactionDetail.getpTransactions().remove(removeProductTransaction);
 		}
 	}
 
