@@ -176,10 +176,12 @@ public class TransactionServiceImpl implements TransactionService {
 		List<ProductTransaction> pTs = currentTransaction.getProductTransactions();
 
 		if (product != null) {
-			for (ProductTransaction pt : pTs) {
-				if (pt.getProduct().getProductId().equals(product.getProductId())) {
-					productExist = true;
-					break;
+			if (pTs != null) {
+				for (ProductTransaction pt : pTs) {
+					if (pt.getProduct().getProductId().equals(product.getProductId())) {
+						productExist = true;
+						break;
+					}
 				}
 			}
 		} else {

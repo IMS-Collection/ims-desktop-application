@@ -2352,7 +2352,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			int row = 0;
 			tableProductsMap = new HashMap<Integer, ProductDTO>();
 			for (ProductDTO p : products) {
-				model.addRow(new Object[] {p.getName(), p.getItemPrice(), p.getQuantity()});
+				model.addRow(new Object[] {p.getName(), roundOff(p.getItemPrice()), p.getQuantity()});
 				tableProductsMap.put(row, p);
 				row++;
 			}
@@ -2446,25 +2446,24 @@ public class ImsMainPage extends ImsDesktopApplication {
 			for (TransactionDTO tT : customerDTO.getTransactions()) {
 				String date = tT.getDate().substring(0, 10);
 				double balance = tT.getTotalAmount() - tT.getAmountPaid();
-				model.addRow(new Object[] {date, roundNumber(tT.getTotalAmount()), roundNumber(tT.getAmountPaid()), roundNumber(balance)});
+				model.addRow(new Object[] {date, roundOff(tT.getTotalAmount()), roundOff(tT.getAmountPaid()), roundOff(balance)});
 				totalBalance = (double) (totalBalance + balance);
 				transactionIds.put(row, tT.getTransactionId());
 				row++;
 			}
 			
 			//textFieldCurrentPaid.setText("");
-			lblTotalBalance.setText(""+totalBalance);
+			lblTotalBalance.setText("" + roundOff(totalBalance));
 			//textFieldUpdatePaid.setText("");
 		}
 		
 	}
 	
-	private double roundNumber(double value) {
-		value = value*100;
-		value = (double)((int) value);
-		value = value /100;
+	private static double roundOff(double value) {
 		
-		return value;
+		double roundOff = Math.round(value * 100.0) / 100.0;
+		
+		return roundOff;
 	}
 	
 	private void refreshTransactionPanel() {
@@ -2528,7 +2527,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 					for (ProductTransactionDTO tp : transactionDetail.getpTransactions()) {
 						// unit price = total price / quantity of products
 						double unitPrice = tp.getPrice() / tp.getQuantity();
-						model.addRow(new Object[] {tp.getProduct().getName(), unitPrice, tp.getQuantity(), roundNumber(tp.getPrice())});
+						model.addRow(new Object[] {tp.getProduct().getName(), roundOff(unitPrice), tp.getQuantity(), roundOff(tp.getPrice())});
 						totalAmount = totalAmount + tp.getPrice();
 					}
 				}
@@ -2536,9 +2535,9 @@ public class ImsMainPage extends ImsDesktopApplication {
 				labelTranCustomerName.setText(transactionDetail.getFirstName() + " " + transactionDetail.getLastName());
 				labelTranCustomerNumber.setText(transactionDetail.getPhoneNumber());
 				lbllabelTranDate.setText(transactionDetail.getDate());
-				labelTranAmount.setText(totalAmount + "");
-				labelTranAmountPaid.setText(transactionDetail.getAmountPaid() +"");
-				labelTranAmountLeft.setText(totalAmount -  transactionDetail.getAmountPaid() +"");
+				labelTranAmount.setText(roundOff(totalAmount) + "");
+				labelTranAmountPaid.setText(roundOff(transactionDetail.getAmountPaid()) +"");
+				labelTranAmountLeft.setText(roundOff(totalAmount -  transactionDetail.getAmountPaid()) +"");
 				
 			}
 			
