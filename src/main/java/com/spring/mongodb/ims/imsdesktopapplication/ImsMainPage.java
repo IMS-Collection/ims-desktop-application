@@ -108,6 +108,9 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private HashMap<Integer, String> transactionIds;
 	String selectedCustomerUserName;
 	
+	// Transactions
+	TransactionDetail transactionDetail;
+	
 	
 	private JPanel imsPagePanel;
 	private JLabel errorMessage;
@@ -728,22 +731,6 @@ public class ImsMainPage extends ImsDesktopApplication {
 		btnDelete.setBorder(new LineBorder(new Color(128, 0, 0), 1, true));
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				
-				error = "";
-				int selectedProductRow = tableProducts.getSelectedRow();
-				// the selected product
-				ProductDTO product = tableProductsMap.get(selectedProductRow);
-				
-				textFieldUpdateProductName.setText(product.getName());
-				textFieldUpdateProductPrice.setText(""+product.getItemPrice());
-				textFieldUpdateProductQuantity.setText(""+product.getQuantity());
-				textFieldUpdateLimit.setText("" + product.getLimit());
-				
-			}
-		});
 		
 		JLabel label_17 = new JLabel("Click each column to sort the items");
 		label_17.setForeground(new Color(0, 128, 0));
@@ -1015,6 +1002,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 				try {
 					transactionService.updateQuantityTransaction(ImsDesktopApplication.getCurrentEmployeeId(), 
 							productName, newQuantity, currentTransactionID);
+					updateTransactionProduct(productName, newQuantity);
 				} catch (InvalidInputException e) {
 					error = e.getMessage();
 				}
@@ -1082,7 +1070,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 					String productName = transactionProducts.get(selectedIndex);
 					String employeeId = ImsDesktopApplication.getCurrentEmployeeId(); 
 					try {
-						transactionService.addTransactionProduct(employeeId, productName, quantity, currentTransactionID);
+						ProductTransactionDTO newProductTransaction = transactionService.addTransactionProduct(employeeId, productName, quantity, currentTransactionID);
+						addNewProductTransaction(newProductTransaction);
 					} catch (InvalidInputException e1) {
 						error = e1.getMessage();
 					}
@@ -1114,12 +1103,18 @@ public class ImsMainPage extends ImsDesktopApplication {
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				error = "";
-				try {
-					transactionService.finalizeTransaction(currentTransactionID, ImsDesktopApplication.getCurrentEmployeeId());
-				} catch (InvalidInputException exc) {
-					error = exc.getMessage();
+				int option = JOptionPane.showConfirmDialog(ImsDesktopApplication.getFrame(), 
+						"Do you really want to finalize the transaction?", "Conclude Transaction Confirmation.", 
+						JOptionPane.YES_NO_CANCEL_OPTION);
+				if (option == 0) {
+					try {
+						transactionService.finalizeTransaction(currentTransactionID, ImsDesktopApplication.getCurrentEmployeeId());
+					} catch (InvalidInputException exc) {
+						error = exc.getMessage();
+					}
+					refreshTransactionPanel();
 				}
-				refreshTransactionPanel();
+				
 			}
 		});
 		btnSubmit.setBorder(new LineBorder(new Color(128, 0, 0)));
@@ -1144,6 +1139,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 				try {
 					String productName = lblProductTransaction.getText();
 					transactionService.removeProduct(ImsDesktopApplication.getCurrentEmployeeId(), productName, currentTransactionID);
+					removeProductTransaction(productName);
 				} catch (InvalidInputException exc) {
 					error = exc.getMessage();
 				}
@@ -1215,6 +1211,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 				double newAmount = Double.parseDouble((textFieldPay.getText()));
 				try {
 					transactionService.updateAmountPaidTransaction(newAmount, currentTransactionID, ImsDesktopApplication.getCurrentEmployeeId());
+					updateAmountPaid(newAmount);
 				} catch (InvalidInputException exc) {
 					error = exc.getMessage();
 				}
@@ -1823,6 +1820,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				try {
+					transactionDetail = transactionService.getTransactionDetail(ImsDesktopApplication.getCurrentEmployeeId(), currentTransactionID, selectedCustomerUserName);
 					refreshTransactionPanel();
 					refreshTransactionDetail();
 				} catch (InvalidInputException exc) {
@@ -2354,7 +2352,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			int row = 0;
 			tableProductsMap = new HashMap<Integer, ProductDTO>();
 			for (ProductDTO p : products) {
-				model.addRow(new Object[] {p.getName(), p.getItemPrice(), p.getQuantity()});
+				model.addRow(new Object[] {p.getName(), roundOff(p.getItemPrice()), p.getQuantity()});
 				tableProductsMap.put(row, p);
 				row++;
 			}
@@ -2438,7 +2436,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 			//set the alignment of the balance column
 			tableCustomerTransactions.getColumnModel().getColumn(3).setCellRenderer(leftRenderer);
 			
-			float totalBalance = 0.0f;
+			double totalBalance = 0.0f;
 			transactionIds = new HashMap<Integer, String>();
 			String employeeId = ImsDesktopApplication.getCurrentEmployeeId();
 			int index = comboBoxCustomer.getSelectedIndex();
@@ -2448,25 +2446,24 @@ public class ImsMainPage extends ImsDesktopApplication {
 			for (TransactionDTO tT : customerDTO.getTransactions()) {
 				String date = tT.getDate().substring(0, 10);
 				double balance = tT.getTotalAmount() - tT.getAmountPaid();
-				model.addRow(new Object[] {date, roundNumber(tT.getTotalAmount()), roundNumber(tT.getAmountPaid()), roundNumber(balance)});
-				totalBalance = (float) (totalBalance + balance);
+				model.addRow(new Object[] {date, roundOff(tT.getTotalAmount()), roundOff(tT.getAmountPaid()), roundOff(balance)});
+				totalBalance = (double) (totalBalance + balance);
 				transactionIds.put(row, tT.getTransactionId());
 				row++;
 			}
 			
 			//textFieldCurrentPaid.setText("");
-			lblTotalBalance.setText(""+totalBalance);
+			lblTotalBalance.setText("" + roundOff(totalBalance));
 			//textFieldUpdatePaid.setText("");
 		}
 		
 	}
 	
-	private double roundNumber(double value) {
-		value = value*100;
-		value = (double)((int) value);
-		value = value /100;
+	private static double roundOff(double value) {
 		
-		return value;
+		double roundOff = Math.round(value * 100.0) / 100.0;
+		
+		return roundOff;
 	}
 	
 	private void refreshTransactionPanel() {
@@ -2512,7 +2509,6 @@ public class ImsMainPage extends ImsDesktopApplication {
 		lblErrorMEssage.setText(error);
 		if (error == null || error.length() == 0) {
 			String employeeId = ImsDesktopApplication.getCurrentEmployeeId();
-			TransactionDetail transactionDetail = null;
 			DefaultTableModel model = (DefaultTableModel) tableTransaction.getModel();
 			//set the alignment of total amount column
 			DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
@@ -2525,32 +2521,23 @@ public class ImsMainPage extends ImsDesktopApplication {
 			
 			model.setRowCount(0);
 			if (selectedCustomerUserName != null) {
-				boolean exception = false;
-				try {
-					transactionDetail = transactionService.getTransactionDetail(employeeId, currentTransactionID, selectedCustomerUserName);
-				} catch (InvalidInputException exc) {
-					error = exc.getMessage();
-					lblErrorMEssage.setText(error);
-					exception = true;
-				}
+				
 				double totalAmount = 0.0;
-				if (!exception) {
-					if (transactionDetail.getpTransactions() != null) {
-						for (ProductTransactionDTO tp : transactionDetail.getpTransactions()) {
-							// unit price = total price / quantity of products
-							double unitPrice = tp.getPrice() / tp.getQuantity();
-							model.addRow(new Object[] {tp.getProductName(), unitPrice, tp.getQuantity(), roundNumber(tp.getPrice())});
-							totalAmount = totalAmount + tp.getPrice();
-						}
+				if (transactionDetail.getpTransactions() != null) {
+					for (ProductTransactionDTO tp : transactionDetail.getpTransactions()) {
+						// unit price = total price / quantity of products
+						double unitPrice = tp.getPrice() / tp.getQuantity();
+						model.addRow(new Object[] {tp.getProduct().getName(), roundOff(unitPrice), tp.getQuantity(), roundOff(tp.getPrice())});
+						totalAmount = totalAmount + tp.getPrice();
 					}
-					//update transaction details
-					labelTranCustomerName.setText(transactionDetail.getFirstName() + " " + transactionDetail.getLastName());
-					labelTranCustomerNumber.setText(transactionDetail.getPhoneNumber());
-					lbllabelTranDate.setText(transactionDetail.getDate());
-					labelTranAmount.setText(totalAmount + "");
-					labelTranAmountPaid.setText(transactionDetail.getAmountPaid() +"");
-					labelTranAmountLeft.setText(totalAmount -  transactionDetail.getAmountPaid() +"");
 				}
+				//update transaction details
+				labelTranCustomerName.setText(transactionDetail.getFirstName() + " " + transactionDetail.getLastName());
+				labelTranCustomerNumber.setText(transactionDetail.getPhoneNumber());
+				lbllabelTranDate.setText(transactionDetail.getDate());
+				labelTranAmount.setText(roundOff(totalAmount) + "");
+				labelTranAmountPaid.setText(roundOff(transactionDetail.getAmountPaid()) +"");
+				labelTranAmountLeft.setText(roundOff(totalAmount -  transactionDetail.getAmountPaid()) +"");
 				
 			}
 			
@@ -2625,7 +2612,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		int count = 1;
 		for (ProductTransactionDTO pTransaction : transactionDetail.getpTransactions()) {
 			textArea.append(""+count+"\t");
-			textArea.append(pTransaction.getProductName()+"\t");
+			textArea.append(pTransaction.getProduct().getName()+"\t");
 			textArea.append(""+pTransaction.getQuantity()+"\t");
 			double unitPrice = pTransaction.getPrice() / pTransaction.getQuantity();
 			textArea.append(""+unitPrice+"\t");
@@ -2645,4 +2632,43 @@ public class ImsMainPage extends ImsDesktopApplication {
 		btnAccounts.setForeground(Color.GREEN);
 		
 	}
+	
+	/**
+	 * To improve speed, this method updates products in a transaction in the view. This is done after the transaction has been updated
+	 * in the remote server.
+	 * @param productName
+	 * @param newQuantity
+	 */
+	private void updateTransactionProduct(String productName, int newQuantity) {
+		List<ProductTransactionDTO> productDtos = transactionDetail.getpTransactions();
+		for (ProductTransactionDTO p : productDtos) {
+			if (p.getProduct().getName().equals(productName)) {
+				p.setQuantity(newQuantity);
+				p.setPrice(newQuantity * p.getProduct().getItemPrice());
+				break;
+			}
+		}
+	}
+	
+	private void removeProductTransaction(String productName) {
+		ProductTransactionDTO removeProductTransaction = null;
+		for (ProductTransactionDTO p : transactionDetail.getpTransactions()) {
+			if (p.getProduct().getName().equals(productName)) {
+				removeProductTransaction = p;
+				break;
+			}
+		}
+		if (removeProductTransaction != null) {
+			transactionDetail.getpTransactions().remove(removeProductTransaction);
+		}
+	}
+	
+	private void addNewProductTransaction(ProductTransactionDTO newProductTransaction) {
+		transactionDetail.getpTransactions().add(newProductTransaction);
+	}
+	
+	private void updateAmountPaid(double newAmount) {
+		transactionDetail.setAmountPaid(transactionDetail.getAmountPaid() + newAmount);
+	}
+
 }

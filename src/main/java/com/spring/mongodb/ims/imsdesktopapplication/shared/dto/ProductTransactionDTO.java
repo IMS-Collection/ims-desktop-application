@@ -1,17 +1,20 @@
 package com.spring.mongodb.ims.imsdesktopapplication.shared.dto;
 
+import com.spring.mongodb.ims.imsdesktopapplication.model.Product;
+
 public class ProductTransactionDTO {
-	private String productName;
 	private double price;
 	private int quantity;
 	private String pTransactionId;
+	private Product product;
 
-	public String getProductName() {
-		return productName;
+	
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setProductName(String productName) {
-		this.productName = productName;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
 	public double getPrice() {
