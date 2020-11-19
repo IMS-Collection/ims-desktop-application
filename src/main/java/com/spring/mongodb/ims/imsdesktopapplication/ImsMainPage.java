@@ -95,8 +95,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private HashMap<Integer, String> comboBoxProductsMap;
 	private HashMap<Integer, String> transactionProducts;
 	private HashMap<Integer, ProductDTO> tableProductsMap;
-	private List<ProductDTO> currentProducts;
-	
+	private List<String> productNames;
+	private List<String> currentTransactionProductNames;
 	/**
 	 * maps product name to its unit price.
 	 */
@@ -195,7 +195,6 @@ public class ImsMainPage extends ImsDesktopApplication {
 	public ImsMainPage() {
 		// initialize some data variables
 		//products = new ArrayList<ProductDTO>();
-		currentProducts = new ArrayList<ProductDTO>();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 984, 666);
 		contentPane = new JPanel();
@@ -312,6 +311,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 					if (password != null && password.length() > 0) {
 						try {
 							imsService.login(name, password);
+							initializeProductForTransaction();
 						} catch (InvalidInputException er) {
 							loggedIn = false;
 							error = er.getMessage();
@@ -1066,9 +1066,15 @@ public class ImsMainPage extends ImsDesktopApplication {
 				catch (NumberFormatException e) {
 					error = "Quantity number needs to be a numerical value! ";
 				}
+				
+				String productName = transactionProducts.get(selectedIndex);
+				String employeeId = ImsDesktopApplication.getCurrentEmployeeId(); 
+				
+				if (currentTransactionProductNames.contains(productName)) {
+					error = "The product is already added, you can edit it.";
+				} 
+				
 				if (error.length() == 0) {
-					String productName = transactionProducts.get(selectedIndex);
-					String employeeId = ImsDesktopApplication.getCurrentEmployeeId(); 
 					try {
 						ProductTransactionDTO newProductTransaction = transactionService.addTransactionProduct(employeeId, productName, quantity, currentTransactionID);
 						addNewProductTransaction(newProductTransaction);
@@ -2352,7 +2358,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 			int row = 0;
 			tableProductsMap = new HashMap<Integer, ProductDTO>();
 			for (ProductDTO p : products) {
-				model.addRow(new Object[] {p.getName(), roundOff(p.getItemPrice()), p.getQuantity()});
+				String pName = p.getName();
+				model.addRow(new Object[] {pName, roundOff(p.getItemPrice()), p.getQuantity()});
 				tableProductsMap.put(row, p);
 				row++;
 			}
@@ -2466,6 +2473,36 @@ public class ImsMainPage extends ImsDesktopApplication {
 		return roundOff;
 	}
 	
+	/**
+	 * After login, this method populates product names for adding products in transactions. 
+	 * Also, it populates the combo box for adding products in a transaction
+	 */
+	private void initializeProductForTransaction() {
+		
+		comboBoxAddProductMap = new HashMap<String, String>();
+		transactionProducts = new HashMap<Integer, String>();
+		productNames = new ArrayList<String>();
+		productNames.clear();
+		comboBoxTransactionProduct.removeAllItems();
+		productNames = new ArrayList<String>();
+		
+		// load products
+		List<ProductDTO> databaseProducts = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
+		for (ProductDTO p : databaseProducts) {
+			productNames.add(p.getName());
+			comboBoxAddProductMap.put(p.getName(), "" + p.getItemPrice());
+		}
+		
+		// populate add product in a transaction combo box
+		int index = 0;
+		Collections.sort(productNames);
+		for (String n : productNames) {
+			transactionProducts.put(index, n);
+			comboBoxTransactionProduct.addItem(n);
+			index++;
+		}
+	}
+	
 	private void refreshTransactionPanel() {
 		lblErrorMEssage.setText(error);
 		
@@ -2478,25 +2515,26 @@ public class ImsMainPage extends ImsDesktopApplication {
 			textFieldPay.setText("");
 			
 			
-			comboBoxAddProductMap = new HashMap<String, String>();
+//			comboBoxAddProductMap = new HashMap<String, String>();
+//			
+//			//Update transaction
+//			transactionProducts = new HashMap<Integer, String>();
+//			int index = 0;
+//			productNames = new ArrayList<String>();
+//			productNames.clear();
+//			comboBoxTransactionProduct.removeAllItems();
+//			List<ProductDTO> databaseProducts = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
+//			for (ProductDTO p : databaseProducts) {
+//				productNames.add(p.getName());
+//				comboBoxAddProductMap.put(p.getName(), "" + p.getItemPrice());
+//			}
+//			Collections.sort(productNames);
+//			for (String name : productNames) {
+//				transactionProducts.put(index, name);
+//				comboBoxTransactionProduct.addItem(name);
+//				index++;
+//			}
 			
-			//Update transaction
-			transactionProducts = new HashMap<Integer, String>();
-			int index = 0;
-			List<String> names = new ArrayList<String>();
-			names.clear();
-			comboBoxTransactionProduct.removeAllItems();
-			List<ProductDTO> databaseProducts = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
-			for (ProductDTO p : databaseProducts) {
-				names.add(p.getName());
-				comboBoxAddProductMap.put(p.getName(), "" + p.getItemPrice());
-			}
-			Collections.sort(names);
-			for (String name : names) {
-				transactionProducts.put(index, name);
-				comboBoxTransactionProduct.addItem(name);
-				index++;
-			}
 			comboBoxTransactionProduct.setSelectedIndex(-1);
 			
 
@@ -2521,13 +2559,16 @@ public class ImsMainPage extends ImsDesktopApplication {
 			
 			model.setRowCount(0);
 			if (selectedCustomerUserName != null) {
-				
+				// names of the product in the current transaction
+				currentTransactionProductNames = new ArrayList<String>();
 				double totalAmount = 0.0;
 				if (transactionDetail.getpTransactions() != null) {
 					for (ProductTransactionDTO tp : transactionDetail.getpTransactions()) {
 						// unit price = total price / quantity of products
 						double unitPrice = tp.getPrice() / tp.getQuantity();
-						model.addRow(new Object[] {tp.getProduct().getName(), roundOff(unitPrice), tp.getQuantity(), roundOff(tp.getPrice())});
+						String pName = tp.getProduct().getName();
+						currentTransactionProductNames.add(pName);
+						model.addRow(new Object[] {pName, roundOff(unitPrice), tp.getQuantity(), roundOff(tp.getPrice())});
 						totalAmount = totalAmount + tp.getPrice();
 					}
 				}
