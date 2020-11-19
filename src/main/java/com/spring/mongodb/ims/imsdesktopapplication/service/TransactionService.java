@@ -32,7 +32,7 @@ public interface TransactionService {
 	
 	void updateAmountPaidTransaction(double newAmount, String transactionId, String employeeId) throws InvalidInputException;
 	
-	void removeProduct(String employeeId, String productName, String transactionId) throws InvalidInputException;
+	void removeProduct(String employeeId, String ptId) throws InvalidInputException;
 	
 	void finalizeTransaction(String transactionID, String employeeId);
 
