@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -47,6 +48,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.spring.mongodb.ims.imsdesktopapplication.exceptions.InvalidInputException;
 import com.spring.mongodb.ims.imsdesktopapplication.model.Employee;
+import com.spring.mongodb.ims.imsdesktopapplication.model.Product;
+import com.spring.mongodb.ims.imsdesktopapplication.model.ProductTransaction;
 import com.spring.mongodb.ims.imsdesktopapplication.service.CustomerService;
 import com.spring.mongodb.ims.imsdesktopapplication.service.EmployeeService;
 import com.spring.mongodb.ims.imsdesktopapplication.service.ImsService;
@@ -95,7 +98,26 @@ public class ImsMainPage extends ImsDesktopApplication {
 	private HashMap<Integer, String> comboBoxProductsMap;
 	private HashMap<Integer, String> transactionProducts;
 	private HashMap<Integer, ProductDTO> tableProductsMap;
-	private List<ProductDTO> currentProducts;
+	
+	/**
+	 * Existing product names
+	 */
+	private List<String> productNames;
+	
+	/**
+	 * Product names in the current transaction
+	 */
+	private List<String> currentTransactionProductNames;
+	
+	/**
+	 * Map between each {@link ProductTransaction} and the corresponding {@link Product}
+	 */
+	private Map<String, String> pTransactionNameIdMap;
+	
+	/**
+	 * List products in the product table
+	 */
+	List<ProductDTO> ProductsInTable;
 	
 	/**
 	 * maps product name to its unit price.
@@ -195,7 +217,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 	public ImsMainPage() {
 		// initialize some data variables
 		//products = new ArrayList<ProductDTO>();
-		currentProducts = new ArrayList<ProductDTO>();
+		pTransactionNameIdMap = new HashMap<String, String>();
+		ProductsInTable = new ArrayList<ProductDTO>();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 984, 666);
 		contentPane = new JPanel();
@@ -312,6 +335,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 					if (password != null && password.length() > 0) {
 						try {
 							imsService.login(name, password);
+							initializeProductForTransaction();
 						} catch (InvalidInputException er) {
 							loggedIn = false;
 							error = er.getMessage();
@@ -449,9 +473,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 				btnProducts.setForeground(Color.decode("#0f03fc"));
 				btnAccounts.setForeground(Color.GREEN);
 				
-				List<ProductDTO> products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
-				refreshProductTable(products);
-				refreshProductPanel(products);
+				refreshProductTable();
+				refreshProductPanel();
 				
 			}
 		});
@@ -593,9 +616,9 @@ public class ImsMainPage extends ImsDesktopApplication {
 					}
 				}
 				
-				List<ProductDTO> products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
-				refreshProductPanel(products);
-				refreshProductTable(products);
+				refreshProductTable();
+				refreshProductPanel();
+				
 				
 			}
 		});
@@ -628,8 +651,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 				String productName = comboBoxProductsMap.get(selectedIndex);
 				if (productName != null) {
 			
-					List<ProductDTO> databaseProducts = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
-					for (ProductDTO p : databaseProducts) {
+					for (ProductDTO p : ProductsInTable) {
 						if (productName.equals(p.getName())) {
 							textFieldUpdateProductName.setText(productName);
 							textFieldUpdateProductPrice.setText(""+p.getItemPrice());
@@ -704,9 +726,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 					error = e.getMessage();
 				}
 
-				List<ProductDTO> products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
-				refreshProductTable(products);
-				refreshProductPanel(products);
+				refreshProductTable();
+				refreshProductPanel();
 			}
 		});
 		btnUpdateProduct.setBorder(new LineBorder(new Color(128, 0, 0), 1, true));
@@ -723,9 +744,9 @@ public class ImsMainPage extends ImsDesktopApplication {
 					error = er.getMessage();
 				}
 				
-				List<ProductDTO> products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
-				refreshProductPanel(products);
-				refreshProductTable(products);
+				refreshProductTable();
+				refreshProductPanel();
+				
 			}
 		});
 		btnDelete.setBorder(new LineBorder(new Color(128, 0, 0), 1, true));
@@ -1066,9 +1087,15 @@ public class ImsMainPage extends ImsDesktopApplication {
 				catch (NumberFormatException e) {
 					error = "Quantity number needs to be a numerical value! ";
 				}
+				
+				String productName = transactionProducts.get(selectedIndex);
+				String employeeId = ImsDesktopApplication.getCurrentEmployeeId(); 
+				
+				if (currentTransactionProductNames.contains(productName)) {
+					error = "The product is already added, you can edit it.";
+				} 
+				
 				if (error.length() == 0) {
-					String productName = transactionProducts.get(selectedIndex);
-					String employeeId = ImsDesktopApplication.getCurrentEmployeeId(); 
 					try {
 						ProductTransactionDTO newProductTransaction = transactionService.addTransactionProduct(employeeId, productName, quantity, currentTransactionID);
 						addNewProductTransaction(newProductTransaction);
@@ -1138,7 +1165,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 				error = "";
 				try {
 					String productName = lblProductTransaction.getText();
-					transactionService.removeProduct(ImsDesktopApplication.getCurrentEmployeeId(), productName, currentTransactionID);
+					String ptId = pTransactionNameIdMap.get(productName);
+					transactionService.removeProduct(ImsDesktopApplication.getCurrentEmployeeId(), ptId);
 					removeProductTransaction(productName);
 				} catch (InvalidInputException exc) {
 					error = exc.getMessage();
@@ -2290,7 +2318,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		confirmPasswordField.setText("");
 	}
 	
-	private void refreshProductPanel(List<ProductDTO> products) {
+	private void refreshProductPanel() {
 		lblErrorMEssage.setText(error);
 		
 		if (error == null || error.length() == 0) {
@@ -2306,15 +2334,10 @@ public class ImsMainPage extends ImsDesktopApplication {
 			comboBoxProductsMap = new HashMap<Integer, String>();
 			//comboBoxProduct.removeAll();
 			int index = 0;
-			List<String> names = new ArrayList<String>();
-			names.clear();
 			comboBoxProduct.removeAllItems();
 
-			for (ProductDTO p : products) {
-				names.add(p.getName());
-			}
-			Collections.sort(names);
-			for (String name : names) {
+			Collections.sort(productNames);
+			for (String name : productNames) {
 				comboBoxProductsMap.put(index, name);
 				comboBoxProduct.addItem(name);
 				index++;
@@ -2329,7 +2352,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		}
 	}
 	
-	private void refreshProductTable(List<ProductDTO> products) {
+	private void refreshProductTable() {
 		
 		if (error == null || error.length() == 0) {
 			// some user settings
@@ -2349,10 +2372,18 @@ public class ImsMainPage extends ImsDesktopApplication {
 			
 			//set the alignment of the quantity column
 			tableProducts.getColumnModel().getColumn(2).setCellRenderer(leftRenderer);
+			
+			
+			// clear product names
+			productNames.clear();
 			int row = 0;
 			tableProductsMap = new HashMap<Integer, ProductDTO>();
+			List<ProductDTO> products = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
 			for (ProductDTO p : products) {
-				model.addRow(new Object[] {p.getName(), roundOff(p.getItemPrice()), p.getQuantity()});
+				ProductsInTable.add(p);
+				String pName = p.getName();
+				productNames.add(pName);
+				model.addRow(new Object[] {pName, roundOff(p.getItemPrice()), p.getQuantity()});
 				tableProductsMap.put(row, p);
 				row++;
 			}
@@ -2466,6 +2497,36 @@ public class ImsMainPage extends ImsDesktopApplication {
 		return roundOff;
 	}
 	
+	/**
+	 * After login, this method populates product names for adding products in transactions. 
+	 * Also, it populates the combo box for adding products in a transaction
+	 */
+	private void initializeProductForTransaction() {
+		
+		comboBoxAddProductMap = new HashMap<String, String>();
+		transactionProducts = new HashMap<Integer, String>();
+		productNames = new ArrayList<String>();
+		productNames.clear();
+		comboBoxTransactionProduct.removeAllItems();
+		productNames = new ArrayList<String>();
+		
+		// load products
+		List<ProductDTO> databaseProducts = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
+		for (ProductDTO p : databaseProducts) {
+			productNames.add(p.getName());
+			comboBoxAddProductMap.put(p.getName(), "" + p.getItemPrice());
+		}
+		
+		// populate add product in a transaction combo box
+		int index = 0;
+		Collections.sort(productNames);
+		for (String n : productNames) {
+			transactionProducts.put(index, n);
+			comboBoxTransactionProduct.addItem(n);
+			index++;
+		}
+	}
+	
 	private void refreshTransactionPanel() {
 		lblErrorMEssage.setText(error);
 		
@@ -2478,25 +2539,26 @@ public class ImsMainPage extends ImsDesktopApplication {
 			textFieldPay.setText("");
 			
 			
-			comboBoxAddProductMap = new HashMap<String, String>();
+//			comboBoxAddProductMap = new HashMap<String, String>();
+//			
+//			//Update transaction
+//			transactionProducts = new HashMap<Integer, String>();
+//			int index = 0;
+//			productNames = new ArrayList<String>();
+//			productNames.clear();
+//			comboBoxTransactionProduct.removeAllItems();
+//			List<ProductDTO> databaseProducts = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
+//			for (ProductDTO p : databaseProducts) {
+//				productNames.add(p.getName());
+//				comboBoxAddProductMap.put(p.getName(), "" + p.getItemPrice());
+//			}
+//			Collections.sort(productNames);
+//			for (String name : productNames) {
+//				transactionProducts.put(index, name);
+//				comboBoxTransactionProduct.addItem(name);
+//				index++;
+//			}
 			
-			//Update transaction
-			transactionProducts = new HashMap<Integer, String>();
-			int index = 0;
-			List<String> names = new ArrayList<String>();
-			names.clear();
-			comboBoxTransactionProduct.removeAllItems();
-			List<ProductDTO> databaseProducts = productService.getProducts(ImsDesktopApplication.getCurrentEmployeeId());
-			for (ProductDTO p : databaseProducts) {
-				names.add(p.getName());
-				comboBoxAddProductMap.put(p.getName(), "" + p.getItemPrice());
-			}
-			Collections.sort(names);
-			for (String name : names) {
-				transactionProducts.put(index, name);
-				comboBoxTransactionProduct.addItem(name);
-				index++;
-			}
 			comboBoxTransactionProduct.setSelectedIndex(-1);
 			
 
@@ -2519,15 +2581,22 @@ public class ImsMainPage extends ImsDesktopApplication {
 			tableTransaction.getColumnModel().getColumn(2).setCellRenderer(leftRenderer);
 			tableTransaction.getColumnModel().getColumn(3).setCellRenderer(leftRenderer);
 			
+			// clear product transaction id name map
+			pTransactionNameIdMap.clear();
+			
 			model.setRowCount(0);
 			if (selectedCustomerUserName != null) {
-				
+				// names of the product in the current transaction
+				currentTransactionProductNames = new ArrayList<String>();
 				double totalAmount = 0.0;
 				if (transactionDetail.getpTransactions() != null) {
 					for (ProductTransactionDTO tp : transactionDetail.getpTransactions()) {
 						// unit price = total price / quantity of products
 						double unitPrice = tp.getPrice() / tp.getQuantity();
-						model.addRow(new Object[] {tp.getProduct().getName(), roundOff(unitPrice), tp.getQuantity(), roundOff(tp.getPrice())});
+						String pName = tp.getProduct().getName();
+						pTransactionNameIdMap.put(pName, tp.getpTransactionId());
+						currentTransactionProductNames.add(pName);
+						model.addRow(new Object[] {pName, roundOff(unitPrice), tp.getQuantity(), roundOff(tp.getPrice())});
 						totalAmount = totalAmount + tp.getPrice();
 					}
 				}

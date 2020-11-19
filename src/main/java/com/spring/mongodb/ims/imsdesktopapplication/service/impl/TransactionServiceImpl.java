@@ -171,22 +171,22 @@ public class TransactionServiceImpl implements TransactionService {
 			throw new InvalidInputException(error);
 		}
 
-		boolean productExist = false;
-		
-		List<ProductTransaction> pTs = currentTransaction.getProductTransactions();
-
-		if (product != null) {
-			if (pTs != null) {
-				for (ProductTransaction pt : pTs) {
-					if (pt.getProduct().getProductId().equals(product.getProductId())) {
-						productExist = true;
-						break;
-					}
-				}
-			}
-		} else {
-			error = "The product does not exist.";
-		}
+//		boolean productExist = false;
+//		
+//		List<ProductTransaction> pTs = currentTransaction.getProductTransactions();
+//
+//		if (product != null) {
+//			if (pTs != null) {
+//				for (ProductTransaction pt : pTs) {
+//					if (pt.getProduct().getProductId().equals(product.getProductId())) {
+//						productExist = true;
+//						break;
+//					}
+//				}
+//			}
+//		} else {
+//			error = "The product does not exist.";
+//		}
 		
 //		List<ProductTransaction> productTs = productTransactionRepository.findAllByTransaction(currentTransaction);
 //		if (product != null) {
@@ -199,9 +199,7 @@ public class TransactionServiceImpl implements TransactionService {
 //			error = "The product does not exist.";
 //		}
 
-		if (productExist) {
-			error = "The product is already added, you can edit it.";
-		} else if (quantity <= 0) {
+		if (quantity <= 0) {
 			error = "Quantity of items must be greater than zero.";
 		}
 		if (error.length() > 0) {
@@ -559,41 +557,33 @@ public class TransactionServiceImpl implements TransactionService {
 
 	@Transactional
 	@Override
-	public void removeProduct(String employeeId, String productName, String transactionId)
+	public void removeProduct(String employeeId, String ptId)
 			throws InvalidInputException {
 
 		if (!isManagerLoggedIn(employeeId)) {
 			throw new InvalidInputException("A manager is required to make the request.");
 		}
+		
 		String error = "";
-		Transaction transaction = transactionRepository.findByTransactionId(transactionId);
-		Product product = productRepository.findByName(productName);
+		ProductTransaction deletetPTranaction = productTransactionRepository.findBypTransactionId(ptId);
+		
+		if (deletetPTranaction == null) {
+			throw new InvalidInputException("The product is no longer in the transaction");
+		}
+		
+		Product product = deletetPTranaction.getProduct();
+		Transaction transaction = deletetPTranaction.getTransaction();
 
 		if (transaction == null) {
 			error = "The transaction does not exist.";
 		} else if (!transaction.isEditable()) {
 			error = "This transaction cannot be modified";
-		} else if (product == null) {
-			error = "This product doesn't exist";
-		}
+		} 
 
 		if (error.length() > 0) {
 			throw new InvalidInputException(error);
 		}
-
-		ProductTransaction deletetPTranaction = null;
-		if (transaction.getProductTransactions() != null) {
-			for (ProductTransaction pTransaction : transaction.getProductTransactions()) {
-				if (pTransaction.getProduct().getName().equals(product.getName())) {
-					deletetPTranaction = pTransaction;
-					break;
-				}
-			}
-		}
-		
-		if (deletetPTranaction == null) {
-			throw new InvalidInputException("The product is not in this transaction");
-		}
+	
 		int quantity = deletetPTranaction.getQuantity();
 		product.setQuantity(product.getQuantity() + quantity);
 		transaction.getProductTransactions().remove(deletetPTranaction);
