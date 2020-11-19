@@ -13,4 +13,5 @@ import com.spring.mongodb.ims.imsdesktopapplication.model.Transaction;
 public interface ProductTransactionRepository extends MongoRepository<ProductTransaction, String> {
 	List<ProductTransaction> findAllByTransaction(Transaction transaction);
 	List<ProductTransaction> findAllByProduct(Product product);
+	ProductTransaction findBypTransactionId(String pTransactionId);
 }
