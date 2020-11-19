@@ -1258,7 +1258,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		JScrollPane scrollPaneTransaction = new JScrollPane();
 		
 		tableTransaction = new JTable();
-		tableTransaction.setAutoCreateRowSorter(true);
+		tableTransaction.setAutoCreateRowSorter(false);
 		tableTransaction.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
