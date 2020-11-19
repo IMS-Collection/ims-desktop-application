@@ -1010,8 +1010,8 @@ public class ImsMainPage extends ImsDesktopApplication {
 		
 		lblProductTransaction = new JLabel("Product");
 		lblProductTransaction.setHorizontalAlignment(SwingConstants.CENTER);
-		lblProductTransaction.setFont(new Font("Dialog", Font.PLAIN, 20));
-		lblProductTransaction.setBounds(58, 38, 140, 29);
+		lblProductTransaction.setFont(new Font("Dialog", Font.BOLD, 13));
+		lblProductTransaction.setBounds(0, 38, 276, 29);
 		panel_8.add(lblProductTransaction);
 		
 		JButton btnUpdateTransaction = new JButton("UPDATE");
@@ -1058,7 +1058,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 				}
 			}
 		});
-		comboBoxTransactionProduct.setBounds(15, 202, 183, 26);
+		comboBoxTransactionProduct.setBounds(0, 202, 276, 26);
 		panel_8.add(comboBoxTransactionProduct);
 		
 		JLabel label_21 = new JLabel("Quantity");
@@ -1226,10 +1226,10 @@ public class ImsMainPage extends ImsDesktopApplication {
 		panel_8.add(textFieldTranUpdateQuantity);
 		textFieldTranUpdateQuantity.setColumns(10);
 		
-		lblItemPrice = new JLabel("New label");
-		lblItemPrice.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
-		lblItemPrice.setForeground(Color.GREEN);
-		lblItemPrice.setBounds(15, 240, 178, 16);
+		lblItemPrice = new JLabel("Unit Price");
+		lblItemPrice.setFont(new Font("Dialog", Font.PLAIN, 13));
+		lblItemPrice.setForeground(Color.BLUE);
+		lblItemPrice.setBounds(15, 240, 246, 16);
 		panel_8.add(lblItemPrice);
 		
 		JButton btnPay = new JButton("PAY");
@@ -1258,7 +1258,7 @@ public class ImsMainPage extends ImsDesktopApplication {
 		JScrollPane scrollPaneTransaction = new JScrollPane();
 		
 		tableTransaction = new JTable();
-		tableTransaction.setAutoCreateRowSorter(true);
+		tableTransaction.setAutoCreateRowSorter(false);
 		tableTransaction.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
