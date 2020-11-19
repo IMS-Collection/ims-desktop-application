@@ -171,22 +171,22 @@ public class TransactionServiceImpl implements TransactionService {
 			throw new InvalidInputException(error);
 		}
 
-		boolean productExist = false;
-		
-		List<ProductTransaction> pTs = currentTransaction.getProductTransactions();
-
-		if (product != null) {
-			if (pTs != null) {
-				for (ProductTransaction pt : pTs) {
-					if (pt.getProduct().getProductId().equals(product.getProductId())) {
-						productExist = true;
-						break;
-					}
-				}
-			}
-		} else {
-			error = "The product does not exist.";
-		}
+//		boolean productExist = false;
+//		
+//		List<ProductTransaction> pTs = currentTransaction.getProductTransactions();
+//
+//		if (product != null) {
+//			if (pTs != null) {
+//				for (ProductTransaction pt : pTs) {
+//					if (pt.getProduct().getProductId().equals(product.getProductId())) {
+//						productExist = true;
+//						break;
+//					}
+//				}
+//			}
+//		} else {
+//			error = "The product does not exist.";
+//		}
 		
 //		List<ProductTransaction> productTs = productTransactionRepository.findAllByTransaction(currentTransaction);
 //		if (product != null) {
@@ -199,9 +199,7 @@ public class TransactionServiceImpl implements TransactionService {
 //			error = "The product does not exist.";
 //		}
 
-		if (productExist) {
-			error = "The product is already added, you can edit it.";
-		} else if (quantity <= 0) {
+		if (quantity <= 0) {
 			error = "Quantity of items must be greater than zero.";
 		}
 		if (error.length() > 0) {
