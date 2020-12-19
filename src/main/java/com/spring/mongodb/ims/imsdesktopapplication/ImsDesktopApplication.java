@@ -22,6 +22,7 @@ import com.spring.mongodb.ims.imsdesktopapplication.model.Employee;
 public class ImsDesktopApplication extends JFrame{
 	
 	public ImsDesktopApplication() {
+		
 	}
 	
 //	use jdialog for register page
