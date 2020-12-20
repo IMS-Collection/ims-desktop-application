@@ -64,7 +64,7 @@ public class JavaFXApplication extends Application {
         Platform.exit();
     }
 
-    class StageReadyEvent extends ApplicationEvent {
+    public class StageReadyEvent extends ApplicationEvent {
 
         /**
 		 * 

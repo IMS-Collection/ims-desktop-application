@@ -1,4 +1,4 @@
-package com.spring.mongodb.ims.imsdesktopapplication;
+package com.spring.mongodb.ims.imsdesktopapplication.view;
 
 import javafx.application.Application;
 import javafx.beans.property.IntegerProperty;
@@ -25,6 +25,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+
+import com.spring.mongodb.ims.imsdesktopapplication.JavaFXApplication;
+import com.spring.mongodb.ims.imsdesktopapplication.JavaFXApplication.StageReadyEvent;
 
 import java.io.IOException;
 import java.net.URL;
