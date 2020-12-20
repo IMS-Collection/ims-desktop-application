@@ -17,6 +17,7 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<javafx.version>11</javafx.version>
 	</properties>
 
 	<dependencies>
@@ -28,6 +29,22 @@
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
 			<version>2.3.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-controls</artifactId>
+			<version>${javafx.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-fxml</artifactId>
+			<version>${javafx.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-graphics</artifactId>
+			<version>${javafx.version}</version>
 		</dependency>
 
 		<dependency>
@@ -55,15 +72,11 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 
-<!-- Follow this instruction to change java version		 -->	
-<!-- Pick the version you want to be the default (1.6.0_65-b14-462 for arguments sake) then:
-
-export JAVA_HOME=`/usr/libexec/java_home -v 1.6.0_65-b14-462`
-or you can specify just the major version, like:
-
-export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
-Now when you run java -version you will see:
- -->
+			<!-- Follow this instruction to change java version -->
+			<!-- Pick the version you want to be the default (1.6.0_65-b14-462 for 
+				arguments sake) then: export JAVA_HOME=`/usr/libexec/java_home -v 1.6.0_65-b14-462` 
+				or you can specify just the major version, like: export JAVA_HOME=`/usr/libexec/java_home 
+				-v 1.8` Now when you run java -version you will see: -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>

@@ -18,10 +18,13 @@ import com.spring.mongodb.ims.imsdesktopapplication.exceptions.InvalidInputExcep
 import com.spring.mongodb.ims.imsdesktopapplication.model.Customer;
 import com.spring.mongodb.ims.imsdesktopapplication.model.Employee;
 
+import javafx.application.Application;
+
 @SpringBootApplication
 public class ImsDesktopApplication extends JFrame{
 	
 	public ImsDesktopApplication() {
+		
 	}
 	
 //	use jdialog for register page
@@ -42,15 +45,18 @@ public class ImsDesktopApplication extends JFrame{
 	private static Employee currentEmployee;
 	
 	public static void main(String[] args) {
-		init();
-		var springApp = new SpringApplicationBuilder(ImsDesktopApplication.class)
-                .headless(false).run(args);
-
-        EventQueue.invokeLater(() -> {
-
-            var imsPage = springApp.getBean(ImsMainPage.class);
-            imsPage.setVisible(true);
-        });
+		
+		Application.launch(JavaFXApplication.class, args);
+		
+//		init();
+//		var springApp = new SpringApplicationBuilder(ImsDesktopApplication.class)
+//                .headless(false).run(args);
+//
+//        EventQueue.invokeLater(() -> {
+//
+//            var imsPage = springApp.getBean(ImsMainPage.class);
+//            imsPage.setVisible(true);
+//        });
 	}
 
 	public static void setCurrentEmployees(List<Employee> currentEmployees) {
