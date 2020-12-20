@@ -18,6 +18,7 @@ public class Product {
 	private String productId;
 	@DBRef(lazy = true)
 	private Set<ProductTransaction> productTransactions;
+	private ProductKind productKind;
 
 	public double getItemPrice() {
 		return itemPrice;
@@ -108,6 +109,20 @@ public class Product {
 	 */
 	public void setLimit(int limit) {
 		this.limit = limit;
+	}
+
+	/**
+	 * @return the productKind
+	 */
+	public ProductKind getProductKind() {
+		return productKind;
+	}
+
+	/**
+	 * @param productKind the productKind to set
+	 */
+	public void setProductKind(ProductKind productKind) {
+		this.productKind = productKind;
 	}
 	
 	
