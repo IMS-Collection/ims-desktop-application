@@ -1,4 +1,4 @@
-package com.spring.mongodb.ims.imsdesktopapplication.view;
+package com.spring.mongodb.ims.imsdesktopapplication;
 
 import javafx.application.Application;
 import javafx.beans.property.IntegerProperty;
@@ -26,7 +26,6 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
-import com.spring.mongodb.ims.imsdesktopapplication.JavaFXApplication;
 import com.spring.mongodb.ims.imsdesktopapplication.JavaFXApplication.StageReadyEvent;
 
 import java.io.IOException;
@@ -54,46 +53,45 @@ public class StageListener implements ApplicationListener<JavaFXApplication.Stag
     @Override
     public void onApplicationEvent(JavaFXApplication.StageReadyEvent stageReadyEvent) {
 
-        window = stageReadyEvent.getStage();
-        Group root = new Group();
-        Text text =  new Text(50, 100, "Here's a Text String");
-        text.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 50));
-        text.setFill(Color.LIGHTSALMON);
-        text.setStroke(Color.DARKBLUE);
-        text.setStrokeWidth(2);
-        text.setUnderline(true);
+//        window = stageReadyEvent.getStage();
+//        Group root = new Group();
+//        Text text =  new Text(50, 100, "Here's a Text String");
+//        text.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 50));
+//        text.setFill(Color.LIGHTSALMON);
+//        text.setStroke(Color.DARKBLUE);
+//        text.setStrokeWidth(2);
+//        text.setUnderline(true);
+//
+//        root.getChildren().add(text);
+//        Scene scene = new Scene(root, 600, 600);
+//        window.setScene(scene);
+//        window.setTitle(this.applicationTitle);
+//        window.show();
 
-        root.getChildren().add(text);
-        Scene scene = new Scene(root, 600, 600);
-        window.setScene(scene);
-        window.setTitle(this.applicationTitle);
-        window.show();
+        try {
+            // original codes
+            Stage window = stageReadyEvent.getStage();
+            URL url = fxml.getURL();
+            FXMLLoader fxmlLoader = new FXMLLoader(url);
+            fxmlLoader.setControllerFactory(applicationContext::getBean);
+            Parent root = fxmlLoader.load();
 
-//        try {
-//            // original codes
-//            Stage window = stageReadyEvent.getStage();
-////            URL url = fxml.getURL();
-////            FXMLLoader fxmlLoader = new FXMLLoader(url);
-////            fxmlLoader.setControllerFactory(applicationContext::getBean);
-////            Parent root = fxmlLoader.load();
-//
-//            Group root = new Group();
-//            Text text =  new Text(50, 100, "Here's a Text String");
-//            text.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 50));
-//            text.setFill(Color.LIGHTSALMON);
-//            text.setStroke(Color.DARKBLUE);
-//            text.setStrokeWidth(2);
-//            text.setUnderline(true);
-//            Scene scene = new Scene(root, 600, 600);
-//            window.setScene(scene);
-//            window.setTitle(this.applicationTitle);
-//            window.show();
-//
-//
-//
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+            Text text =  new Text(50, 100, "Here's a Text String");
+            text.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 50));
+            text.setFill(Color.LIGHTSALMON);
+            text.setStroke(Color.DARKBLUE);
+            text.setStrokeWidth(2);
+            text.setUnderline(true);
+            Scene scene = new Scene(root, 600, 600);
+            window.setScene(scene);
+            window.setTitle(this.applicationTitle);
+            window.show();
+
+
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 //    public ObservableList<Product> getProduct() {

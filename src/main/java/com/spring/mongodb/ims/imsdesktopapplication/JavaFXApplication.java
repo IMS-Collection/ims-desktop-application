@@ -41,21 +41,6 @@ public class JavaFXApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.context.publishEvent(new StageReadyEvent(primaryStage));
-        
-        //window = stageReadyEvent.getStage();
-//        Group root = new Group();
-//        Text text =  new Text(50, 100, "Here's a Text String");
-//        text.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 50));
-//        text.setFill(Color.LIGHTSALMON);
-//        text.setStroke(Color.DARKBLUE);
-//        text.setStrokeWidth(2);
-//        text.setUnderline(true);
-//
-//        root.getChildren().add(text);
-//        Scene scene = new Scene(root, 600, 600);
-//        primaryStage.setScene(scene);
-//        //primaryStage.setTitle(this.applicationTitle);
-//        primaryStage.show();
     }
 
     @Override
