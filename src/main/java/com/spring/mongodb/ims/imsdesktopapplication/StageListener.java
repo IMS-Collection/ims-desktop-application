@@ -82,7 +82,8 @@ public class StageListener implements ApplicationListener<JavaFXApplication.Stag
             text.setStroke(Color.DARKBLUE);
             text.setStrokeWidth(2);
             text.setUnderline(true);
-            Scene scene = new Scene(root, 600, 600);
+            Scene scene = new Scene(root, 800, 600);
+            scene.getStylesheets().add("imsStyles.css");
             window.setScene(scene);
             window.setTitle(this.applicationTitle);
             window.show();
