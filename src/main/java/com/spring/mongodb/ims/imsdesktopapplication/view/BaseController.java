@@ -3,8 +3,8 @@ package com.spring.mongodb.ims.imsdesktopapplication.view;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BaseController {
+public abstract class BaseController {
 	
-	private String error = "";
+	protected String error = "";
 
 }

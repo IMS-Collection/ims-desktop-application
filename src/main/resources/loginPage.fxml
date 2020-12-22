@@ -83,7 +83,7 @@
                      <children>
                         <Label text="User Name or Email" />
                         <Label text="Password" GridPane.rowIndex="1" />
-                        <TextField prefWidth="328.0" GridPane.columnIndex="1" />
+                        <TextField fx:id="loginUserName" prefWidth="328.0" GridPane.columnIndex="1" />
                         <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <children>
                               <Region HBox.hgrow="ALWAYS" />
@@ -100,7 +100,7 @@
                               <Button mnemonicParsing="false" text="REGISTER" />
                            </children>
                         </HBox>
-                        <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <PasswordField fx:id="loginPassword" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                </children>
