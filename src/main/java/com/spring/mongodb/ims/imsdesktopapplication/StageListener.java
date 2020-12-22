@@ -44,7 +44,7 @@ public class StageListener implements ApplicationListener<JavaFXApplication.Stag
     //private Label;
 
     public StageListener(@Value("${spring.application.ui.title}") String applicationTitle,
-                         @Value("classpath:/ims-main-page.fxml") Resource fxml, ApplicationContext applicationContext) {
+                         @Value("classpath:/loginPage.fxml") Resource fxml, ApplicationContext applicationContext) {
         this.applicationTitle = applicationTitle;
         this.fxml = fxml;
         this.applicationContext = applicationContext;
@@ -82,7 +82,8 @@ public class StageListener implements ApplicationListener<JavaFXApplication.Stag
             text.setStroke(Color.DARKBLUE);
             text.setStrokeWidth(2);
             text.setUnderline(true);
-            Scene scene = new Scene(root, 600, 600);
+            Scene scene = new Scene(root, 800, 600);
+            scene.getStylesheets().add("imsStyles.css");
             window.setScene(scene);
             window.setTitle(this.applicationTitle);
             window.show();
