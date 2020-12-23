@@ -35,64 +35,133 @@ import java.net.URL;
 public class StageListener implements ApplicationListener<JavaFXApplication.StageReadyEvent> {
 
     private final String applicationTitle;
-    private final Resource fxml;
+    private final Resource loginFXML;
+    private final Resource homePageFXML;
+    private final Resource accountPageFXML;
+    private final Resource productPageFXML;
+    private final Resource transactionPageFXML;
+    private final Resource registerPageFXML;
     private final ApplicationContext applicationContext;
 
-    Stage window;
-    Scene scene, scene2;
+    private Stage window;
+    private Scene loginScene;
+    private Scene registerScene; 
+    private Scene homeScene; 
+    private Scene productScene; 
+    private Scene accountScene; 
+    private Scene transactionScene;
 
     //private Label;
 
-    public StageListener(@Value("${spring.application.ui.title}") String applicationTitle,
-                         @Value("classpath:/loginPage.fxml") Resource fxml, ApplicationContext applicationContext) {
+    public StageListener(
+    		@Value("${spring.application.ui.title}") String applicationTitle,
+    		@Value("classpath:/loginPage.fxml") Resource loginFXML, 
+            @Value("classpath:/homePage.fxml") Resource homePageFXML, 
+            @Value("classpath:/accountPage.fxml") Resource accountPageFXML, 
+            @Value("classpath:/productPage.fxml") Resource productPageFXML, 
+            @Value("classpath:/transactionPage.fxml") Resource transactionPageFXML, 
+            @Value("classpath:/registerPage.fxml") Resource registerPageFXML, 
+            ApplicationContext applicationContext) {
         this.applicationTitle = applicationTitle;
-        this.fxml = fxml;
-        this.applicationContext = applicationContext;
+        this.loginFXML = loginFXML;
+        this.homePageFXML = homePageFXML;
+		this.accountPageFXML = accountPageFXML;
+		this.productPageFXML = productPageFXML;
+		this.transactionPageFXML = transactionPageFXML;
+		this.registerPageFXML = registerPageFXML;
+		this.applicationContext = applicationContext;
+		
+    }
+    
+    /**
+     * Initializes the scene of the login page
+     * @param fxml - the login fxml
+     */
+    private void setLoginScene(Resource fxml) {
+    	Parent root = getRoot(fxml);
+		this.loginScene = new Scene(root, 800, 600);
+    }
+    
+    /**
+     * Initializes the scene of the register page
+     * @param fxml - the register fxml
+     */
+    private void setRegisterScene(Resource fxml) {
+    	Parent root = getRoot(fxml);
+		this.registerScene = new Scene(root, 800, 600);
+    }
+    
+    /**
+     * Initializes the scene of the home page
+     * @param fxml - the home fxml
+     */
+    private void setHomeScene(Resource fxml) {
+    	Parent root = getRoot(fxml);
+		this.homeScene = new Scene(root, 800, 600);
+    }
+    
+    /**
+     * Initializes the scene of the product page
+     * @param fxml - the product fxml
+     */
+    private void setProductScene(Resource fxml) {
+    	Parent root = getRoot(fxml);
+		this.productScene = new Scene(root, 800, 600);
+    }
+    
+    /**
+     * Initializes the scene of the account page
+     * @param fxml - the account fxml
+     */
+    private void setAccountScene(Resource fxml) {
+    	Parent root = getRoot(fxml);
+		this.accountScene = new Scene(root, 800, 600);
+    }
+    
+    /**
+     * Initializes the scene of the transaction page
+     * @param fxml - the transaction fxml
+     */
+    private void setTransactionScene(Resource fxml) {
+    	Parent root = getRoot(fxml);
+		this.transactionScene = new Scene(root, 800, 600);
+    }
+    
+    /**
+     * Gets the root of the fxml resource
+     * @param fxml
+     * @return
+     */
+    private Parent getRoot(Resource fxml) {
+    	Parent root;
+    	try {
+    		URL url = fxml.getURL();
+    		FXMLLoader fxmlLoader = new FXMLLoader(url);
+    		fxmlLoader.setControllerFactory(applicationContext::getBean);
+    		root = fxmlLoader.load();
+    	} catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    	
+    	return root;
     }
 
     @Override
     public void onApplicationEvent(JavaFXApplication.StageReadyEvent stageReadyEvent) {
+    	
+    	setLoginScene(loginFXML);
+    	setRegisterScene(registerPageFXML);
+    	setHomeScene(homePageFXML);
+    	setProductScene(productPageFXML);
+    	setAccountScene(accountPageFXML);
+    	setTransactionScene(transactionPageFXML);
+    	
+    	 window = stageReadyEvent.getStage();
+    	 Scene scene = getLoginScene();
+    	 window.setScene(scene);
+         window.setTitle(this.applicationTitle);
+         window.show();
 
-//        window = stageReadyEvent.getStage();
-//        Group root = new Group();
-//        Text text =  new Text(50, 100, "Here's a Text String");
-//        text.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 50));
-//        text.setFill(Color.LIGHTSALMON);
-//        text.setStroke(Color.DARKBLUE);
-//        text.setStrokeWidth(2);
-//        text.setUnderline(true);
-//
-//        root.getChildren().add(text);
-//        Scene scene = new Scene(root, 600, 600);
-//        window.setScene(scene);
-//        window.setTitle(this.applicationTitle);
-//        window.show();
-
-        try {
-            // original codes
-            Stage window = stageReadyEvent.getStage();
-            URL url = fxml.getURL();
-            FXMLLoader fxmlLoader = new FXMLLoader(url);
-            fxmlLoader.setControllerFactory(applicationContext::getBean);
-            Parent root = fxmlLoader.load();
-
-            Text text =  new Text(50, 100, "Here's a Text String");
-            text.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.ITALIC, 50));
-            text.setFill(Color.LIGHTSALMON);
-            text.setStroke(Color.DARKBLUE);
-            text.setStrokeWidth(2);
-            text.setUnderline(true);
-            Scene scene = new Scene(root, 800, 600);
-            //scene.getStylesheets().add("imsStyles.css");
-            window.setScene(scene);
-            window.setTitle(this.applicationTitle);
-            window.show();
-
-
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 //    public ObservableList<Product> getProduct() {
@@ -126,6 +195,35 @@ public class StageListener implements ApplicationListener<JavaFXApplication.Stag
         return item;
     }
 
+	public Stage getWindow() {
+		return window;
+	}
+
+	public Scene getLoginScene() {
+		return loginScene;
+	}
+
+	public Scene getRegisterScene() {
+		return registerScene;
+	}
+
+	public Scene getHomeScene() {
+		return homeScene;
+	}
+
+	public Scene getProductScene() {
+		return productScene;
+	}
+
+	public Scene getAccountScene() {
+		return accountScene;
+	}
+
+	public Scene getTransactionScene() {
+		return transactionScene;
+	}
+
+
 //    private void closeProgram() {
 //        boolean answer = ConfirmBox.display("Title", "Are sure you want to close the program?");
 //        if (answer) {
@@ -133,4 +231,5 @@ public class StageListener implements ApplicationListener<JavaFXApplication.Stag
 //        }
 //
 //    }
+    
 }

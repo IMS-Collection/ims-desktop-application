@@ -27,6 +27,11 @@
 	-fx-background:linear-gradient(to bottom, #408c99 5%, #599bb3 100%);
 	-fx-background-color:#408c99;
 }
+
+.barButton:hover {
+	-fx-background:linear-gradient(to bottom, #408c99 5%, #599bb3 100%);
+	-fx-background-color:#408c99;
+}
 .button:active {
 	-fx-position:relative;
 	-fx-top:1px;
