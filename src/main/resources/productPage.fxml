@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@imsStyles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.spring.mongodb.ims.imsdesktopapplication.view.ProductController">
+   <center>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="THIS IS PRODUCT PAGE" BorderPane.alignment="CENTER" />
+   </center>
+   <top>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <HBox spacing="20.0">
+               <children>
+                  <Label text="DE-DON MOTORS" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <Label onMouseClicked="#homePage" styleClass="barButton" text="HOME" />
+                  <Label layoutX="115.0" layoutY="10.0" onMouseClicked="#productPage" styleClass="barButton" text="PRODUCT" />
+                  <Label layoutX="145.0" layoutY="10.0" onMouseClicked="#accountPage" styleClass="barButton" text="ACCOUNT" />
+                  <Label layoutX="175.0" layoutY="10.0" styleClass="barButton" text="SETTINGS" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </top>
+</BorderPane>

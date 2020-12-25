@@ -1,17 +1,50 @@
 .root {
     /* -fx-background-color: #2f4f4f; */
-    -fx-background-color: #bfbfbf;
+    -fx-background-color: #E4E9FD;
     -fx-font-size: 12pt;
 }
 
 .label {
-    -fx-text-fill: #e8e8e8;
+    -fx-text-fill: #000000;
 }
 
 .button {
-    /* -fx-background-color: linear-gradient(#dc9656, #ab4642); */
-    -fx-background-color: #ab4642;
-    -fx-text-fill: #FFFFFF;
-    -fx-background-radius: 6;
+	-fx-box-shadow: 0 10px 14px -7px #276873;
+	-fx-background:linear-gradient(to bottom, #599bb3 5%, #408c99 100%);
+	-fx-background-color:#599bb3;
+	-fx-border-radius:10px;
+	-fx-display:inline-block;
+	-fx-cursor:pointer;
+	-fx-text-fill:#ffffff;
+	-fx-font-family:Arial;
+	-fx-font-size:14px;
+	-fx-font-weight:bold;
+	-fx-padding:7px 12px;
+	-fx-text-decoration:none;
+	-fx-text-shadow:0 1px 0 #3d768a;
+}
+.button:hover {
+	-fx-background:linear-gradient(to bottom, #408c99 5%, #599bb3 100%);
+	-fx-background-color:#408c99;
+}
 
+.barButton:hover {
+	-fx-background:linear-gradient(to bottom, #408c99 5%, #599bb3 100%);
+	-fx-background-color:#408c99;
+}
+.button:active {
+	-fx-position:relative;
+	-fx-top:1px;
+}
+
+
+.text {
+    -fx-font-weight: bold;
+    /*-fx-text-fill: #08682b;*/
+    -fx-text-stroke: green;
+    -fx-text-stroke-width: 5;
+}
+
+.text-field {
+	-fx-background-radius: 6;
 }
